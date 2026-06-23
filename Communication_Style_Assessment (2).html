@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>แบบประเมินสไตล์การสื่อสาร | Effective Communication for Results</title>
+<style>
+  :root {
+    --navy:   #1A237E;
+    --blue:   #1565C0;
+    --orange: #E65100;
+    --green:  #1B5E20;
+    --teal:   #00695C;
+    --red:    #B71C1C;
+    --purple: #4A148C;
+    --gray:   #37474F;
+    --light:  #ECEFF1;
+    --white:  #FFFFFF;
+    /* Style colours */
+    --s1: #C62828; --s1l: #FFEBEE; --s1m: #EF9A9A;
+    --s2: #1565C0; --s2l: #E3F2FD; --s2m: #90CAF9;
+    --s3: #2E7D32; --s3l: #E8F5E9; --s3m: #A5D6A7;
+    --s4: #6A1B9A; --s4l: #F3E5F5; --s4m: #CE93D8;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Sarabun', 'TH Sarabun New', sans-serif;
+    background: #F0F4F8;
+    color: var(--gray);
+    font-size: 17px;
+    line-height: 1.6;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: linear-gradient(135deg, var(--navy) 0%, #283593 60%, #1A237E 100%);
+    color: white;
+    text-align: center;
+    padding: 36px 20px 28px;
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  }
+  .header h1 { font-size: 1.7rem; font-weight: 800; letter-spacing: 0.02em; }
+  .header p  { font-size: 1rem; opacity: 0.85; margin-top: 6px; }
+  .progress-bar-wrap { background: rgba(255,255,255,0.2); border-radius: 8px; height: 8px; margin: 16px auto 0; max-width: 500px; }
+  .progress-bar      { background: #FFD54F; border-radius: 8px; height: 8px; width: 0%; transition: width 0.4s ease; }
+  .progress-text     { font-size: 0.85rem; opacity: 0.8; margin-top: 6px; }
+
+  /* ── MAIN ── */
+  .container { max-width: 760px; margin: 0 auto; padding: 24px 16px 60px; }
+
+  /* ── INTRO CARD ── */
+  .intro-card {
+    background: white; border-radius: 16px; padding: 28px 32px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08); margin-bottom: 28px;
+  }
+  .intro-card h2 { color: var(--navy); font-size: 1.2rem; margin-bottom: 12px; }
+  .intro-card p  { color: var(--gray); font-size: 1rem; margin-bottom: 8px; }
+  .instruction-box {
+    background: #FFF8E1; border-left: 4px solid #F9A825;
+    border-radius: 8px; padding: 14px 18px; margin-top: 16px;
+  }
+  .instruction-box p { margin: 0; font-size: 0.97rem; }
+
+  /* ── SECTION LABEL ── */
+  .section-label {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--navy); color: white;
+    padding: 10px 20px; border-radius: 10px;
+    font-size: 0.95rem; font-weight: 700;
+    margin: 28px 0 12px;
+  }
+
+  /* ── QUESTION CARD ── */
+  .q-card {
+    background: white; border-radius: 14px;
+    padding: 20px 22px; margin-bottom: 14px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+    transition: box-shadow 0.2s, border-color 0.2s, background 0.15s;
+    border: 2px solid transparent;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .q-card:hover            { box-shadow: 0 4px 16px rgba(0,0,0,0.12); background: #F8FBFF; border-color: #90CAF9; }
+  .q-card.checked          { border-color: #1565C0; background: #EFF6FF; }
+  .q-card.missed           { border-color: #E53935 !important; background: #FFF0F0 !important; animation: shake 0.3s; }
+
+  @keyframes shake {
+    0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)}
+  }
+
+  .q-inner {
+    display: flex; align-items: center; gap: 16px;
+  }
+  .q-num {
+    flex-shrink: 0; width: 36px; height: 36px;
+    background: var(--light); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 0.88rem; color: var(--gray);
+    transition: background 0.2s, color 0.2s;
+  }
+  .q-card.checked .q-num { background: var(--blue); color: white; }
+  .q-text { flex: 1; font-size: 1.05rem; }
+  .q-check {
+    flex-shrink: 0; width: 36px; height: 36px;
+    border: 2.5px solid #90CAF9; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem; color: transparent;
+    transition: all 0.2s; background: #F0F4F8; margin-top: 0;
+  }
+  .q-card:hover .q-check   { border-color: #1565C0; background: #DDEEFF; }
+  .q-card.checked .q-check {
+    background: var(--blue); border-color: var(--blue); color: white;
+  }
+
+
+  /* ── SUBMIT BUTTON ── */
+  .submit-wrap { text-align: center; margin: 36px 0 20px; }
+  .btn-submit {
+    background: var(--orange); color: white;
+    border: none; border-radius: 50px;
+    padding: 16px 52px; font-size: 1.15rem; font-weight: 700;
+    cursor: pointer; box-shadow: 0 4px 16px rgba(230,81,0,0.4);
+    transition: transform 0.15s, box-shadow 0.15s;
+    font-family: inherit;
+  }
+  .btn-submit:hover  { transform: translateY(-2px); box-shadow: 0 6px 22px rgba(230,81,0,0.5); }
+  .btn-submit:active { transform: translateY(0); }
+  .counter-note { font-size: 0.9rem; color: #78909C; margin-top: 10px; }
+
+  /* ── RESULT ── */
+  #result-section { display: none; }
+  .result-card {
+    background: white; border-radius: 20px; padding: 32px 28px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1); margin-bottom: 24px;
+  }
+  .result-title { font-size: 1.5rem; font-weight: 800; color: var(--navy); text-align: center; margin-bottom: 8px; }
+  .result-sub   { text-align: center; color: #78909C; font-size: 0.95rem; margin-bottom: 28px; }
+
+  /* ── SCORE BARS ── */
+  .score-row {
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 16px;
+  }
+  .score-label { width: 130px; flex-shrink: 0; font-size: 0.92rem; font-weight: 700; }
+  .score-bar-bg {
+    flex: 1; height: 28px; background: var(--light); border-radius: 8px; overflow: hidden;
+  }
+  .score-bar {
+    height: 100%; border-radius: 8px; display: flex; align-items: center;
+    padding-left: 10px; font-size: 0.82rem; font-weight: 700; color: white;
+    transition: width 0.8s cubic-bezier(0.4,0,0.2,1);
+    width: 0%;
+  }
+  .score-val { width: 46px; text-align: right; font-weight: 700; font-size: 0.95rem; }
+
+  /* ── DOMINANT STYLE CARD ── */
+  .dominant-card {
+    border-radius: 16px; padding: 24px 28px; margin: 24px 0;
+    border-left: 6px solid;
+  }
+  .dominant-card h3 { font-size: 1.25rem; font-weight: 800; margin-bottom: 10px; }
+  .dominant-card .tag {
+    display: inline-block; padding: 3px 12px; border-radius: 50px;
+    font-size: 0.82rem; font-weight: 700; margin-bottom: 14px; color: white;
+  }
+  .dominant-card p { font-size: 0.98rem; line-height: 1.7; color: #37474F; }
+  .trait-list { margin-top: 14px; padding-left: 0; list-style: none; }
+  .trait-list li { padding: 4px 0; font-size: 0.95rem; }
+  .trait-list li::before { content: "✦  "; }
+
+  /* ── ALL STYLES SUMMARY ── */
+  .styles-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 8px; }
+  @media(max-width: 520px) { .styles-grid { grid-template-columns: 1fr; } }
+
+  .style-mini {
+    border-radius: 12px; padding: 16px 18px;
+    border-top: 4px solid;
+  }
+  .style-mini h4 { font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
+  .style-mini p  { font-size: 0.88rem; color: #546E7A; line-height: 1.5; }
+
+  /* ── RETAKE ── */
+  .btn-retake {
+    background: white; color: var(--navy);
+    border: 2px solid var(--navy); border-radius: 50px;
+    padding: 12px 36px; font-size: 1rem; font-weight: 700;
+    cursor: pointer; font-family: inherit;
+    transition: background 0.2s, color 0.2s;
+  }
+  .btn-retake:hover { background: var(--navy); color: white; }
+
+  /* ── FOOTER ── */
+  .footer {
+    text-align: center; color: #90A4AE; font-size: 0.85rem;
+    padding: 20px; margin-top: 40px;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>แบบประเมินสไตล์การสื่อสาร</h1>
+  <p>Communication Style Self-Assessment  ·  Effective Communication for Results</p>
+  <div class="progress-bar-wrap">
+    <div class="progress-bar" id="pbar"></div>
+  </div>
+  <p class="progress-text" id="ptext">เลือกคำตอบที่ตรงกับตัวคุณ แล้วกด "ดูผลประเมิน"</p>
+</div>
+
+<div class="container">
+
+  <!-- INTRO -->
+  <div class="intro-card">
+    <h2>📋  คำชี้แจง</h2>
+    <p>แบบประเมินนี้ประกอบด้วยข้อความ <strong>80 ข้อ</strong> ซึ่งอธิบายพฤติกรรมและทัศนคติในการสื่อสาร</p>
+    <p>กรุณาอ่านแต่ละข้อและ <strong>เลือกทุกข้อที่ตรงกับตัวคุณ</strong> — ไม่มีถูกหรือผิด ตอบตามความเป็นจริง</p>
+    <div class="instruction-box">
+      <p>💡  <strong>วิธีใช้:</strong>  แตะหรือคลิกที่ข้อความที่<em>ตรงกับตัวคุณ</em> กล่องจะเปลี่ยนเป็นสีน้ำเงินเมื่อเลือกแล้ว เมื่อเลือกครบแล้ว กดปุ่ม <strong>"ดูผลประเมิน"</strong> ด้านล่าง</p>
+    </div>
+  </div>
+
+  <!-- QUESTIONS -->
+  <div id="quiz-section">
+
+    <div class="section-label">📝  ข้อ 1–20</div>
+    <div id="block1"></div>
+    <div class="section-label">📝  ข้อ 21–40</div>
+    <div id="block2"></div>
+    <div class="section-label">📝  ข้อ 41–60</div>
+    <div id="block3"></div>
+    <div class="section-label">📝  ข้อ 61–80</div>
+    <div id="block4"></div>
+
+    <div class="submit-wrap">
+      <button class="btn-submit" onclick="submitAssessment()">✅  ดูผลประเมิน</button>
+      <p class="counter-note" id="counter-note">เลือกไปแล้ว 0 ข้อ</p>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div id="result-section">
+    <div class="result-card">
+      <div class="result-title">🎯  ผลการประเมินสไตล์การสื่อสาร</div>
+      <div class="result-sub">Communication Style Assessment Results</div>
+
+      <div id="score-bars"></div>
+      <div id="dominant-block"></div>
+    </div>
+
+    <div class="result-card">
+      <h3 style="color:var(--navy);margin-bottom:16px;font-size:1.1rem;">📊  ภาพรวม 4 สไตล์การสื่อสาร</h3>
+      <div class="styles-grid">
+        <div class="style-mini" style="background:var(--s1l);border-color:var(--s1);">
+          <h4 style="color:var(--s1);">🔴  Style 1 — ACTION (A)</h4>
+          <p><strong>WHAT</strong> — ผลลัพธ์ / เป้าประสงค์<br>ลงมือทำ ตัดสินใจเร็ว ตรงไปตรงมา มีพลัง ไม่ชอบรอ มุ่งเป้าหมาย</p>
+        </div>
+        <div class="style-mini" style="background:var(--s2l);border-color:var(--s2);">
+          <h4 style="color:var(--s2);">🔵  Style 2 — PROCESS (PR)</h4>
+          <p><strong>HOW</strong> — กลยุทธ์ / การจัดการ<br>เป็นระบบ วางแผนรอบคอบ ใส่ใจรายละเอียด ใช้ข้อมูล ไม่ใช้อารมณ์</p>
+        </div>
+        <div class="style-mini" style="background:var(--s3l);border-color:var(--s3);">
+          <h4 style="color:var(--s3);">🟢  Style 3 — PEOPLE (PE)</h4>
+          <p><strong>WHO</strong> — ความสัมพันธ์ / ทีมเวิร์ค<br>เห็นอกเห็นใจ อบอุ่น รับรู้ความรู้สึกได้ไว สร้างความร่วมมือ</p>
+        </div>
+        <div class="style-mini" style="background:var(--s4l);border-color:var(--s4);">
+          <h4 style="color:var(--s4);">🟣  Style 4 — IDEA (I)</h4>
+          <p><strong>WHY</strong> — นวัตกรรม / แนวคิด<br>จินตนาการสูง มีบารมี ชอบสิ่งใหม่ มองอนาคต เต็มไปด้วยความคิดเห็น</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:12px;">
+      <button class="btn-retake" onclick="retakeAssessment()">🔄  ทำแบบประเมินใหม่</button>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<div class="footer">
+  <p>อ.มนตรี อชรายุวัฒนา  ·  The Bridge Training & Consulting  ·  www.thebridge.co.th</p>
+  <p style="margin-top:4px;">หลักสูตร: Effective Communication for Results</p>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// QUESTION DATA  (all 80 questions)
+// ═══════════════════════════════════════════════════════════
+const QUESTIONS = [
+  "เป็นคนชอบการลงมือปฏิบัติ",
+  "จัดการกับปัญหาอย่างมีระบบ",
+  "เชื่อว่าการทำงานเป็นทีมย่อมดีกว่าทำคนเดียว",
+  "สนุกกับการคิดค้นสิ่งใหม่ๆ",
+  "สนใจอนาคตมากกว่าอดีต",
+  "สนุกกับการทำงานร่วมกันคนอื่น",
+  "ชอบเข้าร่วมประชุมกับกลุ่มที่มีการจัดการอย่างดี",
+  "วันกำหนดส่งงานเป็นเรื่องสำคัญ",
+  "ไม่ชอบการเลื่อนเวลาทำงานออกไป",
+  "เชื่อว่าความคิดเห็นใหม่ๆ จะต้องมีการทดสอบก่อนนำไปใช้",
+  "สนุกกับการมีปฏิสัมพันธ์กับคนอื่น",
+  "มักจะมองหาความเป็นไปได้ใหม่ๆ เสมอ",
+  "ต้องการที่จะกำหนดเป้าหมายด้วยตัวเอง",
+  "เมื่อต้องเริ่มทำสิ่งใหม่ๆ ตัวเองมักจะลงมือทำตั้งแต่ต้นจนจบ",
+  "โดยปกติตัวเองมักจะพยายามที่จะเข้าใจอารมณ์ของคนอื่น",
+  "ชอบท้าทายความสามารถของคนอื่น",
+  "ต้องการที่จะให้คนอื่นแสดงความคิดเห็นเกี่ยวกับผลการทำงานของตัวเอง",
+  "คิดว่าวิธีการทำงานทีละขั้นตอนเป็นวิธีซึ่งมีประสิทธิภาพ",
+  "คิดว่าตัวเองเก่งเรื่อง การอ่านใจคนอื่น",
+  "ชอบการแก้ปัญหาแบบสร้างสรรค์",
+  "ชอบประเมินสถานการณ์ และวางแผนการทำงานตลอดเวลา",
+  "รู้สึกอ่อนไหวต่อความต้องการของคนอื่น",
+  "การวางแผนคือ หัวใจของความสำเร็จ",
+  "ไม่ชอบอดทนรอคอยอะไรนานๆ",
+  "สามารถรับความกดดันได้",
+  "คิดว่าประสบการณ์เป็นสิ่งมีค่า",
+  "ชอบฟังคนอื่น",
+  "คนอื่นมักพูดว่าตัวเองเป็นคนคิดไว",
+  "มองว่าการร่วมมือกันทำงานคือ สิ่งสำคัญ",
+  "ใช้วิธีการต่างๆ อย่างมีหลักการเพื่อทดสอบทางเลือกที่เป็นไปได้",
+  "ชอบจัดการกับโปรเจ็กต์ต่างๆ หลายๆ โปรเจ็กต์ในเวลาเดียวกัน",
+  "มักถามคำถามกับตัวเองเสมอ",
+  "ชอบเรียนรู้จากการลงมือทำ",
+  "เชื่อว่าสมองเป็นตัวกำหนดความรู้สึกของคนเรา",
+  "สามารถทำนายได้ว่าคนอื่นจะแสดงออกอย่างไร",
+  "ไม่ชอบรายละเอียด",
+  "เชื่อว่าการวิเคราะห์มักนำไปสู่การปฏิบัติ",
+  "สามารถประเมินบรรยากาศการทำงานของคนอื่นๆ ในทีม",
+  "มีแนวโน้มว่าตัวเองจะเริ่มลงมือทำงาน แต่ไม่เสร็จสมบูรณ์",
+  "คิดว่าตัวเองเป็นคนกล้าตัดสินใจ",
+  "มองหางานที่ท้าทาย",
+  "อาศัยข้อมูล และการสังเกตในการทำงาน",
+  "สามารถแสดงความรู้สึกของตัวเองได้อย่างเปิดเผย",
+  "ชอบที่จะออกแบบโปรเจ็กต์ใหม่ๆ",
+  "สนุกกับการอ่าน",
+  "คิดว่าตัวเองคือ คนที่ชอบช่วยเหลือคนอื่น",
+  "ชอบทำงานทีละอย่าง",
+  "ชอบที่จะทำงานให้บรรลุเป้าหมาย",
+  "ชอบเรียนรู้คนอื่น",
+  "ชอบความหลากหลาย",
+  "ความจริงจะพูดแทนทุกสิ่งทุกอย่าง",
+  "ใช้จินตนาการของตัวเองมากที่สุด",
+  "ไม่ชอบอดทนกับงานที่ต้องรอนานๆ หรือต้องใช้เวลาทำนาน",
+  "ความคิดของตัวเองไม่เคยหยุดพัก",
+  "การตัดสินใจที่สำคัญจะต้องทำอย่างระมัดระวัง",
+  "เชื่อจริงๆ ว่าทุกคนต้องทำงานร่วมกันเพื่อให้งานเสร็จ",
+  "ตัดสินใจโดยไม่คิดมาก",
+  "เชื่อว่าอารมณ์สร้างปัญหา",
+  "ชอบให้คนอื่นรัก",
+  "สามารถบวกเลขได้อย่างรวดเร็ว",
+  "ลองความคิดใหม่ๆ ของตัวเองกับคนอื่น",
+  "เชื่อเรื่องวิธีทางวิทยาศาสตร์",
+  "ชอบทำงานให้เสร็จ",
+  "ความสัมพันธ์ที่ดีเป็นสิ่งจำเป็น",
+  "เป็นคนหุนหันพลันแล่น",
+  "สามารถยอมรับความแตกต่างของคนแต่ละคนได้",
+  "การสื่อสารกับคนอื่นเป็นเรื่องยากลำบาก",
+  "ต้องการแรงกระตุ้นในการทำงาน",
+  "ชอบการบริหารจัดการ",
+  "มักทำงานโดยข้ามจากงานหนึ่งไปยังอีกงานหนึ่ง โดยที่งานเก่ายังไม่เสร็จ",
+  "มองว่าการสนทนา และทำงานร่วมกับคนอื่นเป็นศิลปะอย่างหนึ่ง",
+  "ความต้องการที่จะเข้าใจตัวเอง คือ สิ่งสำคัญ",
+  "สนุกกับการคิดหาความคิดเห็นใหม่ๆ",
+  "ไม่ชอบเสียเวลา",
+  "สนุกกับการทำสิ่งที่ตัวเองถนัด",
+  "เรียนรู้โดยจากการมีปฏิสัมพันธ์กับคนอื่น",
+  "มองว่าสิ่งที่เป็นนามธรรมเป็นเรื่องที่น่าสนใจ",
+  "สามารถอดทนได้กับงานที่เต็มไปด้วยรายละเอียด",
+  "ชอบพูดสั้นๆ ตรงจุด ไม่อ้อมค้อม",
+  "เป็นคนมีความมั่นใจในตัวเอง"
+];
+
+// ═══════════════════════════════════════════════════════════
+// SCORING KEY
+// ═══════════════════════════════════════════════════════════
+const KEYS = {
+  1: new Set([1,8,9,13,17,24,26,31,33,40,41,48,50,53,57,63,65,70,74,79]),
+  2: new Set([2,7,10,14,18,23,25,30,34,37,42,47,51,55,58,62,66,69,75,78]),
+  3: new Set([3,6,11,15,19,22,27,29,35,38,43,46,49,56,59,64,67,71,76,80]),
+  4: new Set([4,5,12,16,20,21,28,32,36,39,44,45,52,54,60,61,68,72,73,77])
+};
+
+const STYLE_INFO = {
+  1: {
+    label: "Style 1 — ACTION (A)  สไตล์การลงมือทำ",
+    keyword: "WHAT — ผลลัพธ์ / เป้าประสงค์ / บรรลุเป้าหมาย",
+    color: "var(--s1)", light: "var(--s1l)", mid: "var(--s1m)",
+    icon: "🔴",
+    desc: "คุณเป็นคน<strong>Action Style</strong> — มุ่งเน้นที่ผลลัพธ์และการลงมือทำ สื่อสารตรงไปตรงมา กระชับ ไม่อ้อมค้อม มีพลังงานสูง กล้าตัดสินใจ และขับเคลื่อนทุกอย่างให้เกิดขึ้นได้จริง",
+    convTopics: ["เน้นผลลัพธ์และผลผลิต","เป้าประสงค์และการบรรลุเป้าหมาย","ประสิทธิภาพและการตัดสินใจ","ความท้าทายและการเปลี่ยนแปลง","ข้อเสนอแนะและประสบการณ์"],
+    traits: ["เน้นปฏิบัติ ทำตัวติดดิน","ตรงไปตรงมา ไม่อ้อมค้อม","ความอดทนสั้น ไม่ชอบรอ","กล้าตัดสินใจและตัดสินใจเร็ว","มีพลังงานสูง มุ่งไปข้างหน้าเสมอ"],
+    workingTips: ["เน้นที่ผลลัพธ์ก่อน แล้วค่อยสรุป — อย่าเน้นกระบวนการ","ให้คำแนะนำที่ดีที่สุดเพียงทางเดียว ไม่ควรเสนอทางเลือกมากเกินไป","พูดสั้นๆ กระชับ ไม่เยิ่นเย้อ","เน้นที่ความคิดซึ่งลงมือปฏิบัติได้จริง ไม่เน้นทฤษฎี","ใช้สื่อต่างๆ มาประกอบเพื่อช่วยในการสื่อสาร"],
+    tip: "💡 เคล็ดลับการทำงานร่วมกัน: พูดสั้น ตรง เน้นผลลัพธ์ — อย่าให้ทางเลือกมากและอย่าเน้นกระบวนการ"
+  },
+  2: {
+    label: "Style 2 — PROCESS (PR)  สไตล์กระบวนการ",
+    keyword: "HOW — กลยุทธ์ / การจัดการ / ความจริง",
+    color: "var(--s2)", light: "var(--s2l)", mid: "var(--s2m)",
+    icon: "🔵",
+    desc: "คุณเป็นคน<strong>Process Style</strong> — ให้ความสำคัญกับความจริง ระบบ และกระบวนการที่ถูกต้อง วางแผนรอบคอบ ทำงานทีละขั้นตอน ใส่ใจรายละเอียด และตัดสินใจบนพื้นฐานของข้อมูลและการวิเคราะห์",
+    convTopics: ["ความจริงและระเบียบปฏิบัติ","การวางแผนและการจัดการ","การควบคุมและการทดสอบ","การวิเคราะห์และการสังเกต","รายละเอียดและการพิสูจน์"],
+    traits: ["ความเป็นระบบและเป็นขั้นตอน","สมเหตุสมผล ยึดความจริง","พูดมากเพื่ออธิบายอย่างครบถ้วน","ไม่ใช้อารมณ์ในการตัดสินใจ","ระมัดระวังและมีความอดทนสูง"],
+    workingTips: ["พูดชัดถ้อยชัดคำ ไม่เร่งรีบ เน้นที่ความจริงเป็นหลัก","จัดลำดับการนำเสนอ: ภูมิหลัง → สถานการณ์ → ผลที่ตามมา","รวบรวมทางเลือกพร้อมข้อดี-ข้อเสียให้มีเวลาวิเคราะห์","อย่าเร่งเร้าให้รีบทำงาน ต้องใจเย็น","ร่างข้อเสนอหรือวางแผนการทำงานก่อนเสมอ"],
+    tip: "💡 เคล็ดลับการทำงานร่วมกัน: ใจเย็น เตรียมข้อมูลให้ครบ จัดลำดับให้ชัด และอย่ากดดันให้ตัดสินใจเร็ว"
+  },
+  3: {
+    label: "Style 3 — PEOPLE (PE)  สไตล์มนุษยสัมพันธ์",
+    keyword: "WHO — การสื่อสาร / ความสัมพันธ์ / ทีมเวิร์ค",
+    color: "var(--s3)", light: "var(--s3l)", mid: "var(--s3m)",
+    icon: "🟢",
+    desc: "คุณเป็นคน<strong>People Style</strong> — ให้ความสำคัญกับคน ความสัมพันธ์ และการทำงานเป็นทีม เห็นอกเห็นใจ รับรู้ความรู้สึกคนอื่นได้ไว สื่อสารด้วยความอบอุ่น และเป็นที่รักไว้วางใจของทุกคน",
+    convTopics: ["คนอื่นๆ และความต้องการของพวกเขา","แรงจูงใจและทีมเวิร์ค","การสื่อสารและความรู้สึก","ความร่วมมือและความเชื่อ","คุณค่า ความสัมพันธ์ และความคาดหวัง"],
+    traits: ["กระฉับกระเฉง เห็นอกเห็นใจ","อบอุ่น มีความเป็นส่วนตัว","อารมณ์ขึ้นลงได้ง่าย รับรู้ได้ไว","อ่อนไหวต่อความรู้สึกคนอื่น","ชอบพัฒนาตัวเองและมีจิตสำนึก"],
+    workingTips: ["ทักทายเกริ่นนำก่อน อย่ารีบเข้าเรื่องธุรกิจทันที","เน้นสร้างความสัมพันธ์ด้วยการให้เกียรติ ยกย่อง จริงใจ","แสดงให้เห็นวิธีที่เคยได้ผลในอดีตเพื่อสร้างความเชื่อมั่น","อ้างอิงคนที่เชื่อถือได้ในเครือข่ายของเขา","ใช้สไตล์การสื่อสารแบบไม่เป็นทางการ สบายๆ"],
+    tip: "💡 เคล็ดลับการทำงานร่วมกัน: สร้างความสัมพันธ์ก่อนเสมอ ให้เกียรติ และสื่อสารแบบไม่เป็นทางการ"
+  },
+  4: {
+    label: "Style 4 — IDEA (I)  สไตล์ความคิดสร้างสรรค์",
+    keyword: "WHY — แนวคิด / ทฤษฎี / นวัตกรรม",
+    color: "var(--s4)", light: "var(--s4l)", mid: "var(--s4m)",
+    icon: "🟣",
+    desc: "คุณเป็นคน<strong>Idea Style</strong> — มีจินตนาการสูง มองหาสิ่งใหม่ๆ นวัตกรรม และโอกาสที่เป็นไปได้เสมอ มีบารมี เต็มไปด้วยความคิดเห็น และสื่อสารในแบบที่เชื่อมโยงแนวคิดกว้างๆ เข้าด้วยกัน",
+    convTopics: ["แนวคิด นวัตกรรม และวิธีใหม่ๆ","สิ่งใหม่ๆ และความเป็นไปได้","โอกาสและการปรับปรุง","แนวโน้มและทางเลือก","ประเด็นต่างๆ และการสร้างสรรค์"],
+    traits: ["มีจินตนาการและบารมีสูง","ความคิดสร้างสรรค์ เข้าใจยาก","มีอีโก้ (Ego) และเต็มไปด้วยความคิดเห็น","ชอบสิ่งกระตุ้นและความท้าทายใหม่ๆ","พึ่งพาคนอื่นในการนำไอเดียไปปฏิบัติ"],
+    workingTips: ["ให้เวลามากพอในการพูดคุยและสนทนา","อย่าหมดความอดทนหากพูดออกนอกเรื่อง — เป็นธรรมชาติของเขา","เชื่อมโยงหัวข้อกับแนวคิดหรือหลักการในวงกว้าง","เน้นที่คุณค่าและผลกระทบที่จะเกิดขึ้นในอนาคต","นำเสนอแนวคิดหลักก่อน → ภาพรวม → หัวข้อเฉพาะเจาะจง"],
+    tip: "💡 เคล็ดลับการทำงานร่วมกัน: ให้เวลา เชื่อมโยงไอเดียกับภาพใหญ่ และเน้นคุณค่าในอนาคต"
+  }
+};
+
+// ═══════════════════════════════════════════════════════════
+// BUILD QUESTIONS
+// ═══════════════════════════════════════════════════════════
+const selected = new Set();   // tracks which question numbers are ON
+
+function buildQuestions() {
+  const blocks = ['block1','block2','block3','block4'];
+  const ranges = [[1,20],[21,40],[41,60],[61,80]];
+
+  ranges.forEach(([start,end], bi) => {
+    const container = document.getElementById(blocks[bi]);
+    for (let i = start; i <= end; i++) {
+      const card = document.createElement('div');
+      card.className = 'q-card';
+      card.id = `card-${i}`;
+      card.setAttribute('role', 'checkbox');
+      card.setAttribute('aria-checked', 'false');
+      card.setAttribute('tabindex', '0');
+      card.innerHTML = `
+        <div class="q-inner">
+          <span class="q-num">${i}</span>
+          <span class="q-text">${QUESTIONS[i-1]}</span>
+          <span class="q-check">✓</span>
+        </div>`;
+
+      // Single unified handler — no label, no checkbox, no double-fire
+      function toggle() {
+        if (selected.has(i)) {
+          selected.delete(i);
+          card.classList.remove('checked');
+          card.setAttribute('aria-checked', 'false');
+        } else {
+          selected.add(i);
+          card.classList.add('checked');
+          card.classList.remove('missed');
+          card.setAttribute('aria-checked', 'true');
+        }
+        updateCounter();
+      }
+
+      card.addEventListener('click', toggle);
+      card.addEventListener('keydown', function(e){
+        if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); toggle(); }
+      });
+
+      container.appendChild(card);
+    }
+  });
+}
+
+function updateCounter() {
+  const count = selected.size;
+  document.getElementById('counter-note').textContent = `เลือกไปแล้ว ${count} ข้อ`;
+  const pct = Math.round((count / 80) * 100);
+  document.getElementById('pbar').style.width = pct + '%';
+  document.getElementById('ptext').textContent = `เลือกไปแล้ว ${count} / 80 ข้อ`;
+}
+
+// ═══════════════════════════════════════════════════════════
+// SUBMIT & SCORE
+// ═══════════════════════════════════════════════════════════
+function submitAssessment() {
+  if (selected.size === 0) {
+    alert('กรุณาเลือกข้อความที่ตรงกับตัวคุณอย่างน้อย 1 ข้อ');
+    return;
+  }
+
+  // Score
+  const scores = { 1:0, 2:0, 3:0, 4:0 };
+  selected.forEach(num => {
+    for (let s = 1; s <= 4; s++) {
+      if (KEYS[s].has(num)) scores[s]++;
+    }
+  });
+
+  showResults(scores);
+}
+
+function showResults(scores) {
+  // Hide quiz
+  document.getElementById('quiz-section').style.display = 'none';
+  document.getElementById('result-section').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  // Determine dominant (or tie)
+  const maxScore = Math.max(...Object.values(scores));
+  const dominant = Object.keys(scores).filter(k => scores[k] === maxScore).map(Number);
+
+  // Score bars
+  const barsEl = document.getElementById('score-bars');
+  barsEl.innerHTML = '';
+  const styleNames = ['','Action','Process','People','Idea'];
+  const styleColors = ['','var(--s1)','var(--s2)','var(--s3)','var(--s4)'];
+
+  for (let s = 1; s <= 4; s++) {
+    const pct = Math.round((scores[s] / 20) * 100);
+    const row = document.createElement('div');
+    row.className = 'score-row';
+    row.innerHTML = `
+      <div class="score-label">${STYLE_INFO[s].icon} Style ${s}</div>
+      <div class="score-bar-bg">
+        <div class="score-bar" id="bar${s}" style="background:${styleColors[s]};max-width:100%;width:0%">
+          ${styleNames[s]}
+        </div>
+      </div>
+      <div class="score-val" style="color:${styleColors[s]}">${scores[s]}<span style="font-size:0.75rem;color:#90A4AE;">/20</span></div>`;
+    barsEl.appendChild(row);
+  }
+
+  // Animate bars after paint
+  setTimeout(() => {
+    for (let s = 1; s <= 4; s++) {
+      const pct = Math.round((scores[s] / 20) * 100);
+      document.getElementById(`bar${s}`).style.width = pct + '%';
+    }
+  }, 100);
+
+  // Dominant block
+  const domEl = document.getElementById('dominant-block');
+  let html = '';
+  function buildDominantCard(s, isMain) {
+    const info = STYLE_INFO[s];
+    return `
+      <div class="dominant-card" style="background:${info.light};border-color:${info.color};margin-top:20px;">
+        <div class="tag" style="background:${info.color};">${info.icon} ${isMain ? 'สไตล์หลักของคุณ' : info.label}</div>
+        <h3 style="color:${info.color};margin-bottom:4px;">${info.label}</h3>
+        <p style="font-size:0.88rem;color:#78909C;margin-bottom:12px;">${info.keyword}</p>
+        <p style="margin-bottom:16px;">${info.desc}</p>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
+          <div style="background:rgba(255,255,255,0.75);border-radius:10px;padding:14px 16px;">
+            <p style="font-weight:700;color:${info.color};font-size:0.92rem;margin-bottom:8px;">💬  หัวข้อที่ชอบพูดถึง</p>
+            <ul style="list-style:none;padding:0;margin:0;">
+              ${info.convTopics.map(t=>`<li style="padding:3px 0;font-size:0.9rem;">• ${t}</li>`).join('')}
+            </ul>
+          </div>
+          <div style="background:rgba(255,255,255,0.75);border-radius:10px;padding:14px 16px;">
+            <p style="font-weight:700;color:${info.color};font-size:0.92rem;margin-bottom:8px;">⚡  พฤติกรรมที่โดดเด่น</p>
+            <ul style="list-style:none;padding:0;margin:0;">
+              ${info.traits.map(t=>`<li style="padding:3px 0;font-size:0.9rem;">• ${t}</li>`).join('')}
+            </ul>
+          </div>
+        </div>
+
+        <div style="background:rgba(255,255,255,0.75);border-radius:10px;padding:14px 16px;margin-bottom:12px;">
+          <p style="font-weight:700;color:${info.color};font-size:0.92rem;margin-bottom:8px;">🤝  การทำงานร่วมกับคนสไตล์นี้ได้ผลดี</p>
+          <ul style="list-style:none;padding:0;margin:0;">
+            ${info.workingTips.map(t=>`<li style="padding:4px 0;font-size:0.9rem;">• ${t}</li>`).join('')}
+          </ul>
+        </div>
+
+        <p style="background:rgba(255,255,255,0.9);padding:12px 16px;border-radius:8px;font-size:0.92rem;margin:0;">${info.tip}</p>
+      </div>`;
+  }
+
+  if (dominant.length === 1) {
+    html = buildDominantCard(dominant[0], true);
+  } else {
+    html = `<div style="margin-top:20px;background:#F3F4F6;border-radius:12px;padding:16px 20px;">
+      <strong>คุณมีสไตล์หลักหลายแบบ:</strong>
+      ${dominant.map(s=>`<span style="display:inline-block;margin:4px 6px;padding:4px 12px;background:${STYLE_INFO[s].color};color:white;border-radius:50px;font-size:0.9rem;">${STYLE_INFO[s].icon} Style ${s}</span>`).join('')}
+      <p style="margin-top:10px;font-size:0.95rem;">คุณมีความยืดหยุ่นสูงและสามารถปรับสไตล์การสื่อสารได้ตามสถานการณ์</p>
+    </div>
+    ${dominant.map(s => buildDominantCard(s, false)).join('')}`;
+  }
+  domEl.innerHTML = html;
+}
+
+function retakeAssessment() {
+  selected.clear();
+  for (let i = 1; i <= 80; i++) {
+    const card = document.getElementById(`card-${i}`);
+    if (card) {
+      card.classList.remove('checked','missed');
+      card.setAttribute('aria-checked','false');
+    }
+  }
+  document.getElementById('counter-note').textContent = 'เลือกไปแล้ว 0 ข้อ';
+  document.getElementById('pbar').style.width = '0%';
+  document.getElementById('ptext').textContent = 'เลือกคำตอบที่ตรงกับตัวคุณ แล้วกด "ดูผลประเมิน"';
+  document.getElementById('quiz-section').style.display = 'block';
+  document.getElementById('result-section').style.display = 'none';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── INIT ─────────────────────────────────────────────────
+buildQuestions();
+</script>
+</body>
+</html>
