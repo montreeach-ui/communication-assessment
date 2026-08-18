@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>แบบประเมิน Growth Mindset | The Bridge</title>
+<style>
+  :root {
+    --navy:#1A237E; --teal:#00695C; --teal-lt:#E0F2F1;
+    --green:#2E7D32; --green-lt:#E8F5E9;
+    --amber:#E65100; --amber-lt:#FFF3E0;
+    --red:#C62828; --red-lt:#FFEBEE;
+    --blue:#1565C0; --blue-lt:#E3F2FD;
+    --gray:#37474F; --light:#ECEFF1; --white:#FFFFFF;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Sarabun','TH Sarabun New',sans-serif;background:#F0F4F8;color:var(--gray);font-size:16px;}
+
+  /* HEADER */
+  .header{background:linear-gradient(135deg,#00695C,#004D40);color:#fff;text-align:center;padding:26px 16px 20px;position:sticky;top:0;z-index:100;box-shadow:0 4px 16px rgba(0,0,0,.3);}
+  .header h1{font-size:1.5rem;font-weight:800;}
+  .header p{font-size:.88rem;opacity:.85;margin-top:4px;}
+  .prog-wrap{background:rgba(255,255,255,.2);border-radius:8px;height:7px;margin:12px auto 0;max-width:460px;}
+  .prog-bar{background:#FFD54F;border-radius:8px;height:7px;width:0%;transition:width .4s;}
+  .prog-text{font-size:.78rem;opacity:.78;margin-top:4px;}
+
+  .container{max-width:760px;margin:0 auto;padding:18px 14px 60px;}
+
+  /* INTRO */
+  .intro{background:#fff;border-radius:14px;padding:22px 26px;box-shadow:0 2px 10px rgba(0,0,0,.08);margin-bottom:20px;}
+  .intro h2{color:var(--teal);font-size:1.1rem;margin-bottom:10px;}
+  .scale-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0 10px;}
+  .scale-item{text-align:center;background:#F8FAFF;border-radius:10px;padding:10px 6px;}
+  .scale-num{font-size:1.4rem;font-weight:800;color:var(--teal);}
+  .scale-txt{font-size:.78rem;color:#78909C;margin-top:2px;line-height:1.3;}
+  .note-box{background:#E0F2F1;border-left:4px solid var(--teal);border-radius:8px;padding:11px 16px;font-size:.9rem;}
+
+  /* QUESTION CARD */
+  .q-card{background:#fff;border-radius:12px;padding:16px 18px;margin-bottom:10px;box-shadow:0 1px 5px rgba(0,0,0,.07);border:2px solid transparent;transition:border-color .2s;}
+  .q-card.answered{border-color:#80CBC4;}
+  .q-card.error{border-color:#E53935!important;background:#FFF0F0!important;animation:shake .3s;}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+
+  .q-header{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px;}
+  .q-num{flex-shrink:0;width:30px;height:30px;border-radius:50%;background:var(--teal-lt);display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:700;color:var(--teal);}
+  .q-text{font-size:.97rem;line-height:1.65;flex:1;padding-top:4px;}
+
+  /* RATING */
+  .rating-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+  .rating-btn{padding:10px 6px;border-radius:10px;border:2px solid #CFD8DC;background:#F8FAFF;font-size:.82rem;font-weight:600;color:var(--gray);cursor:pointer;transition:all .15s;font-family:inherit;line-height:1.3;text-align:center;}
+  .rating-btn:hover{border-color:var(--teal);background:var(--teal-lt);}
+  .rating-btn.selected{background:var(--teal);border-color:var(--teal);color:#fff;}
+  .rating-btn .rb-num{font-size:1.15rem;font-weight:800;display:block;margin-bottom:2px;}
+
+  /* SUBMIT */
+  .submit-wrap{text-align:center;margin:26px 0 14px;}
+  .btn-submit{background:var(--teal);color:#fff;border:none;border-radius:50px;padding:15px 48px;font-size:1.1rem;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(0,105,92,.4);transition:transform .15s;font-family:inherit;}
+  .btn-submit:hover{transform:translateY(-2px);}
+  .counter-note{font-size:.85rem;color:#78909C;margin-top:8px;}
+  #err-msg{display:none;background:#FFEBEE;color:#C62828;border-radius:10px;padding:12px 16px;margin:0 0 12px;font-size:.92rem;font-weight:600;text-align:center;}
+
+  /* RESULT */
+  #result-section{display:none;}
+  .result-card{background:#fff;border-radius:18px;padding:26px 22px;box-shadow:0 4px 18px rgba(0,0,0,.1);margin-bottom:16px;}
+  .result-title{font-size:1.35rem;font-weight:800;color:var(--teal);text-align:center;margin-bottom:4px;}
+  .result-sub{text-align:center;color:#78909C;font-size:.88rem;margin-bottom:22px;}
+
+  /* GAUGE */
+  .gauge-wrap{text-align:center;margin-bottom:24px;}
+  .gauge-score{font-size:4rem;font-weight:800;color:var(--teal);line-height:1;}
+  .gauge-denom{font-size:1.2rem;color:#90A4AE;}
+  .gauge-band{display:inline-block;padding:5px 22px;border-radius:50px;font-size:1rem;font-weight:700;margin-top:10px;}
+
+  /* PROGRESS BAR */
+  .score-bar-wrap{background:var(--light);border-radius:12px;height:22px;overflow:hidden;margin:14px 0 6px;}
+  .score-bar-fill{height:100%;border-radius:12px;transition:width 1.2s cubic-bezier(.4,0,.2,1);width:0%;display:flex;align-items:center;justify-content:flex-end;padding-right:10px;font-size:.8rem;font-weight:700;color:#fff;}
+
+  /* DIMENSION ANALYSIS */
+  .dim-block{margin-top:10px;}
+  .dim-row{background:#fff;border-radius:12px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 5px rgba(0,0,0,.06);border-left:4px solid var(--teal);}
+  .dim-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+  .dim-name{font-size:.93rem;font-weight:700;color:var(--teal);}
+  .dim-score{font-size:.9rem;font-weight:700;color:var(--teal);}
+  .dim-bar-bg{background:var(--light);border-radius:8px;height:20px;overflow:hidden;margin-bottom:6px;}
+  .dim-bar-fill{height:100%;border-radius:8px;background:var(--teal);transition:width 1s cubic-bezier(.4,0,.2,1);width:0%;}
+  .dim-desc{font-size:.86rem;color:#546E7A;line-height:1.6;}
+
+  /* INTERPRETATION */
+  .interp-box{border-radius:14px;padding:20px 22px;margin-top:6px;border-left:5px solid;}
+  .interp-box h4{font-size:1rem;font-weight:700;margin-bottom:10px;}
+  .interp-box p{font-size:.9rem;line-height:1.7;color:#37474F;margin-bottom:8px;}
+  .interp-box ul{padding-left:16px;font-size:.88rem;line-height:1.8;color:#37474F;}
+
+  /* CRITERIA TABLE */
+  .criteria-table{width:100%;border-collapse:collapse;font-size:.87rem;}
+  .criteria-table td{padding:9px 12px;border-bottom:1px solid #ECEFF1;vertical-align:top;}
+  .criteria-table tr:last-child td{border-bottom:none;}
+
+  .btn-retake{background:#fff;color:var(--teal);border:2px solid var(--teal);border-radius:50px;padding:11px 30px;font-size:.95rem;font-weight:700;cursor:pointer;font-family:inherit;transition:background .2s,color .2s;}
+  .btn-retake:hover{background:var(--teal);color:#fff;}
+
+  .footer{text-align:center;color:#90A4AE;font-size:.8rem;padding:16px;margin-top:28px;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🌱  แบบประเมิน Growth Mindset</h1>
+  <p>Growth Mindset Self-Assessment  ·  The Bridge Training & Consulting</p>
+  <div class="prog-wrap"><div class="prog-bar" id="pbar"></div></div>
+  <p class="prog-text" id="ptext">เลือกคำตอบที่ตรงกับตัวคุณมากที่สุด แล้วกด "ดูผลประเมิน"</p>
+</div>
+
+<div class="container">
+  <div class="intro">
+    <h2>📋  คำชี้แจง</h2>
+    <p>กรุณาตอบคำถามต่อไปนี้ด้วยความซื่อสัตย์ เนื่องจากไม่มีคำตอบใดผิด</p>
+    <div class="scale-row">
+      <div class="scale-item"><div class="scale-num">0</div><div class="scale-txt">ไม่เห็นด้วย<br>อย่างยิ่ง</div></div>
+      <div class="scale-item"><div class="scale-num">1</div><div class="scale-txt">ไม่เห็นด้วย</div></div>
+      <div class="scale-item"><div class="scale-num">2</div><div class="scale-txt">เห็นด้วย</div></div>
+      <div class="scale-item"><div class="scale-num">3</div><div class="scale-txt">เห็นด้วย<br>อย่างยิ่ง</div></div>
+    </div>
+    <div class="note-box">💡 <strong>วิธีใช้:</strong> กดปุ่มที่ตรงกับความรู้สึกของคุณมากที่สุด ปุ่มจะเปลี่ยนเป็นสีเขียวเมื่อเลือกแล้ว</div>
+  </div>
+
+  <div id="quiz-section">
+    <div id="all-questions"></div>
+    <div id="err-msg"></div>
+    <div class="submit-wrap">
+      <button class="btn-submit" onclick="submitGM()">🌱  ดูผลประเมิน Growth Mindset</button>
+      <p class="counter-note" id="counter-note">ตอบไปแล้ว 0 / 15 ข้อ</p>
+    </div>
+  </div>
+
+  <!-- RESULT -->
+  <div id="result-section">
+    <div class="result-card">
+      <div class="result-title">🌱  ผลการประเมิน Growth Mindset</div>
+      <div class="result-sub">Growth Mindset Self-Assessment Results</div>
+
+      <div class="gauge-wrap">
+        <div><span class="gauge-score" id="res-total">0</span><span class="gauge-denom"> / 45</span></div>
+        <div style="font-size:.9rem;color:#78909C;margin-top:4px;">คะแนนรวม Growth Mindset</div>
+        <div><span class="gauge-band" id="res-band"></span></div>
+      </div>
+
+      <div class="score-bar-wrap">
+        <div class="score-bar-fill" id="score-bar" style="background:var(--teal);"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;font-size:.75rem;color:#90A4AE;margin-bottom:20px;">
+        <span>0 — Fixed Mindset</span><span>45 — Growth Mindset</span>
+      </div>
+
+      <h3 style="color:var(--teal);font-size:.97rem;margin-bottom:12px;">📐  คะแนนรายด้าน</h3>
+      <div class="dim-block" id="dim-block"></div>
+    </div>
+
+    <div class="result-card">
+      <h3 style="color:var(--teal);margin-bottom:16px;font-size:1rem;">💡  การแปลผลและคำแนะนำ</h3>
+      <div id="interp-block"></div>
+    </div>
+
+    <div class="result-card" style="background:#F8FAFF;">
+      <h3 style="color:var(--teal);margin-bottom:12px;font-size:1rem;">📌  เกณฑ์การแปลผลคะแนนรวม (45 คะแนน)</h3>
+      <table class="criteria-table">
+        <tr style="background:var(--teal);color:#fff;">
+          <td style="border-radius:6px 0 0 0;padding:9px 12px;font-weight:700;">ช่วงคะแนน</td>
+          <td style="padding:9px 12px;font-weight:700;">ระดับ Mindset</td>
+          <td style="border-radius:0 6px 0 0;padding:9px 12px;font-weight:700;">ความหมาย</td>
+        </tr>
+        <tr style="background:#E8F5E9;">
+          <td style="font-weight:700;color:#1B5E20;">37–45</td>
+          <td style="font-weight:700;color:#1B5E20;">🌳  Growth Mindset สูง</td>
+          <td>เชื่อมั่นในศักยภาพของตนเอง กล้าเผชิญความท้าทาย และเรียนรู้จากความผิดพลาด</td>
+        </tr>
+        <tr style="background:#E3F2FD;">
+          <td style="font-weight:700;color:#0C447C;">28–36</td>
+          <td style="font-weight:700;color:#0C447C;">🌿  Growth Mindset ปานกลาง</td>
+          <td>มีแนวโน้ม Growth Mindset แต่ยังมีความคิดแบบ Fixed Mindset ในบางสถานการณ์</td>
+        </tr>
+        <tr style="background:#FFF8E1;">
+          <td style="font-weight:700;color:#633806;">19–27</td>
+          <td style="font-weight:700;color:#633806;">🌱  Mindset กำลังพัฒนา</td>
+          <td>ยังอยู่ระหว่างการเปลี่ยนแปลง ต้องการการพัฒนาทัศนคติเพิ่มเติม</td>
+        </tr>
+        <tr style="background:#FFEBEE;">
+          <td style="font-weight:700;color:#B71C1C;">0–18</td>
+          <td style="font-weight:700;color:#B71C1C;">🪨  Fixed Mindset</td>
+          <td>มีความเชื่อว่าความสามารถเป็นสิ่งตายตัว ควรเริ่มพัฒนาทัศนคติใหม่</td>
+        </tr>
+      </table>
+    </div>
+
+    <div style="text-align:center;margin-top:10px;">
+      <button class="btn-retake" onclick="retake()">🔄  ทำแบบประเมินใหม่</button>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <p>อ.มนตรี อชรายุวัฒนา  ·  The Bridge Training & Consulting  ·  www.thebridge.co.th</p>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+// QUESTIONS (15 ข้อ จากต้นฉบับ)
+// ═══════════════════════════════════════════════
+const QUESTIONS = [
+  { no:1,  text:"คุณเชื่อว่าคนเราสามารถเปลี่ยนแปลงหรือปรับปรุงความฉลาดของตัวเองได้", dim:"belief" },
+  { no:2,  text:"การเปลี่ยนแปลงและปรับปรุงความฉลาดต้องใช้ความพยายาม ความมุ่งมั่น และความตั้งใจ", dim:"belief" },
+  { no:3,  text:"โดยปรกติแล้วคนฉลาดจำเป็นที่จะต้องทำงานหนักหรือใช้ความพยายามเพื่อทำให้ตัวเองประสบความสำเร็จ", dim:"effort" },
+  { no:4,  text:"ถึงแม้ว่าฉันจะรู้สึกแย่และรู้สึกว่าหมดกำลังใจบ้างเมื่อตัวเองทำอะไรผิดพลาด แต่ฉันยังสามารถก้าวต่อไปได้อย่างรวดเร็ว", dim:"resilience" },
+  { no:5,  text:"ฉันมองว่าความผิดพลาดก็คือสิ่งมีค่าอย่างหนึ่งที่จะช่วยเพิ่มโอกาสในการเรียนรู้สิ่งใหม่ๆ และการพัฒนาตัวเอง", dim:"learning" },
+  { no:6,  text:"ฉันรู้สึกไม่ค่อยเป็นกังวลเมื่อต้องเจอกับความท้าทายหรือต้องลองทำสิ่งอะไรใหม่ๆ ฉันก็เลยพยายามทำสิ่งนั้นให้สำเร็จ", dim:"challenge" },
+  { no:7,  text:"ฉันคิดว่ามีคนจำนวนมากที่มีความสามารถหรือเป็นพวกดาวเด่น และคนเหล่านี้ก็มักจะพัฒนาตัวเองอยู่ตลอดเวลา", dim:"belief" },
+  { no:8,  text:"ฉันคิดว่ายิ่งคนเราทำงานหนักมากเท่าไหร่ เราก็จะยิ่งมีทักษะเพิ่มขึ้นมากเท่านั้น", dim:"effort" },
+  { no:9,  text:"ฉันแทบไม่รู้สึกหมดกำลังใจหรือรู้สึกโกรธที่มีคนบางคนมาแสดงความคิดเห็นในเชิงสร้างสรรค์เกี่ยวกับผลการทำงานของตัวเอง", dim:"feedback" },
+  { no:10, text:"ฉันรู้สึกขอบคุณที่มีคนมาแสดงความคิดเห็นเกี่ยวกับเรื่องการทำงานของฉัน เนื่องจากมันจะช่วยปรับปรุงการทำงานให้ดีขึ้นได้", dim:"feedback" },
+  { no:11, text:"ฉันคิดว่าคนเราสามารถเปลี่ยนพฤติกรรมและอุปนิสัยของตัวเองได้ หากเรามีความตั้งใจและพยายามมากพอ", dim:"belief" },
+  { no:12, text:"การเรียนรู้เป็นสิ่งที่คนเราสามารถทำได้ตลอดชีวิต และฉันก็รู้สึกสนุกกับการเรียนรู้สิ่งใหม่ๆ อยู่ตลอดเวลา", dim:"learning" },
+  { no:13, text:"ฉันสนุกกับการเรียนรู้สิ่งใหม่ๆ และยังกล้าเผชิญกับความท้าทายต่างๆ ที่เข้ามาในชีวิต", dim:"challenge" },
+  { no:14, text:"ในกรณีที่ฉันได้ลองพยายามทำอะไรบางอย่างหลายๆ ครั้งแล้วรู้สึกว่ามันยังทำได้ไม่ดีพอ ฉันก็จะพยายามหาทางแก้ปัญหาและทำมันให้สำเร็จให้ได้", dim:"resilience" },
+  { no:15, text:"ถ้าฉันรู้สึกว่าตัวเองไม่เก่งเรื่องอะไร ฉันก็จะฝึกฝนเรื่องนั้นอย่างต่อเนื่อง และเชื่อว่าแค่เพียงความคืบหน้าเล็กๆ น้อยๆ ก็สามารถสร้างความแตกต่างให้กับชีวิตตัวเองได้แล้ว", dim:"effort" },
+];
+
+const DIMS = {
+  belief:    { name:"ความเชื่อในศักยภาพ (Belief in Growth)", qs:[1,2,7,11],   max:12,
+               desc:"เชื่อว่าความสามารถและสติปัญญาสามารถพัฒนาได้ด้วยความพยายาม",
+               low:"ลองเปิดใจรับแนวคิดว่าสมองสามารถพัฒนาได้ตลอดชีวิต ลองศึกษา Neuroplasticity",
+               high:"คุณมีความเชื่อมั่นว่าตัวเองสามารถพัฒนาได้ ซึ่งเป็นรากฐานสำคัญของ Growth Mindset" },
+  effort:    { name:"ความมุ่งมั่นและความพยายาม (Effort & Persistence)", qs:[3,8,15], max:9,
+               desc:"มองความพยายามว่าเป็นกุญแจสู่ความสำเร็จ ไม่ใช่สัญญาณของความอ่อนแอ",
+               low:"ฝึกมองความพยายามเป็นสิ่งที่มีคุณค่า ไม่ใช่ภาระ — ทุกชั่วโมงที่ฝึกฝนสร้างทักษะให้คุณ",
+               high:"คุณมองความพยายามว่าเป็นเส้นทางสู่ความเชี่ยวชาญ ไม่ใช่ข้อพิสูจน์ความสามารถ" },
+  resilience:{ name:"ความยืดหยุ่นทางใจ (Resilience)", qs:[4,14],           max:6,
+               desc:"สามารถฟื้นตัวจากความล้มเหลวและอุปสรรคได้อย่างรวดเร็ว",
+               low:"ฝึกมองความล้มเหลวเป็น 'ข้อมูล' ไม่ใช่ 'ตราประทับ' — ทุกความผิดพลาดสอนบางอย่างเสมอ",
+               high:"คุณฟื้นตัวจากอุปสรรคได้ดี และไม่ปล่อยให้ความล้มเหลวหยุดคุณไว้" },
+  learning:  { name:"ความรักในการเรียนรู้ (Love of Learning)", qs:[5,12],    max:6,
+               desc:"มองความผิดพลาดเป็นโอกาสเรียนรู้ และสนุกกับการพัฒนาตนเอง",
+               low:"ลองตั้งคำถามว่า 'ฉันเรียนรู้อะไรจากสิ่งนี้?' แทนที่จะถามว่า 'ฉันทำพลาดอะไร?'",
+               high:"คุณมองการเรียนรู้เป็นความสุข ไม่ใช่ภาระ และมองความผิดพลาดเป็นครูที่ดีที่สุด" },
+  challenge: { name:"การเผชิญความท้าทาย (Embracing Challenges)", qs:[6,13], max:6,
+               desc:"กล้าออกจาก Comfort Zone และมองความท้าทายเป็นโอกาสเติบโต",
+               low:"เริ่มด้วยความท้าทายเล็กๆ ที่ทำได้ทุกวัน — ความกล้าสร้างได้จากความสำเร็จเล็กๆ สะสม",
+               high:"คุณมองความท้าทายด้วยความตื่นเต้น ไม่ใช่ความกลัว และพร้อมเผชิญสิ่งใหม่เสมอ" },
+  feedback:  { name:"การรับ Feedback (Openness to Feedback)", qs:[9,10],     max:6,
+               desc:"เปิดรับและขอบคุณความคิดเห็น มองว่าช่วยพัฒนาตนเองได้",
+               low:"ฝึกมอง Feedback ว่าเป็นของขวัญ ไม่ใช่การโจมตี — คนที่ให้ Feedback อยากเห็นคุณดีขึ้น",
+               high:"คุณเปิดรับ Feedback ได้ดีและมองเป็นเครื่องมือพัฒนา ซึ่งหายากมากในโลกการทำงาน" },
+};
+
+const OPTS = [
+  {val:0, label:"ไม่เห็นด้วยอย่างยิ่ง"},
+  {val:1, label:"ไม่เห็นด้วย"},
+  {val:2, label:"เห็นด้วย"},
+  {val:3, label:"เห็นด้วยอย่างยิ่ง"},
+];
+
+const scores = {};
+
+// ── BUILD ────────────────────────────────────────────────────────────────────
+function buildQuestions() {
+  const container = document.getElementById('all-questions');
+  QUESTIONS.forEach(q => {
+    const card = document.createElement('div');
+    card.className = 'q-card';
+    card.id = 'q' + q.no;
+    const btns = OPTS.map(o =>
+      `<button class="rating-btn" id="btn-${q.no}-${o.val}" onclick="setScore(${q.no},'${q.dim}',${o.val})">
+         <span class="rb-num">${o.val}</span>${o.label}
+       </button>`
+    ).join('');
+    card.innerHTML = `
+      <div class="q-header">
+        <div class="q-num">${q.no}</div>
+        <div class="q-text">${q.text}</div>
+      </div>
+      <div class="rating-row">${btns}</div>`;
+    container.appendChild(card);
+  });
+}
+
+function setScore(no, dim, val) {
+  scores[no] = val;
+  for (let v=0;v<=3;v++) {
+    const btn = document.getElementById(`btn-${no}-${v}`);
+    if (btn) btn.classList.toggle('selected', v===val);
+  }
+  const card = document.getElementById('q'+no);
+  if(card){ card.classList.add('answered'); card.classList.remove('error'); }
+  const done = Object.keys(scores).length;
+  document.getElementById('counter-note').textContent = `ตอบไปแล้ว ${done} / 15 ข้อ`;
+  document.getElementById('pbar').style.width = Math.round(done/15*100)+'%';
+  document.getElementById('ptext').textContent = `ตอบไปแล้ว ${done} / 15 ข้อ`;
+}
+
+// ── SUBMIT ───────────────────────────────────────────────────────────────────
+function submitGM() {
+  let firstErr = -1;
+  QUESTIONS.forEach(q => {
+    const card = document.getElementById('q'+q.no);
+    if (scores[q.no] === undefined) {
+      card.classList.add('error');
+      if (firstErr<0) firstErr = q.no;
+    } else { card.classList.remove('error'); }
+  });
+  const errEl = document.getElementById('err-msg');
+  if (Object.keys(scores).length < 15) {
+    errEl.style.display='block';
+    errEl.textContent='⚠️  กรุณาตอบให้ครบทุกข้อ (ข้อที่มีกรอบสีแดงคือข้อที่ยังไม่ได้ตอบ)';
+    if(firstErr>0) document.getElementById('q'+firstErr).scrollIntoView({behavior:'smooth',block:'center'});
+    return;
+  }
+  errEl.style.display='none';
+  showResults();
+}
+
+// ── RESULTS ──────────────────────────────────────────────────────────────────
+function showResults() {
+  const total = Object.values(scores).reduce((a,b)=>a+b,0);
+  document.getElementById('quiz-section').style.display='none';
+  document.getElementById('result-section').style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+
+  document.getElementById('res-total').textContent = total;
+
+  const pct = Math.round((total/45)*100);
+  setTimeout(()=>{ document.getElementById('score-bar').style.width = pct+'%'; },100);
+
+  const band = total>=37 ? {txt:'🌳  Growth Mindset สูง',bg:'#E8F5E9',col:'#1B5E20'}
+             : total>=28 ? {txt:'🌿  Growth Mindset ปานกลาง',bg:'#E3F2FD',col:'#0C447C'}
+             : total>=19 ? {txt:'🌱  Mindset กำลังพัฒนา',bg:'#FFF8E1',col:'#633806'}
+             :              {txt:'🪨  Fixed Mindset',bg:'#FFEBEE',col:'#B71C1C'};
+  const bandEl = document.getElementById('res-band');
+  bandEl.textContent = band.txt;
+  bandEl.style.background = band.bg;
+  bandEl.style.color = band.col;
+
+  // Dim scores
+  const dimScores = {};
+  Object.keys(DIMS).forEach(d => {
+    dimScores[d] = DIMS[d].qs.reduce((sum,no) => sum+(scores[no]||0), 0);
+  });
+
+  // Dim bars
+  const dimBlock = document.getElementById('dim-block');
+  dimBlock.innerHTML = '';
+  Object.keys(DIMS).forEach(d => {
+    const info = DIMS[d];
+    const sc   = dimScores[d];
+    const pct  = Math.round((sc/info.max)*100);
+    const lv   = pct>=80?'สูง':pct>=60?'ปานกลาง':'ควรพัฒนา';
+    const row  = document.createElement('div');
+    row.className = 'dim-row';
+    row.innerHTML = `
+      <div class="dim-header">
+        <span class="dim-name">${info.name}</span>
+        <span class="dim-score">${sc}/${info.max} — ${lv}</span>
+      </div>
+      <div class="dim-bar-bg"><div class="dim-bar-fill" id="db-${d}"></div></div>
+      <div class="dim-desc">${pct>=60 ? '✅ '+info.high : '🔧 '+info.low}</div>`;
+    dimBlock.appendChild(row);
+    setTimeout(()=>{ document.getElementById('db-'+d).style.width = pct+'%'; },150);
+  });
+
+  // Interpretation
+  const interpEl = document.getElementById('interp-block');
+  let interpHTML = '';
+  if (total >= 37) {
+    interpHTML = `<div class="interp-box" style="background:#E8F5E9;border-color:#2E7D32;">
+      <h4 style="color:#1B5E20;">🌳  Growth Mindset สูง (${total}/45 คะแนน)</h4>
+      <p>คุณมี <strong>Growth Mindset</strong> ในระดับสูง คุณเชื่อมั่นว่าความสามารถและสติปัญญาสามารถพัฒนาได้ผ่านความพยายาม มองความท้าทายและความผิดพลาดเป็นโอกาสเรียนรู้ และเปิดรับ Feedback เพื่อพัฒนาตัวเอง</p>
+      <p><strong>จุดแข็งของคุณ:</strong></p>
+      <ul>
+        <li>เชื่อในศักยภาพของตัวเองและคนอื่น</li>
+        <li>ไม่กลัวความล้มเหลว มองเป็นบทเรียน</li>
+        <li>กล้าเผชิญสิ่งใหม่และความท้าทาย</li>
+        <li>เป็นแรงบันดาลใจให้คนรอบข้างได้</li>
+      </ul>
+      <p style="margin-top:10px;"><strong>สิ่งที่ควรรักษา:</strong> แบ่งปัน Mindset นี้ให้คนรอบข้าง และเป็นต้นแบบ Growth Mindset ในทีมงาน</p>
+    </div>`;
+  } else if (total >= 28) {
+    interpHTML = `<div class="interp-box" style="background:#E3F2FD;border-color:#1565C0;">
+      <h4 style="color:#0C447C;">🌿  Growth Mindset ปานกลาง (${total}/45 คะแนน)</h4>
+      <p>คุณมีแนวโน้ม <strong>Growth Mindset</strong> แต่ยังมีความคิดแบบ Fixed Mindset อยู่บ้างในบางสถานการณ์ คุณรู้ว่าการพัฒนาตัวเองเป็นสิ่งดี แต่บางครั้งอาจหลีกเลี่ยงความท้าทายหรือท้อแท้กับ Feedback</p>
+      <p><strong>แนวทางพัฒนา:</strong></p>
+      <ul>
+        <li>สังเกตเมื่อตัวเองคิดว่า "ฉันทำไม่ได้" แล้วเปลี่ยนเป็น "ฉันยังทำไม่ได้… ยัง"</li>
+        <li>เพิ่มคำว่า <strong>"ยัง" (Yet)</strong> ต่อท้ายทุกครั้งที่รู้สึกว่าตัวเองไม่เก่งพอ</li>
+        <li>เฉลิมฉลองความพยายาม ไม่ใช่แค่ผลลัพธ์</li>
+        <li>หาคนที่มี Growth Mindset เป็น Role Model</li>
+      </ul>
+    </div>`;
+  } else if (total >= 19) {
+    interpHTML = `<div class="interp-box" style="background:#FFF8E1;border-color:#E65100;">
+      <h4 style="color:#633806;">🌱  Mindset กำลังพัฒนา (${total}/45 คะแนน)</h4>
+      <p>คุณอยู่ในช่วงเปลี่ยนผ่านระหว่าง Fixed และ Growth Mindset ซึ่งเป็นเรื่องปกติมาก การรับรู้ตัวเองได้แบบนี้คือก้าวแรกที่สำคัญที่สุดในการพัฒนา</p>
+      <p><strong>แนวทางพัฒนา:</strong></p>
+      <ul>
+        <li>เรียนรู้เรื่อง Neuroplasticity — สมองพัฒนาได้จริงๆ ผ่านการฝึกฝน</li>
+        <li>เริ่มจากเป้าหมายเล็กๆ ที่ท้าทายตัวเองนิดหน่อย แล้วสร้างความสำเร็จสะสม</li>
+        <li>เปลี่ยน "ฉันล้มเหลว" เป็น "ฉันเรียนรู้ว่าวิธีนี้ไม่ได้ผล"</li>
+        <li>อ่านหนังสือ Mindset โดย Carol Dweck เพื่อเข้าใจ Growth Mindset อย่างลึกซึ้ง</li>
+      </ul>
+    </div>`;
+  } else {
+    interpHTML = `<div class="interp-box" style="background:#FFEBEE;border-color:#C62828;">
+      <h4 style="color:#B71C1C;">🪨  Fixed Mindset (${total}/45 คะแนน)</h4>
+      <p>คุณมีความเชื่อแบบ <strong>Fixed Mindset</strong> ในระดับสูง ซึ่งอาจทำให้คุณหลีกเลี่ยงความท้าทาย กลัวการถูกตัดสิน และมองความผิดพลาดเป็นสัญญาณของความล้มเหลว แต่ข่าวดีคือ Mindset เปลี่ยนแปลงได้!</p>
+      <p><strong>จุดเริ่มต้นที่แนะนำ:</strong></p>
+      <ul>
+        <li>ยอมรับว่าตัวเองมี Fixed Mindset — การรับรู้คือก้าวแรก</li>
+        <li>เริ่มสังเกตเสียงในหัวที่บอกว่า "ฉันทำไม่ได้" แล้วตั้งคำถามกับมัน</li>
+        <li>เพิ่มคำว่า "ยัง" ต่อท้ายทุกครั้ง: "ฉันทำไม่ได้... ยัง"</li>
+        <li>ลองทำสิ่งที่ยากเพียงเล็กน้อยทุกวัน เพื่อสร้างประสบการณ์ว่าตัวเองพัฒนาได้</li>
+        <li>พูดคุยกับวิทยากรหรือ Coach เพื่อรับการสนับสนุนในการพัฒนา Mindset</li>
+      </ul>
+    </div>`;
+  }
+  interpEl.innerHTML = interpHTML;
+}
+
+function retake() {
+  QUESTIONS.forEach(q => {
+    delete scores[q.no];
+    const card = document.getElementById('q'+q.no);
+    if(card) card.classList.remove('answered','error');
+    for(let v=0;v<=3;v++){
+      const btn=document.getElementById(`btn-${q.no}-${v}`);
+      if(btn) btn.classList.remove('selected');
+    }
+  });
+  document.getElementById('counter-note').textContent='ตอบไปแล้ว 0 / 15 ข้อ';
+  document.getElementById('pbar').style.width='0%';
+  document.getElementById('ptext').textContent='เลือกคำตอบที่ตรงกับตัวคุณมากที่สุด แล้วกด "ดูผลประเมิน"';
+  document.getElementById('quiz-section').style.display='block';
+  document.getElementById('result-section').style.display='none';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+buildQuestions();
+</script>
+</body>
+</html>
