@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>แบบประเมินการสื่อสารแบบ Proactive | The Bridge</title>
+<style>
+  :root {
+    --navy:#1A237E; --orange:#E65100; --orange-lt:#FFF3E0; --orange-md:#FFE0B2;
+    --d1:#1565C0; --d1-lt:#E3F2FD;
+    --d2:#6A1B9A; --d2-lt:#F3E5F5;
+    --d3:#00695C; --d3-lt:#E0F2F1;
+    --d4:#C62828; --d4-lt:#FFEBEE;
+    --d5:#2E7D32; --d5-lt:#E8F5E9;
+    --d6:#E65100; --d6-lt:#FFF3E0;
+    --gray:#37474F; --light:#ECEFF1; --white:#FFFFFF;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Sarabun','TH Sarabun New',sans-serif;background:#F0F4F8;color:var(--gray);font-size:16px;}
+
+  .header{background:linear-gradient(135deg,#E65100,#BF360C);color:#fff;text-align:center;padding:26px 16px 20px;position:sticky;top:0;z-index:100;box-shadow:0 4px 16px rgba(0,0,0,.3);}
+  .header h1{font-size:1.45rem;font-weight:800;}
+  .header p{font-size:.88rem;opacity:.85;margin-top:4px;}
+  .prog-wrap{background:rgba(255,255,255,.2);border-radius:8px;height:7px;margin:12px auto 0;max-width:460px;}
+  .prog-bar{background:#FFD54F;border-radius:8px;height:7px;width:0%;transition:width .4s;}
+  .prog-text{font-size:.78rem;opacity:.78;margin-top:4px;}
+
+  .container{max-width:780px;margin:0 auto;padding:18px 14px 60px;}
+
+  .intro{background:#fff;border-radius:14px;padding:22px 26px;box-shadow:0 2px 10px rgba(0,0,0,.08);margin-bottom:20px;}
+  .intro h2{color:var(--orange);font-size:1.1rem;margin-bottom:10px;}
+  .scale-row{display:flex;justify-content:space-between;align-items:center;background:#FFF8F0;border-radius:10px;padding:12px 16px;margin:14px 0 10px;gap:4px;}
+  .scale-item{text-align:center;flex:1;}
+  .scale-num{font-size:1.25rem;font-weight:800;color:var(--orange);}
+  .scale-txt{font-size:.75rem;color:#78909C;margin-top:2px;line-height:1.3;}
+  .note-box{background:var(--orange-lt);border-left:4px solid var(--orange);border-radius:8px;padding:11px 16px;font-size:.9rem;}
+
+  .sec-head{border-radius:10px;padding:11px 18px;margin:22px 0 10px;display:flex;align-items:center;gap:10px;}
+  .sec-head h3{font-size:.97rem;font-weight:700;color:#fff;margin:0;}
+  .sec-num{background:rgba(255,255,255,.25);border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:.85rem;font-weight:800;color:#fff;flex-shrink:0;}
+
+  .q-card{background:#fff;border-radius:12px;padding:14px 16px;margin-bottom:9px;box-shadow:0 1px 5px rgba(0,0,0,.07);border:2px solid transparent;transition:border-color .2s;}
+  .q-card.answered{border-color:#FFCC80;}
+  .q-card.error{border-color:#E53935!important;background:#FFF0F0!important;animation:shake .3s;}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+
+  .q-header{display:flex;align-items:flex-start;gap:11px;margin-bottom:12px;}
+  .q-num{flex-shrink:0;width:28px;height:28px;border-radius:50%;background:var(--orange-lt);display:flex;align-items:center;justify-content:center;font-size:.82rem;font-weight:700;color:var(--orange);}
+  .q-text{font-size:.96rem;line-height:1.65;flex:1;padding-top:3px;}
+
+  .rating-row{display:flex;gap:6px;justify-content:center;}
+  .rating-btn{flex:1;max-width:52px;height:40px;border-radius:8px;border:2px solid #CFD8DC;background:#FFF8F0;font-size:1rem;font-weight:700;color:var(--orange);cursor:pointer;transition:all .15s;font-family:inherit;}
+  .rating-btn:hover{border-color:var(--orange);background:var(--orange-lt);}
+  .rating-btn.selected{background:var(--orange);border-color:var(--orange);color:#fff;}
+  .rating-labels{display:flex;justify-content:space-between;margin-top:5px;padding:0 2px;}
+  .rating-labels span{font-size:.72rem;color:#90A4AE;}
+
+  .submit-wrap{text-align:center;margin:26px 0 14px;}
+  .btn-submit{background:var(--orange);color:#fff;border:none;border-radius:50px;padding:15px 48px;font-size:1.1rem;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(230,81,0,.4);transition:transform .15s;font-family:inherit;}
+  .btn-submit:hover{transform:translateY(-2px);}
+  .counter-note{font-size:.85rem;color:#78909C;margin-top:8px;}
+  #err-msg{display:none;background:#FFEBEE;color:#C62828;border-radius:10px;padding:12px 16px;margin:0 0 12px;font-size:.92rem;font-weight:600;text-align:center;}
+
+  #result-section{display:none;}
+  .result-card{background:#fff;border-radius:18px;padding:26px 22px;box-shadow:0 4px 18px rgba(0,0,0,.1);margin-bottom:16px;}
+  .result-title{font-size:1.3rem;font-weight:800;color:var(--orange);text-align:center;margin-bottom:4px;}
+  .result-sub{text-align:center;color:#78909C;font-size:.87rem;margin-bottom:20px;}
+
+  .total-wrap{text-align:center;margin-bottom:20px;}
+  .total-num{font-size:3.8rem;font-weight:800;color:var(--orange);line-height:1;}
+  .total-denom{font-size:1.1rem;color:#90A4AE;}
+  .total-band{display:inline-block;padding:5px 22px;border-radius:50px;font-size:.95rem;font-weight:700;margin-top:10px;}
+
+  .score-bar-wrap{background:var(--light);border-radius:12px;height:20px;overflow:hidden;margin:12px 0 5px;}
+  .score-bar-fill{height:100%;border-radius:12px;background:var(--orange);transition:width 1.2s cubic-bezier(.4,0,.2,1);width:0%;}
+
+  .dim-row{margin-bottom:14px;}
+  .dim-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;}
+  .dim-name{font-size:.9rem;font-weight:700;}
+  .dim-score{font-size:.88rem;font-weight:700;}
+  .dim-bg{background:var(--light);border-radius:8px;height:24px;overflow:hidden;}
+  .dim-fill{height:100%;border-radius:8px;display:flex;align-items:center;padding-left:10px;font-size:.76rem;font-weight:700;color:#fff;transition:width 1s cubic-bezier(.4,0,.2,1);width:0%;}
+  .dim-tip{font-size:.8rem;color:#78909C;margin-top:4px;}
+
+  .interp-card{border-radius:12px;padding:18px 20px;margin-bottom:10px;border-left:5px solid;}
+  .interp-card h4{font-size:.97rem;font-weight:700;margin-bottom:8px;}
+  .interp-card ul{padding-left:16px;font-size:.88rem;line-height:1.8;color:#37474F;}
+  .interp-card p{font-size:.9rem;line-height:1.7;color:#37474F;margin-bottom:6px;}
+
+  .crit-table{width:100%;border-collapse:collapse;font-size:.86rem;}
+  .crit-table td{padding:8px 12px;border-bottom:1px solid #ECEFF1;vertical-align:top;}
+  .crit-table tr:last-child td{border-bottom:none;}
+
+  .btn-retake{background:#fff;color:var(--orange);border:2px solid var(--orange);border-radius:50px;padding:11px 30px;font-size:.95rem;font-weight:700;cursor:pointer;font-family:inherit;transition:background .2s,color .2s;}
+  .btn-retake:hover{background:var(--orange);color:#fff;}
+  .footer{text-align:center;color:#90A4AE;font-size:.8rem;padding:16px;margin-top:28px;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>⚡  แบบประเมินการสื่อสารแบบ Proactive</h1>
+  <p>Proactive Communication Self-Assessment  ·  The Bridge Training & Consulting</p>
+  <div class="prog-wrap"><div class="prog-bar" id="pbar"></div></div>
+  <p class="prog-text" id="ptext">ให้คะแนน 1–5 ในแต่ละข้อ แล้วกด "ดูผลประเมิน"</p>
+</div>
+
+<div class="container">
+  <div class="intro">
+    <h2>📋  คำชี้แจง</h2>
+    <p>กรุณาให้คะแนนแต่ละข้อความตามความเป็นจริงของตัวคุณในการทำงานและการสื่อสาร</p>
+    <div class="scale-row">
+      <div class="scale-item"><div class="scale-num">1</div><div class="scale-txt">ไม่เคย<br>เลย</div></div>
+      <div class="scale-item"><div class="scale-num">2</div><div class="scale-txt">นานๆ<br>ครั้ง</div></div>
+      <div class="scale-item"><div class="scale-num">3</div><div class="scale-txt">บางครั้ง</div></div>
+      <div class="scale-item"><div class="scale-num">4</div><div class="scale-txt">บ่อยครั้ง</div></div>
+      <div class="scale-item"><div class="scale-num">5</div><div class="scale-txt">เป็นประจำ<br>เสมอ</div></div>
+    </div>
+    <div class="note-box">💡 <strong>วิธีใช้:</strong> กดปุ่ม 1–5 ใต้แต่ละข้อ ตอบตามพฤติกรรมจริงในการทำงาน ไม่มีถูกหรือผิด</div>
+  </div>
+
+  <div id="quiz-section">
+
+    <div class="sec-head" style="background:var(--d1);"><div class="sec-num">1</div><h3>การสื่อสารตรงไปตรงมา (Direct Communication)</h3></div>
+    <div id="sec-d1"></div>
+
+    <div class="sec-head" style="background:var(--d2);"><div class="sec-num">2</div><h3>การริเริ่มสื่อสารก่อน (Communication Initiative)</h3></div>
+    <div id="sec-d2"></div>
+
+    <div class="sec-head" style="background:var(--d3);"><div class="sec-num">3</div><h3>การแจ้งข้อมูลล่วงหน้า (Proactive Information Sharing)</h3></div>
+    <div id="sec-d3"></div>
+
+    <div class="sec-head" style="background:var(--d4);"><div class="sec-num">4</div><h3>ความชัดเจนในอารมณ์และความรู้สึก (Emotional Clarity)</h3></div>
+    <div id="sec-d4"></div>
+
+    <div class="sec-head" style="background:var(--d5);"><div class="sec-num">5</div><h3>การวางแผนและคาดการณ์ล่วงหน้า (Planning Ahead)</h3></div>
+    <div id="sec-d5"></div>
+
+    <div class="sec-head" style="background:var(--d6);"><div class="sec-num">6</div><h3>การรับผิดชอบและเปิดรับการสื่อสาร (Accountability & Openness)</h3></div>
+    <div id="sec-d6"></div>
+
+    <div id="err-msg"></div>
+    <div class="submit-wrap">
+      <button class="btn-submit" onclick="submitPC()">⚡  ดูผลประเมิน</button>
+      <p class="counter-note" id="counter-note">ตอบไปแล้ว 0 / 24 ข้อ</p>
+    </div>
+  </div>
+
+  <div id="result-section">
+    <div class="result-card">
+      <div class="result-title">⚡  ผลการประเมินการสื่อสารแบบ Proactive</div>
+      <div class="result-sub">Proactive Communication Self-Assessment Results</div>
+      <div class="total-wrap">
+        <div><span class="total-num" id="res-total">0</span><span class="total-denom"> / 120</span></div>
+        <div style="font-size:.88rem;color:#78909C;margin-top:4px;">คะแนนรวม</div>
+        <div><span class="total-band" id="res-band"></span></div>
+      </div>
+      <div class="score-bar-wrap"><div class="score-bar-fill" id="score-bar"></div></div>
+      <div style="display:flex;justify-content:space-between;font-size:.73rem;color:#90A4AE;margin-bottom:20px;">
+        <span>0 — Reactive</span><span>120 — Fully Proactive</span>
+      </div>
+      <h3 style="color:var(--orange);font-size:.96rem;margin-bottom:12px;">📐  คะแนนรายด้าน</h3>
+      <div id="dim-block"></div>
+    </div>
+
+    <div class="result-card">
+      <h3 style="color:var(--orange);margin-bottom:14px;font-size:1rem;">💡  การแปลผลและคำแนะนำ</h3>
+      <div id="interp-block"></div>
+    </div>
+
+    <div class="result-card" style="background:#FFF8F0;">
+      <h3 style="color:var(--orange);margin-bottom:12px;font-size:1rem;">📌  เกณฑ์การแปลผลคะแนนรวม (120 คะแนน)</h3>
+      <table class="crit-table">
+        <tr style="background:var(--orange);color:#fff;">
+          <td style="padding:8px 12px;border-radius:6px 0 0 0;font-weight:700;">ช่วงคะแนน</td>
+          <td style="padding:8px 12px;font-weight:700;">ระดับ</td>
+          <td style="padding:8px 12px;border-radius:0 6px 0 0;font-weight:700;">ความหมาย</td>
+        </tr>
+        <tr style="background:#E8F5E9;">
+          <td style="font-weight:700;color:#1B5E20;">97–120</td>
+          <td style="font-weight:700;color:#1B5E20;">⚡⚡  Fully Proactive</td>
+          <td>สื่อสารเชิงรุกอย่างสม่ำเสมอ เป็นต้นแบบให้คนอื่นในทีม</td>
+        </tr>
+        <tr style="background:#E3F2FD;">
+          <td style="font-weight:700;color:#0C447C;">73–96</td>
+          <td style="font-weight:700;color:#0C447C;">⚡  Proactive</td>
+          <td>มีพฤติกรรมสื่อสารเชิงรุกดี ยังมีบางสถานการณ์ที่รอคนอื่นก่อน</td>
+        </tr>
+        <tr style="background:#FFF8E1;">
+          <td style="font-weight:700;color:#633806;">49–72</td>
+          <td style="font-weight:700;color:#633806;">🔄  กำลังพัฒนา</td>
+          <td>มีทักษะ Proactive บ้าง แต่ยังมีแนวโน้ม Reactive ในหลายสถานการณ์</td>
+        </tr>
+        <tr style="background:#FFEBEE;">
+          <td style="font-weight:700;color:#B71C1C;">24–48</td>
+          <td style="font-weight:700;color:#B71C1C;">⏳  Reactive</td>
+          <td>มักรอให้สถานการณ์เกิดก่อนแล้วค่อยตอบสนอง ควรพัฒนาเร่งด่วน</td>
+        </tr>
+      </table>
+    </div>
+
+    <div style="text-align:center;margin-top:10px;">
+      <button class="btn-retake" onclick="retake()">🔄  ทำแบบประเมินใหม่</button>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <p>อ.มนตรี อชรายุวัฒนา  ·  The Bridge Training & Consulting  ·  www.thebridge.co.th</p>
+  <p style="margin-top:3px;">หลักสูตร: Effective Communication for Results</p>
+</div>
+
+<script>
+const QUESTIONS = [
+  // D1: Direct Communication (4 ข้อ)
+  {no:1,  text:"ฉันสื่อสารความต้องการ ความคิดเห็น และความรู้สึกของตัวเองอย่างตรงไปตรงมา โดยไม่อ้อมค้อมหรือพูดอ้อมๆ", dim:"d1"},
+  {no:2,  text:"เมื่อฉันไม่เห็นด้วยกับใคร ฉันกล้าบอกความคิดเห็นของตัวเองออกไปตรงๆ โดยไม่ก้าวร้าว", dim:"d1"},
+  {no:3,  text:"ฉันพูดสิ่งที่คิดอย่างชัดเจนและกระชับ ไม่ทำให้คนอื่นต้องเดาว่าฉันต้องการอะไร", dim:"d1"},
+  {no:4,  text:"ฉันให้สิทธิ์คนอื่นในการสื่อสารกลับมาหาฉันอย่างตรงไปตรงมาเช่นกัน และรับฟังโดยไม่ตัดสิน", dim:"d1"},
+
+  // D2: Initiative (4 ข้อ)
+  {no:5,  text:"ฉันเป็นคนริเริ่มพูดคุยหรือติดต่อสื่อสารก่อน โดยไม่รอให้คนอื่นเริ่มต้น", dim:"d2"},
+  {no:6,  text:"เมื่อมีปัญหาหรือความไม่เข้าใจเกิดขึ้น ฉันจะรีบติดต่อเพื่อแก้ไขทันที ไม่ปล่อยให้สถานการณ์รุนแรงขึ้น", dim:"d2"},
+  {no:7,  text:"ฉันดึงตัวเองเข้าไปมีส่วนร่วมกับกิจกรรมและการสนทนาต่างๆ ขององค์กรอย่างกระตือรือร้น", dim:"d2"},
+  {no:8,  text:"ฉันกล้าพูดหรือนำเสนอความคิดใหม่ๆ ในที่ประชุมหรือในกลุ่มงาน แม้จะยังไม่แน่ใจ 100%", dim:"d2"},
+
+  // D3: Info Sharing (4 ข้อ)
+  {no:9,  text:"ฉันแจ้งข้อมูลที่สำคัญต่อการทำงานให้ผู้ที่เกี่ยวข้องทราบล่วงหน้า ก่อนที่จะเกิดปัญหา", dim:"d3"},
+  {no:10, text:"เมื่อฉันรู้ว่างานอาจไม่เสร็จตามกำหนด ฉันจะแจ้งให้ทีมหรือหัวหน้าทราบทันที ไม่รอให้ถึงเส้นตายก่อน", dim:"d3"},
+  {no:11, text:"ฉันแบ่งปันข้อมูลที่เป็นประโยชน์กับเพื่อนร่วมงาน แม้ว่าเขาจะไม่ได้ขอก็ตาม", dim:"d3"},
+  {no:12, text:"ฉันอัปเดตความคืบหน้าของงานให้ผู้เกี่ยวข้องทราบอย่างสม่ำเสมอ โดยไม่ต้องรอให้เขามาถามก่อน", dim:"d3"},
+
+  // D4: Emotional Clarity (4 ข้อ)
+  {no:13, text:"ฉันรับรู้และเข้าใจความรู้สึกของตัวเองได้อย่างชัดเจนในขณะที่สื่อสารกับคนอื่น", dim:"d4"},
+  {no:14, text:"ฉันสามารถแยกแยะได้ว่าเมื่อใดที่อารมณ์ของตัวเองกำลังส่งผลต่อการสื่อสาร และสามารถจัดการได้", dim:"d4"},
+  {no:15, text:"ฉันแสดงความรู้สึกของตัวเองออกมาอย่างเหมาะสม โดยไม่เก็บกดหรือระเบิดอารมณ์", dim:"d4"},
+  {no:16, text:"เมื่อฉันรู้สึกไม่พอใจหรือผิดหวัง ฉันสามารถสื่อสารความรู้สึกนั้นออกมาได้อย่างสร้างสรรค์", dim:"d4"},
+
+  // D5: Planning Ahead (4 ข้อ)
+  {no:17, text:"ฉันคิดล่วงหน้าและวางแผนการสื่อสารก่อนที่จะเข้าประชุมหรือพูดคุยกับผู้อื่นในเรื่องสำคัญ", dim:"d5"},
+  {no:18, text:"ฉันคาดการณ์ปัญหาที่อาจเกิดขึ้นและเตรียมวิธีสื่อสารเพื่อป้องกันหรือแก้ไขล่วงหน้า", dim:"d5"},
+  {no:19, text:"ก่อนส่งงานหรือรายงาน ฉันตรวจสอบว่าข้อมูลครบถ้วนและชัดเจน เพื่อลดการสื่อสารซ้ำ", dim:"d5"},
+  {no:20, text:"ฉันกำหนดเวลาและช่องทางการสื่อสารที่เหมาะสมสำหรับแต่ละสถานการณ์อย่างมีแบบแผน", dim:"d5"},
+
+  // D6: Accountability & Openness (4 ข้อ)
+  {no:21, text:"เมื่อฉันพูดอะไรออกไปแล้วทำให้คนอื่นเข้าใจผิด ฉันรับผิดชอบและอธิบายให้ชัดเจนทันที", dim:"d6"},
+  {no:22, text:"ฉันเปิดรับ Feedback เกี่ยวกับวิธีการสื่อสารของตัวเองและนำไปปรับปรุง", dim:"d6"},
+  {no:23, text:"ฉันแสดงความรับผิดชอบต่อคำพูดและการกระทำของตัวเอง ไม่โยนความผิดให้คนอื่น", dim:"d6"},
+  {no:24, text:"ฉันสร้างบรรยากาศให้คนอื่นกล้าสื่อสารกลับมาหาฉันอย่างตรงไปตรงมา โดยไม่รู้สึกกดดัน", dim:"d6"},
+];
+
+const DIMS = {
+  d1:{name:"สื่อสารตรงไปตรงมา (Direct)",       color:"var(--d1)", light:"var(--d1-lt)",
+      low:"ฝึกพูดความต้องการของตัวเองตรงๆ เริ่มจากสถานการณ์เล็กๆ และฝึกใช้ประโยค 'ฉันต้องการ...' แทนการพูดอ้อมค้อม",
+      high:"คุณสื่อสารได้ตรงและชัดเจน ทำให้คนอื่นเข้าใจความต้องการของคุณได้อย่างถูกต้อง"},
+  d2:{name:"ริเริ่มสื่อสารก่อน (Initiative)",  color:"var(--d2)", light:"var(--d2-lt)",
+      low:"ฝึกเป็นคนเริ่มต้นการสนทนาก่อน อย่ารอให้คนอื่น — ความกระตือรือร้นสร้างความประทับใจและความไว้วางใจ",
+      high:"คุณเป็นคนกระตือรือร้นในการสื่อสาร ทำให้ทีมงานรู้สึกว่าได้รับการดูแลและใส่ใจ"},
+  d3:{name:"แจ้งข้อมูลล่วงหน้า (Info Sharing)",color:"var(--d3)", light:"var(--d3-lt)",
+      low:"ฝึกนิสัยการแบ่งปันข้อมูลก่อนที่คนอื่นจะถาม — ถามตัวเองว่า 'มีใครที่ควรรู้เรื่องนี้บ้าง?'",
+      high:"คุณแบ่งปันข้อมูลได้ดีมาก ทำให้ทีมทำงานได้อย่างราบรื่นและไม่เกิดความผิดพลาดจากการขาดข้อมูล"},
+  d4:{name:"ชัดเจนในอารมณ์ (Emotional Clarity)",color:"var(--d4)", light:"var(--d4-lt)",
+      low:"ฝึกระบุอารมณ์ตัวเองก่อนสื่อสาร ใช้ประโยค 'ฉันรู้สึก...' แทนการโทษคนอื่น เพื่อสื่อสารได้ตรงและไม่ทำร้ายความสัมพันธ์",
+      high:"คุณมีความฉลาดทางอารมณ์สูง สามารถสื่อสารความรู้สึกได้อย่างเหมาะสมและสร้างสรรค์"},
+  d5:{name:"วางแผนล่วงหน้า (Planning Ahead)",   color:"var(--d5)", light:"var(--d5-lt)",
+      low:"ลองใช้เวลา 5 นาทีก่อนการประชุมหรือการสนทนาสำคัญ เพื่อคิดว่าต้องการสื่ออะไร และคาดการณ์คำถามที่อาจเกิดขึ้น",
+      high:"คุณเตรียมตัวได้ดีก่อนสื่อสาร ทำให้การสนทนามีประสิทธิภาพและลดความเข้าใจผิด"},
+  d6:{name:"รับผิดชอบ & เปิดรับ (Accountability)",color:"var(--d6)", light:"var(--d6-lt)",
+      low:"ฝึกรับผิดชอบต่อคำพูดของตัวเอง และเปิดรับ Feedback โดยมองเป็นโอกาสพัฒนา ไม่ใช่การโจมตี",
+      high:"คุณมีความรับผิดชอบสูงและเปิดรับ Feedback ได้ดี ทำให้คนรอบข้างไว้วางใจและกล้าสื่อสารกับคุณ"},
+};
+
+const COLORS_BTN = {d1:'#1565C0',d2:'#6A1B9A',d3:'#00695C',d4:'#C62828',d5:'#2E7D32',d6:'#E65100'};
+const scores = {};
+
+function buildQuestions() {
+  QUESTIONS.forEach(q => {
+    const con = document.getElementById('sec-'+q.dim);
+    const card = document.createElement('div');
+    card.className = 'q-card'; card.id = 'q'+q.no;
+    const btns = [1,2,3,4,5].map(v =>
+      `<button class="rating-btn" id="btn-${q.no}-${v}" onclick="setScore(${q.no},'${q.dim}',${v})">${v}</button>`
+    ).join('');
+    card.innerHTML = `
+      <div class="q-header">
+        <div class="q-num">${q.no}</div>
+        <div class="q-text">${q.text}</div>
+      </div>
+      <div class="rating-row">${btns}</div>
+      <div class="rating-labels"><span>ไม่เคยเลย</span><span>เป็นประจำเสมอ</span></div>`;
+    con.appendChild(card);
+  });
+}
+
+function setScore(no, dim, val) {
+  scores[no] = val;
+  for(let v=1;v<=5;v++){
+    const btn=document.getElementById(`btn-${no}-${v}`);
+    if(btn){ btn.classList.toggle('selected',v===val); btn.style.background=(v===val)?COLORS_BTN[dim]:''; }
+  }
+  const card=document.getElementById('q'+no);
+  if(card){ card.classList.add('answered'); card.classList.remove('error'); }
+  const done=Object.keys(scores).length;
+  document.getElementById('counter-note').textContent=`ตอบไปแล้ว ${done} / 24 ข้อ`;
+  document.getElementById('pbar').style.width=Math.round(done/24*100)+'%';
+  document.getElementById('ptext').textContent=`ตอบไปแล้ว ${done} / 24 ข้อ`;
+}
+
+function submitPC() {
+  let firstErr=-1;
+  QUESTIONS.forEach(q=>{
+    const card=document.getElementById('q'+q.no);
+    if(!scores[q.no]){ card.classList.add('error'); if(firstErr<0) firstErr=q.no; }
+    else card.classList.remove('error');
+  });
+  const errEl=document.getElementById('err-msg');
+  if(Object.keys(scores).length<24){
+    errEl.style.display='block';
+    errEl.textContent='⚠️  กรุณาตอบให้ครบทุกข้อ (ข้อที่มีกรอบสีแดงคือข้อที่ยังไม่ได้ตอบ)';
+    if(firstErr>0) document.getElementById('q'+firstErr).scrollIntoView({behavior:'smooth',block:'center'});
+    return;
+  }
+  errEl.style.display='none';
+  showResults();
+}
+
+function showResults() {
+  const total=Object.values(scores).reduce((a,b)=>a+b,0);
+  document.getElementById('quiz-section').style.display='none';
+  document.getElementById('result-section').style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+
+  document.getElementById('res-total').textContent=total;
+  setTimeout(()=>{ document.getElementById('score-bar').style.width=Math.round(total/120*100)+'%'; },100);
+
+  const band=total>=97?{txt:'⚡⚡  Fully Proactive',bg:'#E8F5E9',col:'#1B5E20'}
+            :total>=73?{txt:'⚡  Proactive',bg:'#E3F2FD',col:'#0C447C'}
+            :total>=49?{txt:'🔄  กำลังพัฒนา',bg:'#FFF8E1',col:'#633806'}
+            :           {txt:'⏳  Reactive',bg:'#FFEBEE',col:'#B71C1C'};
+  const bandEl=document.getElementById('res-band');
+  bandEl.textContent=band.txt; bandEl.style.background=band.bg; bandEl.style.color=band.col;
+
+  // Dim scores
+  const dimScores={};
+  Object.keys(DIMS).forEach(d=>dimScores[d]=0);
+  QUESTIONS.forEach(q=>{ dimScores[q.dim]+=scores[q.no]; });
+
+  const dimBlock=document.getElementById('dim-block');
+  dimBlock.innerHTML='';
+  Object.keys(DIMS).forEach(d=>{
+    const info=DIMS[d]; const sc=dimScores[d]; const pct=Math.round(sc/20*100);
+    const lv=sc>=16?'ดีมาก':sc>=12?'ดี':sc>=8?'พอใช้':'ต้องพัฒนา';
+    const row=document.createElement('div'); row.className='dim-row';
+    row.innerHTML=`
+      <div class="dim-hd">
+        <span class="dim-name" style="color:${info.color};">${info.name}</span>
+        <span class="dim-score" style="color:${info.color};">${sc}/20 — ${lv}</span>
+      </div>
+      <div class="dim-bg"><div class="dim-fill" id="df-${d}" style="background:${info.color};"></div></div>
+      <div class="dim-tip">${sc>=12?'✅ '+info.high:'🔧 '+info.low}</div>`;
+    dimBlock.appendChild(row);
+    setTimeout(()=>{ document.getElementById('df-'+d).style.width=pct+'%'; },120);
+  });
+
+  // Interpretation
+  const interpEl=document.getElementById('interp-block');
+  let html='';
+  if(total>=97){
+    html=`<div class="interp-card" style="background:#E8F5E9;border-color:#2E7D32;">
+      <h4 style="color:#1B5E20;">⚡⚡  Fully Proactive (${total}/120)</h4>
+      <p>คุณมีทักษะการสื่อสารแบบ Proactive ในระดับสูงมาก คุณสื่อสารตรงไปตรงมา กล้าริเริ่มก่อน แบ่งปันข้อมูลล่วงหน้า และรับผิดชอบต่อคำพูดของตัวเองอย่างสม่ำเสมอ</p>
+      <p><strong>จุดแข็งของคุณ:</strong></p>
+      <ul>
+        <li>เป็นแบบอย่างการสื่อสาร Proactive ให้คนในทีม</li>
+        <li>ลดความเข้าใจผิดและปัญหาในการทำงานได้อย่างมีประสิทธิภาพ</li>
+        <li>สร้างความไว้วางใจและความน่าเชื่อถือในองค์กร</li>
+      </ul>
+      <p style="margin-top:8px;"><strong>แนะนำ:</strong> แบ่งปันทักษะนี้ให้เพื่อนร่วมงาน และเป็น Mentor ด้านการสื่อสารให้คนอื่นได้</p>
+    </div>`;
+  } else if(total>=73){
+    html=`<div class="interp-card" style="background:#E3F2FD;border-color:#1565C0;">
+      <h4 style="color:#0C447C;">⚡  Proactive (${total}/120)</h4>
+      <p>คุณมีทักษะการสื่อสารแบบ Proactive ดี มีพฤติกรรมเชิงรุกในหลายด้าน แต่ยังมีบางสถานการณ์ที่อาจรอหรือลังเลก่อนสื่อสาร</p>
+      <p><strong>แนวทางพัฒนา:</strong></p>
+      <ul>
+        <li>ดูด้านที่คะแนนต่ำที่สุดและตั้งเป้าพัฒนาด้านนั้นก่อน</li>
+        <li>ฝึกนิสัยการ "พูดก่อน ไม่รอให้ถาม" ในการทำงานประจำวัน</li>
+        <li>ทบทวนการสื่อสารของตัวเองสัปดาห์ละครั้ง ว่ามีสถานการณ์ใดที่ควรพูดก่อนแต่ไม่ได้พูด</li>
+      </ul>
+    </div>`;
+  } else if(total>=49){
+    html=`<div class="interp-card" style="background:#FFF8E1;border-color:#E65100;">
+      <h4 style="color:#633806;">🔄  กำลังพัฒนา (${total}/120)</h4>
+      <p>คุณมีพฤติกรรม Proactive บ้างในบางสถานการณ์ แต่โดยรวมยังมีแนวโน้มรอให้คนอื่นริเริ่มหรือรอให้ปัญหาเกิดก่อนค่อยแก้</p>
+      <p><strong>แนวทางพัฒนา:</strong></p>
+      <ul>
+        <li>เริ่มจากการพูดสิ่งที่คิดออกมา แม้จะยังไม่แน่ใจ 100%</li>
+        <li>ฝึกการแจ้งข้อมูลล่วงหน้าทุกวัน เช่น อัปเดตความคืบหน้างานโดยไม่รอให้ถาม</li>
+        <li>ตั้งเป้าหมายเล็กๆ เช่น "สัปดาห์นี้จะเป็นคนเริ่มประชุมก่อนอย่างน้อย 1 ครั้ง"</li>
+        <li>หาพี่เลี้ยงหรือเพื่อนที่มีทักษะ Proactive ดีมาเป็นแบบอย่าง</li>
+      </ul>
+    </div>`;
+  } else {
+    html=`<div class="interp-card" style="background:#FFEBEE;border-color:#C62828;">
+      <h4 style="color:#B71C1C;">⏳  Reactive (${total}/120)</h4>
+      <p>คุณมีแนวโน้มสื่อสารแบบ Reactive — รอให้คนอื่นริเริ่ม รอให้ปัญหาเกิดก่อนค่อยพูด หรือรอให้ถูกถามก่อนค่อยให้ข้อมูล ซึ่งอาจส่งผลต่อประสิทธิภาพการทำงานและความสัมพันธ์ในทีม</p>
+      <p><strong>จุดเริ่มต้นที่แนะนำ:</strong></p>
+      <ul>
+        <li>ลองตั้งกติกาตัวเอง: "ทุกวันจะแจ้งข้อมูลสำคัญ 1 อย่างให้ทีมทราบก่อนที่เขาจะถาม"</li>
+        <li>ฝึกพูดความต้องการของตัวเองตรงๆ อย่างน้อย 1 ครั้งต่อวัน</li>
+        <li>เมื่อรู้สึกอยากรอ ให้ถามตัวเองว่า "ถ้าฉันพูดตอนนี้เลย จะเกิดอะไรขึ้น?"</li>
+        <li>ขอ Feedback จากหัวหน้าหรือเพื่อนร่วมงานเกี่ยวกับสไตล์การสื่อสารของตัวเอง</li>
+      </ul>
+    </div>`;
+  }
+  interpEl.innerHTML = html;
+}
+
+function retake() {
+  QUESTIONS.forEach(q=>{
+    delete scores[q.no];
+    const card=document.getElementById('q'+q.no);
+    if(card) card.classList.remove('answered','error');
+    for(let v=1;v<=5;v++){
+      const btn=document.getElementById(`btn-${q.no}-${v}`);
+      if(btn){ btn.classList.remove('selected'); btn.style.background=''; }
+    }
+  });
+  document.getElementById('counter-note').textContent='ตอบไปแล้ว 0 / 24 ข้อ';
+  document.getElementById('pbar').style.width='0%';
+  document.getElementById('ptext').textContent='ให้คะแนน 1–5 ในแต่ละข้อ แล้วกด "ดูผลประเมิน"';
+  document.getElementById('quiz-section').style.display='block';
+  document.getElementById('result-section').style.display='none';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+buildQuestions();
+</script>
+</body>
+</html>
