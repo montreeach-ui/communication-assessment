@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>แบบประเมินแรงจูงใจในการทำงาน (Motivation Self-Assessment) | The Bridge</title>
+<style>
+  :root{
+    --navy:#1A237E; --blue:#1565C0;
+    --gold-lt:#FDF6E3;
+    --gray:#37474F; --light:#ECEFF1;
+    --green:#2E7D32; --green-lt:#E8F5E9;
+    --red:#C62828; --red-lt:#FFEBEE;
+    --amber:#EF6C00; --amber-lt:#FFF3E0;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  body{font-family:'Sarabun','TH Sarabun New',sans-serif;background:var(--light);color:var(--gray);font-size:16px;line-height:1.6;padding-bottom:60px;}
+
+  .header{background:linear-gradient(135deg,var(--navy),#283593);color:#fff;text-align:center;padding:32px 16px 28px;}
+  .header h1{font-size:1.45rem;font-weight:700;margin-bottom:6px;}
+  .header p{font-size:0.95rem;opacity:0.9;}
+
+  .container{max-width:720px;margin:0 auto;padding:0 16px;}
+
+  .scale-box{background:#fff;border-radius:12px;padding:18px 20px;margin-top:-18px;box-shadow:0 2px 10px rgba(0,0,0,0.08);}
+  .scale-box h2{font-size:1.05rem;color:var(--navy);margin-bottom:10px;}
+  .scale-row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;font-size:0.85rem;}
+  .scale-item{flex:1 1 18%;text-align:center;background:var(--gold-lt);border-radius:8px;padding:8px 4px;font-weight:600;color:var(--navy);}
+
+  .progress-wrap{position:sticky;top:0;background:var(--light);padding:10px 16px 6px;z-index:10;}
+  .progress-bar{height:8px;background:#dfe3e8;border-radius:4px;overflow:hidden;}
+  .progress-fill{height:100%;background:var(--blue);width:0%;transition:width .2s;}
+  .progress-text{font-size:0.8rem;text-align:right;color:var(--gray);margin-top:4px;}
+
+  .question{background:#fff;border-radius:12px;padding:18px 18px;margin:14px 0;box-shadow:0 1px 6px rgba(0,0,0,0.06);}
+  .question p.q-text{font-weight:600;color:var(--navy);margin-bottom:12px;font-size:1rem;}
+  .q-num{display:inline-block;background:var(--blue);color:#fff;border-radius:50%;width:26px;height:26px;text-align:center;line-height:26px;font-size:0.85rem;margin-right:8px;}
+
+  .likert{display:flex;justify-content:space-between;gap:6px;}
+  .opt-btn{flex:1;text-align:center;padding:10px 0;border-radius:8px;border:2px solid #dfe3e8;font-weight:700;color:var(--gray);background:#fff;cursor:pointer;font-size:1rem;font-family:inherit;-webkit-appearance:none;appearance:none;}
+  .opt-btn.selected{background:var(--blue);border-color:var(--blue);color:#fff;}
+
+  .submit-wrap{text-align:center;margin:30px 0;}
+  #submitBtn{background:var(--navy);color:#fff;border:none;padding:14px 40px;font-size:1.05rem;font-weight:700;border-radius:30px;cursor:pointer;box-shadow:0 4px 12px rgba(26,35,126,0.35);font-family:inherit;}
+  #submitBtn:hover{background:var(--blue);}
+
+  #results{display:none;}
+  .result-card{background:#fff;border-radius:14px;padding:24px 20px;margin-top:10px;box-shadow:0 2px 12px rgba(0,0,0,0.08);}
+  .result-card h2{color:var(--navy);font-size:1.2rem;margin-bottom:4px;}
+  .result-card .total-label{font-size:0.9rem;color:#607D8B;margin-bottom:16px;}
+
+  .level-badge{display:inline-block;padding:8px 22px;border-radius:20px;font-weight:700;font-size:1.05rem;margin-bottom:18px;}
+  .lvl-verylow{background:var(--red-lt);color:var(--red);}
+  .lvl-low{background:var(--amber-lt);color:var(--amber);}
+  .lvl-medium{background:#E3F2FD;color:var(--blue);}
+  .lvl-high{background:var(--green-lt);color:var(--green);}
+
+  .bar-row{margin-bottom:14px;}
+  .bar-label{display:flex;justify-content:space-between;font-size:0.9rem;font-weight:600;color:var(--navy);margin-bottom:4px;}
+  .bar-bg{background:#ECEFF1;border-radius:6px;height:14px;overflow:hidden;}
+  .bar-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--navy));border-radius:6px;transition:width .6s ease;}
+  .bar-def{font-size:0.8rem;color:#78909C;margin-top:3px;}
+
+  .legend-scale{display:flex;justify-content:space-between;font-size:0.75rem;color:#90A4AE;margin:20px 0 4px;border-top:1px dashed #CFD8DC;padding-top:10px;}
+
+  .restart{display:block;margin:22px auto 0;background:none;border:2px solid var(--navy);color:var(--navy);padding:10px 26px;border-radius:24px;font-weight:700;cursor:pointer;font-family:inherit;}
+  .restart:hover{background:var(--navy);color:#fff;}
+
+  .warn{color:var(--red);text-align:center;font-size:0.85rem;margin-top:8px;display:none;}
+  .question.missing{outline:2px solid var(--red);}
+  footer{text-align:center;font-size:0.75rem;color:#90A4AE;margin-top:30px;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>แบบประเมินแรงจูงใจในการทำงาน</h1>
+  <p>Motivation Self-Assessment</p>
+</div>
+
+<div class="container">
+
+  <div class="scale-box">
+    <h2>คำชี้แจง</h2>
+    <p style="font-size:0.9rem;margin-bottom:10px;">กรุณาตอบคำถามทั้ง 28 ข้อตามความรู้สึกที่ตรงกับตัวคุณมากที่สุด โดยใช้ระดับคะแนนดังนี้</p>
+    <div class="scale-row">
+      <div class="scale-item">1<br>ไม่เห็นด้วย<br>อย่างมาก</div>
+      <div class="scale-item">2<br>ไม่เห็นด้วย</div>
+      <div class="scale-item">3<br>เห็นด้วยและ<br>ไม่เห็นด้วย</div>
+      <div class="scale-item">4<br>เห็นด้วย</div>
+      <div class="scale-item">5<br>เห็นด้วย<br>อย่างมาก</div>
+    </div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-text" id="progressText">ตอบแล้ว 0 / 28 ข้อ</div>
+  </div>
+
+  <div id="quizWrap">
+    <div id="questionsContainer"></div>
+    <div class="submit-wrap">
+      <button id="submitBtn">ดูผลการประเมิน</button>
+      <div class="warn" id="warnMsg">กรุณาตอบคำถามที่ไฮไลต์สีแดงให้ครบก่อนดูผลค่ะ</div>
+    </div>
+  </div>
+
+  <div id="results">
+    <div class="result-card">
+      <h2 id="levelTitle"></h2>
+      <div class="total-label" id="totalLabel"></div>
+      <div id="levelBadgeWrap" style="text-align:center;"></div>
+
+      <div id="barsContainer"></div>
+
+      <div class="legend-scale">
+        <span>28<br>ต่ำมาก</span>
+        <span>56<br>ต่ำ</span>
+        <span>84<br>ปานกลาง</span>
+        <span>112<br>สูง</span>
+        <span>140<br>สูงมาก</span>
+      </div>
+      <button type="button" class="restart" id="restartBtn">ทำแบบประเมินอีกครั้ง</button>
+    </div>
+  </div>
+
+  <footer>The Bridge · Motivation Self-Assessment</footer>
+</div>
+
+<script>
+(function(){
+  var questions = [
+    "ฉันคิดว่าตัวเองสามารถทำงานได้ผลผลิตสูง",
+    "ปกติฉันเป็นคนมีความพยายามในการทำงาน",
+    "ฉันสนใจและตั้งใจที่จะทำงานของตัวเองอย่างเต็มที่",
+    "ฉันมองว่าการทำงานก็คือรางวัลอย่างหนึ่งที่ตัวเองจะได้รับ",
+    "ฉันเชื่อว่าการทำงานมีส่วนสำคัญที่จะทำให้ตัวเองประสบความสำเร็จ",
+    "ปัจจุบันฉันเป็นคนทำงานหนักมาก",
+    "ฉันเต็มใจที่จะทำงานให้บรรลุเป้าหมาย",
+    "ฉันคิดว่าตัวเองทำงานมากกว่าคนอื่นๆ",
+    "ฉันรู้สึกว่าตัวเองกระตือรือร้นที่จะทำงานอยู่เสมอ",
+    "ฉันตั้งใจและมุ่งมั่นที่จะทำงานอยู่ตลอดเวลา",
+    "ทุกวันนี้ฉันมีความสุขกับการทำงาน",
+    "ฉันเป็นคนมองหางานหรือหน้าที่ความรับผิดชอบใหม่ๆ เพิ่มเติมอยู่เสมอ",
+    "ปัจจุบันตัวฉันเองสามารถทำงานได้ดีกว่าในอดีต",
+    "ปัจจุบันฉันใช้ความพยายามมากขึ้นเพื่อทำให้งานของทีมประสบความสำเร็จ",
+    "ปัจจุบันตัวฉันเองใช้เวลามากขึ้นในการทำงาน",
+    "ฉันคิดว่าตัวเองทำงานหนักและเหนื่อยกว่าคนอื่นๆ",
+    "ฉันไม่ค่อยมีเวลาให้กับตัวเองเนื่องจากมัวยุ่งอยู่กับการทำงาน",
+    "ฉันมีความสุขตลอดเวลาในขณะที่กำลังทำงาน",
+    "ฉันชอบพูดคุยเกี่ยวกับโอกาสดีๆ เรื่องอาชีพการงานที่จะเกิดขึ้นในบริษัท",
+    "ฉันเป็นคนมีความแน่วแน่และสนใจที่จะทำงานของตัวเองให้ดีที่สุด",
+    "ฉันชอบช่วยเหลืองานของคนอื่นๆ เพื่อให้แน่ใจว่างานเสร็จสมบูรณ์",
+    "ปกติตัวฉันเองแทบไม่ค่อยหยุดหรือลางาน",
+    "ฉันพยายามทำงานของตัวเองให้ดีที่สุดเพื่อเพิ่มผลผลิต",
+    "ฉันรู้สึกสนุกหรือไม่เคยเบื่อกับการทำงาน",
+    "ฉันรู้สึกดีและพึงพอใจกับมาตรฐานในการทำงานของตัวเอง",
+    "ฉันเชื่อว่าตำแหน่งงานที่ตัวเองทำมีโอกาสเติบโตในสายอาชีพ",
+    "ฉันมักจะพูดเกี่ยวกับความสำเร็จและความเป็นเลิศของงานที่ตัวเองทำในปัจจุบัน",
+    "ฉันสามารถเลิกงานดึกกว่าปกติได้หากบริษัทร้องขอหรือตัวเองจำเป็นต้องทำงานให้เสร็จ"
+  ];
+
+  var components = [
+    { name:"Commitment (ความมุ่งมั่นทุ่มเท)",     def:"ทุ่มเทให้กับงานโดยดูจากเวลาที่ใช้ไปกับงาน",              idx:[0,7,14,21] },
+    { name:"Passion (ความหลงใหลในงาน)",           def:"มีพลังและความคิดสร้างสรรค์ในการทำงาน",                  idx:[1,8,15,22] },
+    { name:"Involvement (การมีส่วนร่วมกับงาน)",   def:"ดื่มด่ำและจดจ่ออยู่กับงานของตัวเอง",                     idx:[2,9,16,23] },
+    { name:"Contentment (ความพึงพอใจในงาน)",      def:"มีความสุขและความพึงพอใจกับงานที่ทำ",                     idx:[3,10,17,24] },
+    { name:"Goals (เป้าหมายและความสำเร็จ)",       def:"ขับเคลื่อนด้วยความสำเร็จและโอกาสก้าวหน้า",                idx:[4,11,18,25] },
+    { name:"Excellence (ความเป็นเลิศ)",           def:"มุ่งพัฒนาตัวเองอย่างต่อเนื่องและทำสิ่งที่ดีที่สุด",       idx:[5,12,19,26] },
+    { name:"Teamwork (การทำงานเป็นทีม)",          def:"ให้คุณค่ากับความสำเร็จของทีมมากกว่าความสำเร็จส่วนตัว",   idx:[6,13,20,27] }
+  ];
+
+  var answers = {}; // { questionIndex: value }
+
+  var container = document.getElementById('questionsContainer');
+
+  for (var i = 0; i < questions.length; i++) {
+    (function(qIndex){
+      var qDiv = document.createElement('div');
+      qDiv.className = 'question';
+      qDiv.id = 'q-' + qIndex;
+
+      var qText = document.createElement('p');
+      qText.className = 'q-text';
+      var numSpan = document.createElement('span');
+      numSpan.className = 'q-num';
+      numSpan.textContent = (qIndex + 1);
+      qText.appendChild(numSpan);
+      qText.appendChild(document.createTextNode(questions[qIndex]));
+      qDiv.appendChild(qText);
+
+      var likertDiv = document.createElement('div');
+      likertDiv.className = 'likert';
+
+      for (var v = 1; v <= 5; v++) {
+        (function(val){
+          var btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'opt-btn';
+          btn.textContent = val;
+          btn.setAttribute('data-q', qIndex);
+          btn.setAttribute('data-v', val);
+          btn.addEventListener('click', function(){
+            answers[qIndex] = val;
+            var siblings = likertDiv.querySelectorAll('.opt-btn');
+            for (var s = 0; s < siblings.length; s++) {
+              siblings[s].classList.remove('selected');
+            }
+            btn.classList.add('selected');
+            qDiv.classList.remove('missing');
+            updateProgress();
+          });
+          likertDiv.appendChild(btn);
+        })(v);
+      }
+
+      qDiv.appendChild(likertDiv);
+      container.appendChild(qDiv);
+    })(i);
+  }
+
+  var progressFill = document.getElementById('progressFill');
+  var progressText = document.getElementById('progressText');
+
+  function updateProgress(){
+    var n = Object.keys(answers).length;
+    progressFill.style.width = (n / questions.length * 100) + '%';
+    progressText.textContent = 'ตอบแล้ว ' + n + ' / ' + questions.length + ' ข้อ';
+  }
+
+  document.getElementById('submitBtn').addEventListener('click', function(){
+    var missing = [];
+    for (var i = 0; i < questions.length; i++) {
+      if (typeof answers[i] === 'undefined') missing.push(i);
+      var qEl = document.getElementById('q-' + i);
+      if (typeof answers[i] === 'undefined') qEl.classList.add('missing');
+      else qEl.classList.remove('missing');
+    }
+
+    if (missing.length > 0) {
+      document.getElementById('warnMsg').style.display = 'block';
+      var firstMissing = document.getElementById('q-' + missing[0]);
+      firstMissing.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+    document.getElementById('warnMsg').style.display = 'none';
+
+    var total = 0;
+    var scores = [];
+    for (var c = 0; c < components.length; c++) {
+      var comp = components[c];
+      var s = 0;
+      for (var k = 0; k < comp.idx.length; k++) {
+        s += answers[comp.idx[k]];
+      }
+      total += s;
+      scores.push({ name: comp.name, def: comp.def, score: s, max: 20 });
+    }
+
+    var levelKey, levelLabel;
+    if (total <= 56) { levelKey = 'verylow'; levelLabel = 'ต่ำมาก (Very Low)'; }
+    else if (total <= 84) { levelKey = 'low'; levelLabel = 'ต่ำ (Low)'; }
+    else if (total <= 112) { levelKey = 'medium'; levelLabel = 'ปานกลาง (Medium)'; }
+    else { levelKey = 'high'; levelLabel = 'สูง (High)'; }
+
+    document.getElementById('levelTitle').textContent = 'ผลการประเมินแรงจูงใจในการทำงาน';
+    document.getElementById('totalLabel').textContent = 'คะแนนรวม ' + total + ' จาก 140 คะแนน';
+    document.getElementById('levelBadgeWrap').innerHTML =
+      '<span class="level-badge lvl-' + levelKey + '">ระดับแรงจูงใจ: ' + levelLabel + '</span>';
+
+    var barsHtml = '';
+    for (var b = 0; b < scores.length; b++) {
+      var s2 = scores[b];
+      var pct = (s2.score / s2.max * 100);
+      barsHtml += '<div class="bar-row">' +
+        '<div class="bar-label"><span>' + s2.name + '</span><span>' + s2.score + '/' + s2.max + '</span></div>' +
+        '<div class="bar-bg"><div class="bar-fill" style="width:' + pct + '%"></div></div>' +
+        '<div class="bar-def">' + s2.def + '</div>' +
+        '</div>';
+    }
+    document.getElementById('barsContainer').innerHTML = barsHtml;
+
+    document.getElementById('quizWrap').style.display = 'none';
+    document.querySelector('.progress-wrap').style.display = 'none';
+    document.getElementById('results').style.display = 'block';
+    window.scrollTo(0, 0);
+  });
+
+  document.getElementById('restartBtn').addEventListener('click', function(){
+    answers = {};
+    var allBtns = document.querySelectorAll('.opt-btn.selected');
+    for (var i = 0; i < allBtns.length; i++) allBtns[i].classList.remove('selected');
+    document.getElementById('quizWrap').style.display = 'block';
+    document.querySelector('.progress-wrap').style.display = 'block';
+    document.getElementById('results').style.display = 'none';
+    updateProgress();
+    window.scrollTo(0, 0);
+  });
+
+  updateProgress();
+})();
+</script>
+</body>
+</html>
