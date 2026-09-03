@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>แบบประเมินทักษะการวางแผน (Planning Skills Self-Assessment) | The Bridge</title>
+<style>
+  :root{
+    --navy:#1A237E; --blue:#1565C0;
+    --gold-lt:#FDF6E3;
+    --gray:#37474F; --light:#ECEFF1;
+    --green:#2E7D32; --green-lt:#E8F5E9;
+    --red:#C62828; --red-lt:#FFEBEE;
+    --amber:#EF6C00; --amber-lt:#FFF3E0;
+    --teal:#00695C; --teal-lt:#E0F2F1;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  body{font-family:'Sarabun','TH Sarabun New',sans-serif;background:var(--light);color:var(--gray);font-size:16px;line-height:1.6;padding-bottom:60px;}
+
+  .header{background:linear-gradient(135deg,var(--navy),#283593);color:#fff;text-align:center;padding:32px 16px 28px;}
+  .header h1{font-size:1.4rem;font-weight:700;margin-bottom:6px;}
+  .header p{font-size:0.92rem;opacity:0.9;}
+
+  .container{max-width:720px;margin:0 auto;padding:0 16px;}
+
+  .scale-box{background:#fff;border-radius:12px;padding:18px 20px;margin-top:-18px;box-shadow:0 2px 10px rgba(0,0,0,0.08);}
+  .scale-box h2{font-size:1.05rem;color:var(--navy);margin-bottom:10px;}
+  .scale-row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;font-size:0.82rem;}
+  .scale-item{flex:1 1 18%;text-align:center;background:var(--gold-lt);border-radius:8px;padding:8px 4px;font-weight:600;color:var(--navy);}
+
+  .progress-wrap{position:sticky;top:0;background:var(--light);padding:10px 16px 6px;z-index:10;}
+  .progress-bar{height:8px;background:#dfe3e8;border-radius:4px;overflow:hidden;}
+  .progress-fill{height:100%;background:var(--blue);width:0%;transition:width .2s;}
+  .progress-text{font-size:0.8rem;text-align:right;color:var(--gray);margin-top:4px;}
+
+  .dim-title{background:var(--navy);color:#fff;padding:10px 16px;border-radius:10px;font-size:0.95rem;font-weight:700;margin:22px 0 6px;}
+
+  .question{background:#fff;border-radius:12px;padding:18px 18px;margin:12px 0;box-shadow:0 1px 6px rgba(0,0,0,0.06);}
+  .question p.q-text{font-weight:600;color:var(--navy);margin-bottom:4px;font-size:0.98rem;}
+  .q-example{font-size:0.8rem;color:#78909C;margin-bottom:12px;font-style:italic;}
+  .q-num{display:inline-block;background:var(--blue);color:#fff;border-radius:50%;width:26px;height:26px;text-align:center;line-height:26px;font-size:0.85rem;margin-right:8px;flex-shrink:0;}
+
+  .likert{display:flex;justify-content:space-between;gap:6px;}
+  .opt-btn{flex:1;text-align:center;padding:10px 0;border-radius:8px;border:2px solid #dfe3e8;font-weight:700;color:var(--gray);background:#fff;cursor:pointer;font-size:1rem;font-family:inherit;-webkit-appearance:none;appearance:none;}
+  .opt-btn.selected{background:var(--blue);border-color:var(--blue);color:#fff;}
+
+  .submit-wrap{text-align:center;margin:30px 0;}
+  #submitBtn{background:var(--navy);color:#fff;border:none;padding:14px 40px;font-size:1.05rem;font-weight:700;border-radius:30px;cursor:pointer;box-shadow:0 4px 12px rgba(26,35,126,0.35);font-family:inherit;}
+  #submitBtn:hover{background:var(--blue);}
+
+  #results{display:none;}
+  .result-card{background:#fff;border-radius:14px;padding:24px 20px;margin-top:10px;box-shadow:0 2px 12px rgba(0,0,0,0.08);}
+  .result-card h2{color:var(--navy);font-size:1.15rem;margin-bottom:4px;}
+  .result-card .total-label{font-size:0.9rem;color:#607D8B;margin-bottom:16px;}
+
+  .level-badge{display:inline-block;padding:8px 22px;border-radius:20px;font-weight:700;font-size:1.02rem;margin-bottom:6px;}
+  .lvl-beginner{background:var(--red-lt);color:var(--red);}
+  .lvl-emerging{background:var(--amber-lt);color:var(--amber);}
+  .lvl-developing{background:#E3F2FD;color:var(--blue);}
+  .lvl-strong{background:var(--teal-lt);color:var(--teal);}
+  .lvl-excellent{background:var(--green-lt);color:var(--green);}
+  .level-desc{font-size:0.85rem;color:#607D8B;margin-bottom:18px;padding:0 8px;}
+
+  .bar-row{margin-bottom:14px;}
+  .bar-label{display:flex;justify-content:space-between;font-size:0.9rem;font-weight:600;color:var(--navy);margin-bottom:4px;}
+  .bar-bg{background:#ECEFF1;border-radius:6px;height:14px;overflow:hidden;}
+  .bar-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--navy));border-radius:6px;transition:width .6s ease;}
+
+  .legend-scale{display:flex;justify-content:space-between;font-size:0.72rem;color:#90A4AE;margin:20px 0 4px;border-top:1px dashed #CFD8DC;padding-top:10px;flex-wrap:wrap;gap:4px;}
+
+  .restart{display:block;margin:22px auto 0;background:none;border:2px solid var(--navy);color:var(--navy);padding:10px 26px;border-radius:24px;font-weight:700;cursor:pointer;font-family:inherit;}
+  .restart:hover{background:var(--navy);color:#fff;}
+
+  .warn{color:var(--red);text-align:center;font-size:0.85rem;margin-top:8px;display:none;}
+  .question.missing{outline:2px solid var(--red);}
+  footer{text-align:center;font-size:0.75rem;color:#90A4AE;margin-top:30px;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>แบบประเมินทักษะการวางแผน</h1>
+  <p>Planning Skills Self-Assessment</p>
+</div>
+
+<div class="container">
+
+  <div class="scale-box">
+    <h2>คำชี้แจง</h2>
+    <p style="font-size:0.88rem;margin-bottom:10px;">อ่านแต่ละข้อความอย่างละเอียด แล้วพิจารณาว่าตรงกับตัวคุณมากน้อยเพียงใด โดยใช้เกณฑ์ดังนี้ (ไม่มีคำตอบถูกหรือผิด — ตอบตามความเป็นจริง)</p>
+    <div class="scale-row">
+      <div class="scale-item">1<br>แทบไม่<br>เคยทำ</div>
+      <div class="scale-item">2<br>ทำน้อย<br>มาก</div>
+      <div class="scale-item">3<br>ทำ<br>บางครั้ง</div>
+      <div class="scale-item">4<br>ทำ<br>บ่อย</div>
+      <div class="scale-item">5<br>ทำเป็น<br>ประจำ</div>
+    </div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-text" id="progressText">ตอบแล้ว 0 / 30 ข้อ</div>
+  </div>
+
+  <div id="quizWrap">
+    <div id="questionsContainer"></div>
+    <div class="submit-wrap">
+      <button id="submitBtn">ดูผลการประเมิน</button>
+      <div class="warn" id="warnMsg">กรุณาตอบคำถามที่ไฮไลต์สีแดงให้ครบก่อนดูผลค่ะ</div>
+    </div>
+  </div>
+
+  <div id="results">
+    <div class="result-card">
+      <h2 id="levelTitle">ผลการประเมินทักษะการวางแผน</h2>
+      <div class="total-label" id="totalLabel"></div>
+      <div style="text-align:center;">
+        <div id="levelBadgeWrap"></div>
+      </div>
+      <div class="level-desc" id="levelDesc" style="text-align:center;"></div>
+
+      <div id="barsContainer"></div>
+
+      <div class="legend-scale">
+        <span>30–50<br>เพิ่งเริ่มต้น</span>
+        <span>51–75<br>ต้องพัฒนา</span>
+        <span>76–100<br>ปานกลาง</span>
+        <span>101–125<br>ดีมาก</span>
+        <span>126–150<br>ยอดเยี่ยม</span>
+      </div>
+      <button type="button" class="restart" id="restartBtn">ทำแบบประเมินอีกครั้ง</button>
+    </div>
+  </div>
+
+  <footer>The Bridge Co., Ltd. · Planning Skills Self-Assessment<br>วิทยากร: อ.มนตรี อชรายุวัฒนา</footer>
+</div>
+
+<script>
+(function(){
+  var questions = [
+    { t:"ฉันกำหนดเป้าหมายที่ชัดเจนก่อนลงมือทำงานทุกครั้ง", e:"เช่น เขียนเป้าหมายเป็นลายลักษณ์อักษร ระบุว่าต้องการผลลัพธ์อะไรภายในเมื่อไหร่" },
+    { t:"เป้าหมายของฉันมีลักษณะ SMART — วัดได้ มีกำหนดเวลา และเป็นจริงได้", e:"เช่น ไม่ใช่แค่ 'ทำให้ดีขึ้น' แต่คือ 'เพิ่มผลผลิตงาน 15% ภายใน Q2'" },
+    { t:"ฉันแยกแยะระหว่างเป้าหมายระยะสั้นและระยะยาวได้ชัดเจน", e:"เช่น รู้ว่าสิ่งใดต้องทำภายในสัปดาห์นี้ และสิ่งใดคือเป้าหมาย 3–6 เดือนข้างหน้า" },
+    { t:"ฉันทบทวนและปรับเป้าหมายเมื่อสถานการณ์เปลี่ยนแปลง", e:"เช่น เมื่อได้ข้อมูลใหม่หรือเกิดเหตุไม่คาดคิด ฉันปรับแผนแทนที่จะยึดแผนเดิมแบบตายตัว" },
+    { t:"ฉันสื่อสารเป้าหมายให้ทีมเข้าใจตรงกันก่อนเริ่มงาน", e:"เช่น ประชุมชี้แจงเป้าหมายร่วมกัน ตรวจสอบว่าทุกคนเข้าใจและเห็นด้วย" },
+
+    { t:"ฉันจัดลำดับงานตามความสำคัญและความเร่งด่วนก่อนเริ่มทำเสมอ", e:"เช่น ใช้ Eisenhower Matrix แยก งานสำคัญ-เร่งด่วน / สำคัญ-ไม่เร่งด่วน ฯลฯ" },
+    { t:"ฉันรู้ว่างานไหนสร้างผลกระทบมากที่สุดและเน้นทำงานนั้นก่อน", e:"เช่น ใช้หลัก 80/20 ระบุว่า 20% ของงานสร้างผลลัพธ์ 80% ของทั้งหมด" },
+    { t:"ฉันสามารถพูดปฏิเสธหรือเลื่อนงานที่ไม่สำคัญออกไปได้", e:"เช่น ปฏิเสธการประชุมที่ไม่จำเป็น หรือมอบหมายงานเล็กน้อยให้ผู้อื่น" },
+    { t:"ฉันไม่ใช้เวลาส่วนใหญ่กับงานเร่งด่วนแต่ไม่สำคัญ", e:"เช่น ไม่ตอบอีเมลหรือข้อความทุกอย่างทันทีโดยทิ้งงานสำคัญไว้" },
+    { t:"ฉันทบทวนลำดับความสำคัญของงานทุกวันหรือทุกสัปดาห์", e:"เช่น มี Daily/Weekly Review เพื่อดูว่าแผนยังเหมาะสมกับสถานการณ์ปัจจุบันหรือไม่" },
+
+    { t:"ฉันจัดตารางเวลาล่วงหน้าและทำตามแผนได้เกิน 80% ของเวลา", e:"เช่น ใช้ปฏิทินหรือ Planner วางแผนงานล่วงหน้า ไม่ใช่แค่จำไว้ในหัว" },
+    { t:"ฉันประมาณเวลาที่ใช้ทำแต่ละงานได้แม่นยำ", e:"เช่น งานที่คิดว่าใช้ 1 ชั่วโมง จริงๆ ใช้ 1–1.5 ชั่วโมง ไม่ใช่ครึ่งวัน" },
+    { t:"ฉันจัดสรรเวลาสำหรับงานสำคัญ (Deep Work) โดยไม่ถูกขัดจังหวะ", e:"เช่น บล็อกเวลา 2–3 ชั่วโมงสำหรับงานที่ต้องใช้สมาธิ ปิดการแจ้งเตือน" },
+    { t:"ฉันส่งงานตรงเวลาหรือแจ้งล่วงหน้าเมื่อต้องปรับกำหนดการ", e:"เช่น ไม่ส่งงานช้าโดยไม่แจ้ง หรือเมื่อรู้ว่าจะช้าก็แจ้งทันที" },
+    { t:"ฉันมีช่วงเวลาสำรอง (Buffer Time) เผื่อเหตุไม่คาดคิดในแผนงาน", e:"เช่น ไม่ยัดงานเต็มทุกนาที แต่เผื่อเวลาว่าง 20–30% สำหรับงานฉุกเฉิน" },
+
+    { t:"ฉันแตกงานใหญ่เป็นขั้นตอนย่อยๆ ที่ชัดเจนและทำได้จริง", e:"เช่น โปรเจคใหญ่ถูกแบ่งเป็น Milestone และ Task ย่อยที่มี Owner และ Deadline" },
+    { t:"ฉันกำหนดขั้นตอนและลำดับการทำงานก่อนลงมือเสมอ", e:"เช่น วาดแผนผัง Flow ของงาน หรือทำ Work Breakdown Structure (WBS)" },
+    { t:"ฉันระบุว่าใครทำอะไร เมื่อไหร่ และต้องการทรัพยากรอะไรในแผนงาน", e:"เช่น แผนงานมีชื่อผู้รับผิดชอบ กำหนดส่ง และสิ่งที่ต้องใช้ระบุชัดเจน" },
+    { t:"ฉันระบุความเสี่ยงและวางแผนรับมือก่อนเริ่มโปรเจค", e:"เช่น คิดล่วงหน้าว่าอะไรอาจผิดพลาด และมีแผน B หรือ Contingency Plan" },
+    { t:"ฉันทำ After-Action Review หรือสรุปบทเรียนหลังจบงาน", e:"เช่น หลังจบโปรเจคมีการถามว่า อะไรดี? อะไรควรปรับ? ครั้งหน้าจะทำต่างออกไปอย่างไร" },
+
+    { t:"ฉันติดตามความคืบหน้าของงานสม่ำเสมอ ไม่รอให้ถึงวันส่งจึงตรวจ", e:"เช่น มี Weekly Check-in กับตนเองหรือทีม เช็คว่างานเป็นไปตามแผนหรือไม่" },
+    { t:"ฉันตรวจจับปัญหาหรือความเสี่ยงได้ตั้งแต่ต้น ก่อนบานปลาย", e:"เช่น เห็นสัญญาณเตือนล่วงหน้า เช่น งานค้างสะสม ทรัพยากรไม่พอ และจัดการทันที" },
+    { t:"ฉันปรับแผนได้อย่างยืดหยุ่นเมื่อสถานการณ์เปลี่ยน โดยไม่ตื่นตระหนก", e:"เช่น เมื่อมีตัวแปรใหม่ ฉันประเมินผลกระทบและปรับแผนอย่างมีระบบ" },
+    { t:"ฉันรายงานความคืบหน้าให้ผู้เกี่ยวข้องรับทราบอย่างสม่ำเสมอ", e:"เช่น อัปเดตหัวหน้าหรือทีมโดยไม่ต้องรอให้เขาถาม" },
+    { t:"ฉันใช้ตัวชี้วัด (KPI หรือ Milestones) เพื่อตรวจสอบว่างานเป็นไปตามแผน", e:"เช่น มีเกณฑ์วัดความสำเร็จชัดเจน ไม่ใช่แค่ความรู้สึกว่า 'น่าจะโอเค'" },
+
+    { t:"ฉันมองการวางแผนเป็นเครื่องมือลดความเครียด ไม่ใช่ภาระเพิ่มเติม", e:"เช่น รู้สึกสบายใจกว่าเมื่อมีแผน ไม่ใช่รู้สึกว่าการทำแผนเป็นการเสียเวลา" },
+    { t:"ฉันมีวินัยในการทำตามแผนแม้จะมีสิ่งรบกวนหรือล่อใจให้เบี่ยงเบน", e:"เช่น ไม่ปล่อยให้การแจ้งเตือน อีเมล หรือบทสนทนาทำให้ละทิ้งงานสำคัญ" },
+    { t:"ฉันเรียนรู้จากความผิดพลาดในการวางแผนครั้งก่อนเสมอ", e:"เช่น จดบันทึกหรือจดจำว่าครั้งที่แล้วประมาณเวลาผิดเพราะอะไร และแก้อย่างไร" },
+    { t:"ฉันมีความยืดหยุ่น — รู้ว่าเมื่อไหร่ควรยึดแผน และเมื่อไหร่ควรเปลี่ยน", e:"เช่น ไม่ยึดแผนแบบแข็งทื่อจนเสียหาย แต่ก็ไม่เปลี่ยนแผนโดยไม่มีเหตุผล" },
+    { t:"ฉันสนับสนุนและแบ่งปันทักษะการวางแผนให้ทีมงานด้วย", e:"เช่น ช่วยทีมวางแผนงาน สอนเทคนิค หรือสร้างวัฒนธรรมการวางแผนในทีม" }
+  ];
+
+  var dimensions = [
+    { name:"มิติที่ 1 — การกำหนดเป้าหมาย (Goal Setting)", idx:[0,1,2,3,4] },
+    { name:"มิติที่ 2 — การจัดลำดับความสำคัญ (Prioritization)", idx:[5,6,7,8,9] },
+    { name:"มิติที่ 3 — การจัดการเวลา (Time Management)", idx:[10,11,12,13,14] },
+    { name:"มิติที่ 4 — การวางแผนและการแตกงาน (Work Breakdown & Action Planning)", idx:[15,16,17,18,19] },
+    { name:"มิติที่ 5 — การติดตามและปรับแผน (Monitoring & Adaptation)", idx:[20,21,22,23,24] },
+    { name:"มิติที่ 6 — ทัศนคติและวินัยของนักวางแผน (Planner's Mindset & Discipline)", idx:[25,26,27,28,29] }
+  ];
+
+  var answers = {};
+  var container = document.getElementById('questionsContainer');
+
+  dimensions.forEach(function(dim){
+    var dimHeader = document.createElement('div');
+    dimHeader.className = 'dim-title';
+    dimHeader.textContent = dim.name;
+    container.appendChild(dimHeader);
+
+    dim.idx.forEach(function(qIndex){
+      var q = questions[qIndex];
+      var qDiv = document.createElement('div');
+      qDiv.className = 'question';
+      qDiv.id = 'q-' + qIndex;
+
+      var qText = document.createElement('p');
+      qText.className = 'q-text';
+      var numSpan = document.createElement('span');
+      numSpan.className = 'q-num';
+      numSpan.textContent = (qIndex + 1);
+      qText.appendChild(numSpan);
+      qText.appendChild(document.createTextNode(q.t));
+      qDiv.appendChild(qText);
+
+      var exampleP = document.createElement('p');
+      exampleP.className = 'q-example';
+      exampleP.textContent = q.e;
+      qDiv.appendChild(exampleP);
+
+      var likertDiv = document.createElement('div');
+      likertDiv.className = 'likert';
+
+      for (var v = 1; v <= 5; v++) {
+        (function(val){
+          var btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'opt-btn';
+          btn.textContent = val;
+          btn.setAttribute('data-q', qIndex);
+          btn.setAttribute('data-v', val);
+          btn.addEventListener('click', function(){
+            answers[qIndex] = val;
+            var siblings = likertDiv.querySelectorAll('.opt-btn');
+            for (var s = 0; s < siblings.length; s++) siblings[s].classList.remove('selected');
+            btn.classList.add('selected');
+            qDiv.classList.remove('missing');
+            updateProgress();
+          });
+          likertDiv.appendChild(btn);
+        })(v);
+      }
+
+      qDiv.appendChild(likertDiv);
+      container.appendChild(qDiv);
+    });
+  });
+
+  var progressFill = document.getElementById('progressFill');
+  var progressText = document.getElementById('progressText');
+
+  function updateProgress(){
+    var n = Object.keys(answers).length;
+    progressFill.style.width = (n / questions.length * 100) + '%';
+    progressText.textContent = 'ตอบแล้ว ' + n + ' / ' + questions.length + ' ข้อ';
+  }
+
+  document.getElementById('submitBtn').addEventListener('click', function(){
+    var missing = [];
+    for (var i = 0; i < questions.length; i++) {
+      var qEl = document.getElementById('q-' + i);
+      if (typeof answers[i] === 'undefined') {
+        missing.push(i);
+        qEl.classList.add('missing');
+      } else {
+        qEl.classList.remove('missing');
+      }
+    }
+
+    if (missing.length > 0) {
+      document.getElementById('warnMsg').style.display = 'block';
+      document.getElementById('q-' + missing[0]).scrollIntoView({ behavior:'smooth', block:'center' });
+      return;
+    }
+    document.getElementById('warnMsg').style.display = 'none';
+
+    var total = 0;
+    var scores = dimensions.map(function(dim){
+      var s = dim.idx.reduce(function(sum, idx){ return sum + answers[idx]; }, 0);
+      total += s;
+      return { name: dim.name.replace(/^มิติที่ \d+ — /, ''), score: s, max: 25 };
+    });
+
+    var levelKey, levelLabel, levelDesc;
+    if (total <= 50) { levelKey='beginner'; levelLabel='เพิ่งเริ่มต้น (Beginner)'; levelDesc='ยังขาดทักษะการวางแผนในหลายด้าน แนะนำให้เริ่มจากพื้นฐานและค่อยๆ สร้างนิสัยการวางแผน'; }
+    else if (total <= 75) { levelKey='emerging'; levelLabel='ต้องพัฒนา (Emerging Planner)'; levelDesc='มีพื้นฐานบางส่วน แต่ต้องพัฒนาอย่างจริงจังในหลายมิติ แนะนำให้ฝึกฝนอย่างต่อเนื่อง'; }
+    else if (total <= 100) { levelKey='developing'; levelLabel='ปานกลาง (Developing Planner)'; levelDesc='เข้าใจการวางแผนพื้นฐาน แต่ยังขาดความสม่ำเสมอในบางมิติ ต้องฝึกฝนเพิ่มในจุดอ่อน'; }
+    else if (total <= 125) { levelKey='strong'; levelLabel='ดีมาก (Strong Planner)'; levelDesc='มีทักษะการวางแผนที่แข็งแกร่ง ทำได้ดีในส่วนใหญ่ มีบางมิติที่ควรพัฒนาเพิ่มเติม'; }
+    else { levelKey='excellent'; levelLabel='ยอดเยี่ยม (Excellent Planner)'; levelDesc='นักวางแผนระดับมืออาชีพ วางแผนเป็นนิสัย มีระบบ และยืดหยุ่นได้ดี พร้อมเป็น Role Model ให้ทีม'; }
+
+    document.getElementById('totalLabel').textContent = 'คะแนนรวม ' + total + ' จาก 150 คะแนน';
+    document.getElementById('levelBadgeWrap').innerHTML = '<span class="level-badge lvl-' + levelKey + '">' + levelLabel + '</span>';
+    document.getElementById('levelDesc').textContent = levelDesc;
+
+    var barsHtml = '';
+    scores.forEach(function(s){
+      var pct = (s.score / s.max * 100);
+      barsHtml += '<div class="bar-row">' +
+        '<div class="bar-label"><span>' + s.name + '</span><span>' + s.score + '/' + s.max + '</span></div>' +
+        '<div class="bar-bg"><div class="bar-fill" style="width:' + pct + '%"></div></div>' +
+        '</div>';
+    });
+    document.getElementById('barsContainer').innerHTML = barsHtml;
+
+    document.getElementById('quizWrap').style.display = 'none';
+    document.querySelector('.progress-wrap').style.display = 'none';
+    document.getElementById('results').style.display = 'block';
+    window.scrollTo(0, 0);
+  });
+
+  document.getElementById('restartBtn').addEventListener('click', function(){
+    answers = {};
+    var allBtns = document.querySelectorAll('.opt-btn.selected');
+    for (var i = 0; i < allBtns.length; i++) allBtns[i].classList.remove('selected');
+    document.getElementById('quizWrap').style.display = 'block';
+    document.querySelector('.progress-wrap').style.display = 'block';
+    document.getElementById('results').style.display = 'none';
+    updateProgress();
+    window.scrollTo(0, 0);
+  });
+
+  updateProgress();
+})();
+</script>
+</body>
+</html>
