@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Delegation Self-Assessment (English / Thai) | The Bridge</title>
+<style>
+  :root{
+    --navy:#1A237E; --blue:#1565C0;
+    --gray:#37474F; --light:#ECEFF1;
+    --green:#2E7D32; --green-lt:#E8F5E9;
+    --red:#C62828; --red-lt:#FFEBEE;
+    --amber:#EF6C00; --amber-lt:#FFF3E0;
+    --teal:#00695C; --teal-lt:#E0F2F1;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  body{font-family:'Sarabun','TH Sarabun New',-apple-system,sans-serif;background:var(--light);color:var(--gray);font-size:16px;line-height:1.6;padding-bottom:60px;}
+
+  .header{background:linear-gradient(135deg,var(--navy),#283593);color:#fff;text-align:center;padding:32px 16px 28px;}
+  .header h1{font-size:1.3rem;font-weight:700;margin-bottom:4px;}
+  .header h2{font-size:1.05rem;font-weight:600;margin-bottom:6px;opacity:0.95;}
+  .header p{font-size:0.85rem;opacity:0.85;}
+
+  .container{max-width:760px;margin:0 auto;padding:0 16px;}
+
+  .scale-box{background:#fff;border-radius:12px;padding:18px 20px;margin-top:-18px;box-shadow:0 2px 10px rgba(0,0,0,0.08);}
+  .scale-box h3{font-size:1rem;color:var(--navy);margin-bottom:8px;}
+  .scale-box p{font-size:0.86rem;margin-bottom:6px;}
+  .scale-box p.th{color:#607D8B;font-style:italic;}
+
+  .progress-wrap{position:sticky;top:0;background:var(--light);padding:10px 16px 6px;z-index:10;}
+  .progress-bar{height:8px;background:#dfe3e8;border-radius:4px;overflow:hidden;}
+  .progress-fill{height:100%;background:var(--blue);width:0%;transition:width .2s;}
+  .progress-text{font-size:0.8rem;text-align:right;color:var(--gray);margin-top:4px;}
+
+  .question{background:#fff;border-radius:12px;padding:16px;margin:12px 0;box-shadow:0 1px 6px rgba(0,0,0,0.06);}
+  .q-num{display:inline-block;background:var(--blue);color:#fff;border-radius:50%;width:24px;height:24px;text-align:center;line-height:24px;font-size:0.78rem;margin-bottom:8px;}
+  .bipolar-row{display:flex;align-items:stretch;gap:8px;}
+  .bipolar-label{flex:1;font-size:0.84rem;display:flex;flex-direction:column;justify-content:center;}
+  .bipolar-label .en{color:var(--navy);font-weight:600;}
+  .bipolar-label .th{color:#607D8B;font-style:italic;font-size:0.8rem;margin-top:3px;}
+  .bipolar-label.left{text-align:right;}
+  .bipolar-label.right .en{color:var(--gray);font-weight:500;}
+  .likert{display:flex;flex-direction:column;gap:6px;flex-shrink:0;width:210px;}
+  .likert-btns{display:flex;justify-content:space-between;gap:5px;}
+  .opt-btn{flex:1;text-align:center;padding:9px 0;border-radius:8px;border:2px solid #dfe3e8;font-weight:700;color:var(--gray);background:#fff;cursor:pointer;font-size:0.92rem;font-family:inherit;-webkit-appearance:none;appearance:none;}
+  .opt-btn.selected{background:var(--blue);border-color:var(--blue);color:#fff;}
+
+  @media (max-width:640px){
+    .bipolar-row{flex-direction:column;}
+    .bipolar-label.left, .bipolar-label.right{text-align:center;}
+    .likert{width:100%;}
+  }
+
+  .submit-wrap{text-align:center;margin:30px 0;}
+  #submitBtn{background:var(--navy);color:#fff;border:none;padding:14px 40px;font-size:1.05rem;font-weight:700;border-radius:30px;cursor:pointer;box-shadow:0 4px 12px rgba(26,35,126,0.35);font-family:inherit;}
+  #submitBtn:hover{background:var(--blue);}
+
+  #results{display:none;}
+  .result-card{background:#fff;border-radius:14px;padding:24px 20px;margin-top:10px;box-shadow:0 2px 12px rgba(0,0,0,0.08);}
+  .result-card h2{color:var(--navy);font-size:1.1rem;margin-bottom:2px;}
+  .result-card h3.th-sub{color:var(--navy);font-size:0.95rem;font-weight:500;margin-bottom:4px;opacity:0.85;}
+  .total-label{font-size:0.88rem;color:#607D8B;margin-bottom:16px;}
+
+  .level-badge{display:inline-block;padding:8px 22px;border-radius:20px;font-weight:700;font-size:1rem;margin-bottom:6px;}
+  .lvl-excellent{background:var(--green-lt);color:var(--green);}
+  .lvl-good{background:var(--teal-lt);color:var(--teal);}
+  .lvl-average{background:#E3F2FD;color:var(--blue);}
+  .lvl-needsimprove{background:var(--amber-lt);color:var(--amber);}
+  .lvl-micromanager{background:var(--red-lt);color:var(--red);}
+  .level-desc{font-size:0.85rem;color:var(--gray);margin-bottom:4px;padding:0 8px;}
+  .level-desc.th{color:#607D8B;font-style:italic;margin-bottom:18px;}
+
+  .legend-scale{display:flex;justify-content:space-between;font-size:0.68rem;color:#90A4AE;margin:20px 0 4px;border-top:1px dashed #CFD8DC;padding-top:10px;flex-wrap:wrap;gap:4px;}
+
+  .note-box{background:var(--teal-lt);border-radius:10px;padding:14px 16px;margin:16px 0;font-size:0.82rem;color:var(--teal);text-align:left;}
+  .note-box .th{font-style:italic;margin-top:6px;display:block;}
+
+  .disclaimer{font-size:0.76rem;color:#90A4AE;text-align:center;margin-top:10px;font-style:italic;}
+
+  .restart{display:block;margin:22px auto 0;background:none;border:2px solid var(--navy);color:var(--navy);padding:10px 26px;border-radius:24px;font-weight:700;cursor:pointer;font-family:inherit;}
+  .restart:hover{background:var(--navy);color:#fff;}
+
+  .warn{color:#C62828;text-align:center;font-size:0.85rem;margin-top:8px;display:none;}
+  .question.missing{outline:2px solid #C62828;}
+  footer{text-align:center;font-size:0.75rem;color:#90A4AE;margin-top:30px;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Delegation Self-Assessment</h1>
+  <h2>แบบประเมินตนเองเรื่องทักษะการมอบหมายงาน</h2>
+  <p>The Bridge Co., Ltd.</p>
+</div>
+
+<div class="container">
+
+  <div class="scale-box">
+    <h3>Instructions</h3>
+    <p>This questionnaire will help you assess how well you delegate tasks to your team. Taking each pair of statements in turn, choose the number which is most representative of your attitude and behaviour. 1 and 5 are closest to the different statements, 2 and 4 less close but still reflect your behaviour, and 3 is the middle between the two statements.</p>
+    <p class="th">แบบสอบถามนี้จะช่วยประเมินความสามารถในการมอบหมายงานของคุณ กรุณาเลือกตัวเลขที่ตรงกับทัศนคติและพฤติกรรมของคุณมากที่สุด ระหว่างข้อความสองฝั่ง (1 และ 5 ตรงกับข้อความแต่ละฝั่งมากที่สุด, 2 และ 4 ใกล้เคียงน้อยลงแต่ยังสะท้อนพฤติกรรมคุณ, 3 คือกึ่งกลางระหว่างสองข้อความ)</p>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-text" id="progressText">Answered 0 / 17</div>
+  </div>
+
+  <div id="quizWrap">
+    <div id="questionsContainer"></div>
+    <div class="submit-wrap">
+      <button id="submitBtn">See my results / ดูผลการประเมิน</button>
+      <div class="warn" id="warnMsg">Please answer all highlighted questions before viewing results. / กรุณาตอบคำถามที่ไฮไลต์สีแดงให้ครบก่อน</div>
+    </div>
+  </div>
+
+  <div id="results">
+    <div class="result-card">
+      <h2>Delegation Assessment Results</h2>
+      <h3 class="th-sub">ผลการประเมินทักษะการมอบหมายงาน</h3>
+      <div class="total-label" id="totalLabel"></div>
+      <div>
+        <div id="levelBadgeWrap"></div>
+      </div>
+      <div class="level-desc" id="levelDescEn"></div>
+      <div class="level-desc th" id="levelDescTh"></div>
+
+      <div class="note-box">
+        <strong>Remember:</strong> Good delegation isn't just handing off tasks — it must come with training and coaching to build employee capability. Delegating a task never transfers accountability for its outcome; the manager remains responsible for the result.
+        <span class="th"><strong>ข้อควรจำ:</strong> การมอบหมายงานที่ดีไม่ใช่แค่การแบ่งงานออกไป แต่ต้องมาพร้อมกับการสอนงานและโค้ชเพื่อพัฒนาความสามารถของพนักงาน และไม่ว่าคะแนนจะอยู่ระดับใด หัวหน้า/ผู้จัดการยังคงเป็นผู้รับผิดชอบต่อผลลัพธ์ของงานที่มอบหมายเสมอ</span>
+      </div>
+
+      <div class="legend-scale">
+        <span>17–30<br>Excellent<br>ยอดเยี่ยม</span>
+        <span>31–44<br>Good<br>ดี</span>
+        <span>45–58<br>Average<br>ปานกลาง</span>
+        <span>59–72<br>Needs Work<br>ควรพัฒนา</span>
+        <span>73–85<br>Micromanager<br>ควบคุมมากไป</span>
+      </div>
+      <p class="disclaimer">* This interpretation scale was added based on the possible score range (17–85), as the original document did not include a scoring table. / เกณฑ์แปลผลนี้จัดทำเพิ่มเติมจากช่วงคะแนนที่เป็นไปได้ เนื่องจากเอกสารต้นฉบับไม่ได้ระบุตารางแปลผลไว้</p>
+
+      <button type="button" class="restart" id="restartBtn">Retake / ทำแบบประเมินอีกครั้ง</button>
+    </div>
+  </div>
+
+  <footer>The Bridge Co., Ltd. · Delegation Self-Assessment (Bilingual)</footer>
+</div>
+
+<script>
+(function(){
+  var questions = [
+    { le:"Delegate tasks to ease the workload", lt:"มอบหมายงานเพื่อลดภาระงาน", re:"Prefer to do the work yourself", rt:"ชอบทำงานด้วยตัวเองมากกว่า" },
+    { le:"Show confidence in staff to complete tasks", lt:"มั่นใจว่าพนักงานสามารถทำงานให้เสร็จได้", re:"Lack confidence in staff to complete tasks", rt:"ไม่มั่นใจว่าพนักงานจะทำงานให้เสร็จได้" },
+    { le:"Allow staff to undertake delegated work in their own way", lt:"ปล่อยให้พนักงานทำงานที่ได้รับมอบหมายตามวิธีของตัวเอง", re:"Prefer to check on how staff complete the task", rt:"ชอบตรวจสอบวิธีการทำงานของพนักงาน" },
+    { le:"Know everyone in your team well in terms of their strengths and weaknesses", lt:"รู้จักจุดแข็งจุดอ่อนของสมาชิกในทีมเป็นอย่างดี", re:"Not know people in your team well", rt:"ไม่ค่อยรู้จักคนในทีมมากนัก" },
+    { le:"Give clear instructions when delegating", lt:"ให้คำแนะนำที่ชัดเจนเมื่อมอบหมายงาน", re:"Find that people refer back to you with questions when you have delegated a task", rt:"พบว่าพนักงานมักกลับมาถามคำถามหลังได้รับมอบหมายงาน" },
+    { le:"View delegation as an opportunity to develop individuals", lt:"มองการมอบหมายงานเป็นโอกาสพัฒนาคน", re:"View delegation as means of getting the task done", rt:"มองการมอบหมายงานเป็นเพียงเครื่องมือทำให้งานเสร็จ" },
+    { le:"Provide training to inexperienced staff in new skills to undertake a task", lt:"ฝึกอบรมทักษะใหม่ให้พนักงานที่ยังไม่มีประสบการณ์", re:"Prefer not to delegate tasks to inexperienced staff", rt:"ไม่ชอบมอบหมายงานให้พนักงานที่ยังไม่มีประสบการณ์" },
+    { le:"Agree a completion time for the task and review as appropriate", lt:"ตกลงกำหนดเวลาแล้วเสร็จของงานร่วมกัน และติดตามทบทวนตามความเหมาะสม", re:"Expect staff to complete the task as soon as possible", rt:"คาดหวังให้พนักงานทำงานให้เสร็จโดยเร็วที่สุด" },
+    { le:"Tell your staff and other people what authority they have when delegating a task", lt:"แจ้งพนักงานและผู้เกี่ยวข้องถึงขอบเขตอำนาจที่ได้รับเมื่อมอบหมายงาน", re:"Neglect to tell staff and other people their level of authority", rt:"ละเลยที่จะแจ้งขอบเขตอำนาจให้พนักงานและผู้เกี่ยวข้องทราบ" },
+    { le:"Set standards appropriate to the task", lt:"กำหนดมาตรฐานให้เหมาะสมกับลักษณะงาน", re:"Set high standards irrespective of the task", rt:"กำหนดมาตรฐานสูงโดยไม่คำนึงถึงลักษณะงาน" },
+    { le:"Tolerate mistakes, recognizing that people learn through them", lt:"ยอมรับข้อผิดพลาดได้ เพราะเชื่อว่าคนเรียนรู้ผ่านความผิดพลาด", re:"Expect delegated work to be error-free", rt:"คาดหวังว่างานที่มอบหมายต้องไม่มีข้อผิดพลาด" },
+    { le:"Balance the workload of your staff", lt:"กระจายภาระงานให้พนักงานอย่างสมดุล", re:"Delegate work to certain individuals in the team more than others", rt:"มอบหมายงานให้พนักงานบางคนมากกว่าคนอื่นในทีม" },
+    { le:"Identify the tasks you should not delegate", lt:"ระบุได้ว่างานประเภทใดไม่ควรมอบหมาย", re:"Prefer to delegate as much work as possible", rt:"ชอบมอบหมายงานออกไปให้มากที่สุดเท่าที่จะทำได้" },
+    { le:"Consider the effects of delegating unpleasant or tedious tasks on the team", lt:"คำนึงถึงผลกระทบของการมอบหมายงานที่น่าเบื่อหรือไม่น่าสนใจต่อทีม", re:"Think that unpleasant tasks are best delegated", rt:"คิดว่างานที่ไม่น่าสนใจควรมอบหมายให้คนอื่นทำแทน" },
+    { le:"Ask for information on your staff's workload and schedules before delegating", lt:"สอบถามภาระงานและตารางเวลาของพนักงานก่อนมอบหมายงาน", re:"Consider that work that you should take priority", rt:"คิดว่างานของตัวเองสำคัญกว่าและควรทำก่อน" },
+    { le:"Think about the amount you should delegate to your staff in terms of their workload and yours", lt:"คำนึงถึงปริมาณงานที่ควรมอบหมาย โดยพิจารณาภาระงานทั้งของพนักงานและตัวเอง", re:"Think more about your workload than your staff's", rt:"คำนึงถึงภาระงานของตัวเองมากกว่าของพนักงาน" },
+    { le:"Give feedback to staff, both positive and negative, when they have completed a task", lt:"ให้ข้อเสนอแนะทั้งด้านดีและควรปรับปรุงแก่พนักงานเมื่องานเสร็จ", re:"Prefer not to give immediate feedback", rt:"ไม่ต้องการให้ข้อเสนอแนะทันที" }
+  ];
+
+  var answers = {};
+  var container = document.getElementById('questionsContainer');
+
+  questions.forEach(function(q, qIndex){
+    var qDiv = document.createElement('div');
+    qDiv.className = 'question';
+    qDiv.id = 'q-' + qIndex;
+
+    var numSpan = document.createElement('span');
+    numSpan.className = 'q-num';
+    numSpan.textContent = (qIndex + 1);
+    qDiv.appendChild(numSpan);
+
+    var row = document.createElement('div');
+    row.className = 'bipolar-row';
+
+    var leftLabel = document.createElement('div');
+    leftLabel.className = 'bipolar-label left';
+    leftLabel.innerHTML = '<span class="en">' + q.le + '</span><span class="th">' + q.lt + '</span>';
+    row.appendChild(leftLabel);
+
+    var likertDiv = document.createElement('div');
+    likertDiv.className = 'likert';
+    var btnsRow = document.createElement('div');
+    btnsRow.className = 'likert-btns';
+
+    for (var v = 1; v <= 5; v++) {
+      (function(val){
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'opt-btn';
+        btn.textContent = val;
+        btn.setAttribute('data-q', qIndex);
+        btn.setAttribute('data-v', val);
+        btn.addEventListener('click', function(){
+          answers[qIndex] = val;
+          var siblings = btnsRow.querySelectorAll('.opt-btn');
+          for (var s = 0; s < siblings.length; s++) siblings[s].classList.remove('selected');
+          btn.classList.add('selected');
+          qDiv.classList.remove('missing');
+          updateProgress();
+        });
+        btnsRow.appendChild(btn);
+      })(v);
+    }
+    likertDiv.appendChild(btnsRow);
+    row.appendChild(likertDiv);
+
+    var rightLabel = document.createElement('div');
+    rightLabel.className = 'bipolar-label right';
+    rightLabel.innerHTML = '<span class="en">' + q.re + '</span><span class="th">' + q.rt + '</span>';
+    row.appendChild(rightLabel);
+
+    qDiv.appendChild(row);
+    container.appendChild(qDiv);
+  });
+
+  var progressFill = document.getElementById('progressFill');
+  var progressText = document.getElementById('progressText');
+
+  function updateProgress(){
+    var n = Object.keys(answers).length;
+    progressFill.style.width = (n / questions.length * 100) + '%';
+    progressText.textContent = 'Answered ' + n + ' / ' + questions.length;
+  }
+
+  document.getElementById('submitBtn').addEventListener('click', function(){
+    var missing = [];
+    for (var i = 0; i < questions.length; i++) {
+      var qEl = document.getElementById('q-' + i);
+      if (typeof answers[i] === 'undefined') {
+        missing.push(i);
+        qEl.classList.add('missing');
+      } else {
+        qEl.classList.remove('missing');
+      }
+    }
+
+    if (missing.length > 0) {
+      document.getElementById('warnMsg').style.display = 'block';
+      document.getElementById('q-' + missing[0]).scrollIntoView({ behavior:'smooth', block:'center' });
+      return;
+    }
+    document.getElementById('warnMsg').style.display = 'none';
+
+    var total = 0;
+    for (var i = 0; i < questions.length; i++) total += answers[i];
+
+    var levelKey, levelLabel, descEn, descTh;
+    if (total <= 30) {
+      levelKey='excellent'; levelLabel='Excellent Delegator';
+      descEn='You delegate effectively, trust your team, coach and train staff alongside delegating tasks, and understand that you remain accountable for outcomes as the manager.';
+      descTh='คุณมอบหมายงานได้อย่างมีประสิทธิภาพ ไว้ใจทีมงาน สอนงานและโค้ชพนักงานควบคู่ไปกับการมอบหมาย และเข้าใจว่าคุณในฐานะหัวหน้ายังคงรับผิดชอบผลลัพธ์ของงานนั้นเสมอ';
+    } else if (total <= 44) {
+      levelKey='good'; levelLabel='Good Delegator';
+      descEn='You have good delegation skills. Some areas could improve, such as giving feedback and coaching more consistently to develop your team alongside delegating tasks.';
+      descTh='คุณมีทักษะการมอบหมายงานที่ดี มีบางจุดที่ยังปรับปรุงได้ เช่น การให้ feedback และโค้ชพนักงานอย่างสม่ำเสมอมากขึ้น เพื่อพัฒนาทีมควบคู่ไปกับการมอบหมายงาน';
+    } else if (total <= 58) {
+      levelKey='average'; levelLabel='Average';
+      descEn='You delegate to some extent, but still show tendencies to control or hesitate in certain situations. More coaching before delegating can help you trust your team more.';
+      descTh='คุณมอบหมายงานได้ในระดับหนึ่ง แต่ยังมีแนวโน้มควบคุมหรือลังเลในบางสถานการณ์ ลองเพิ่มการสอนงานก่อนมอบหมาย จะช่วยให้ไว้ใจทีมได้มากขึ้น';
+    } else if (total <= 72) {
+      levelKey='needsimprove'; levelLabel='Needs Improvement';
+      descEn='You tend to do work yourself or over-control details. Start by training and coaching staff to build their capability, then gradually let them take on tasks — remember delegation must come with development, and you still own the outcome.';
+      descTh='คุณมีแนวโน้มทำงานเองมากกว่ามอบหมาย หรือควบคุมรายละเอียดมากเกินไป ควรเริ่มจากการสอนงาน/โค้ชพนักงานให้มีความสามารถเพียงพอ แล้วค่อยๆ ปล่อยให้ทำงานด้วยตัวเอง และคุณยังคงต้องรับผิดชอบผลลัพธ์ของงานที่มอบหมายอยู่เสมอ';
+    } else {
+      levelKey='micromanager'; levelLabel='Micromanager Tendency';
+      descEn='You tend to do the work yourself or closely control your staff, which may limit their development. Start with small delegated tasks alongside training and feedback to build mutual confidence.';
+      descTh='คุณมีแนวโน้มที่จะทำงานเองหรือควบคุมงานของพนักงานอย่างใกล้ชิด ซึ่งอาจทำให้ทีมงานขาดโอกาสพัฒนา ลองเริ่มจากการสอนงานและมอบหมายงานเล็กๆ พร้อมให้ feedback เพื่อสร้างความมั่นใจทั้งสองฝ่าย';
+    }
+
+    document.getElementById('totalLabel').textContent = 'Total score: ' + total + ' / 85 (lower = better delegator) · คะแนนรวม ' + total + ' จาก 85 (ยิ่งน้อยยิ่งมอบหมายงานได้ดี)';
+    document.getElementById('levelBadgeWrap').innerHTML = '<span class="level-badge lvl-' + levelKey + '">' + levelLabel + '</span>';
+    document.getElementById('levelDescEn').textContent = descEn;
+    document.getElementById('levelDescTh').textContent = descTh;
+
+    document.getElementById('quizWrap').style.display = 'none';
+    document.querySelector('.progress-wrap').style.display = 'none';
+    document.getElementById('results').style.display = 'block';
+    window.scrollTo(0, 0);
+  });
+
+  document.getElementById('restartBtn').addEventListener('click', function(){
+    answers = {};
+    var allBtns = document.querySelectorAll('.opt-btn.selected');
+    for (var i = 0; i < allBtns.length; i++) allBtns[i].classList.remove('selected');
+    document.getElementById('quizWrap').style.display = 'block';
+    document.querySelector('.progress-wrap').style.display = 'block';
+    document.getElementById('results').style.display = 'none';
+    updateProgress();
+    window.scrollTo(0, 0);
+  });
+
+  updateProgress();
+})();
+</script>
+</body>
+</html>
