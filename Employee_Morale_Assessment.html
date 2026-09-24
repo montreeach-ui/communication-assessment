@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>การประเมินขวัญกำลังใจของพนักงาน (Employee Morale Assessment) | The Bridge</title>
+<style>
+  :root{
+    --navy:#1A237E; --blue:#1565C0;
+    --gold-lt:#FDF6E3;
+    --gray:#37474F; --light:#ECEFF1;
+    --green:#2E7D32; --green-lt:#E8F5E9;
+    --red:#C62828; --red-lt:#FFEBEE;
+    --amber:#EF6C00; --amber-lt:#FFF3E0;
+    --teal:#00695C; --teal-lt:#E0F2F1;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  body{font-family:'Sarabun','TH Sarabun New',sans-serif;background:var(--light);color:var(--gray);font-size:16px;line-height:1.6;padding-bottom:60px;}
+
+  .header{background:linear-gradient(135deg,var(--navy),#283593);color:#fff;text-align:center;padding:32px 16px 28px;}
+  .header h1{font-size:1.35rem;font-weight:700;margin-bottom:6px;}
+  .header p{font-size:0.92rem;opacity:0.9;}
+
+  .container{max-width:720px;margin:0 auto;padding:0 16px;}
+
+  .scale-box{background:#fff;border-radius:12px;padding:18px 20px;margin-top:-18px;box-shadow:0 2px 10px rgba(0,0,0,0.08);}
+  .scale-box h2{font-size:1.05rem;color:var(--navy);margin-bottom:10px;}
+  .scale-row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;font-size:0.8rem;}
+  .scale-item{flex:1 1 18%;text-align:center;background:var(--gold-lt);border-radius:8px;padding:8px 4px;font-weight:600;color:var(--navy);}
+
+  .progress-wrap{position:sticky;top:0;background:var(--light);padding:10px 16px 6px;z-index:10;}
+  .progress-bar{height:8px;background:#dfe3e8;border-radius:4px;overflow:hidden;}
+  .progress-fill{height:100%;background:var(--blue);width:0%;transition:width .2s;}
+  .progress-text{font-size:0.8rem;text-align:right;color:var(--gray);margin-top:4px;}
+
+  .dim-title{background:var(--navy);color:#fff;padding:10px 16px;border-radius:10px;font-size:0.95rem;font-weight:700;margin:22px 0 6px;}
+
+  .question{background:#fff;border-radius:12px;padding:18px;margin:12px 0;box-shadow:0 1px 6px rgba(0,0,0,0.06);}
+  .question p.q-text{font-weight:600;color:var(--navy);margin-bottom:12px;font-size:0.96rem;}
+  .q-num{display:inline-block;background:var(--blue);color:#fff;border-radius:50%;width:26px;height:26px;text-align:center;line-height:26px;font-size:0.85rem;margin-right:8px;}
+
+  .likert{display:flex;justify-content:space-between;gap:6px;}
+  .opt-btn{flex:1;text-align:center;padding:10px 0;border-radius:8px;border:2px solid #dfe3e8;font-weight:700;color:var(--gray);background:#fff;cursor:pointer;font-size:1rem;font-family:inherit;-webkit-appearance:none;appearance:none;}
+  .opt-btn.selected{background:var(--blue);border-color:var(--blue);color:#fff;}
+
+  .submit-wrap{text-align:center;margin:30px 0;}
+  #submitBtn{background:var(--navy);color:#fff;border:none;padding:14px 40px;font-size:1.05rem;font-weight:700;border-radius:30px;cursor:pointer;box-shadow:0 4px 12px rgba(26,35,126,0.35);font-family:inherit;}
+  #submitBtn:hover{background:var(--blue);}
+
+  #results{display:none;}
+  .result-card{background:#fff;border-radius:14px;padding:24px 20px;margin-top:10px;box-shadow:0 2px 12px rgba(0,0,0,0.08);}
+  .result-card h2{color:var(--navy);font-size:1.2rem;margin-bottom:4px;}
+  .result-card .total-label{font-size:0.9rem;color:#607D8B;margin-bottom:16px;}
+
+  .level-badge{display:inline-block;padding:8px 22px;border-radius:20px;font-weight:700;font-size:1.05rem;margin-bottom:18px;}
+  .lvl-verylow{background:var(--red-lt);color:var(--red);}
+  .lvl-low{background:var(--amber-lt);color:var(--amber);}
+  .lvl-moderate{background:#E3F2FD;color:var(--blue);}
+  .lvl-good{background:var(--teal-lt);color:var(--teal);}
+  .lvl-excellent{background:var(--green-lt);color:var(--green);}
+  .level-desc{font-size:0.85rem;color:#607D8B;margin-bottom:18px;padding:0 8px;text-align:center;}
+
+  .bar-row{margin-bottom:14px;}
+  .bar-label{display:flex;justify-content:space-between;font-size:0.9rem;font-weight:600;color:var(--navy);margin-bottom:4px;}
+  .bar-bg{background:#ECEFF1;border-radius:6px;height:14px;overflow:hidden;}
+  .bar-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--navy));border-radius:6px;transition:width .6s ease;}
+
+  .legend-scale{display:flex;justify-content:space-between;font-size:0.72rem;color:#90A4AE;margin:20px 0 4px;border-top:1px dashed #CFD8DC;padding-top:10px;flex-wrap:wrap;gap:4px;}
+
+  .disclaimer{font-size:0.76rem;color:#90A4AE;text-align:center;margin-top:10px;font-style:italic;}
+
+  .restart{display:block;margin:22px auto 0;background:none;border:2px solid var(--navy);color:var(--navy);padding:10px 26px;border-radius:24px;font-weight:700;cursor:pointer;font-family:inherit;}
+  .restart:hover{background:var(--navy);color:#fff;}
+
+  .warn{color:var(--red);text-align:center;font-size:0.85rem;margin-top:8px;display:none;}
+  .question.missing{outline:2px solid var(--red);}
+  footer{text-align:center;font-size:0.75rem;color:#90A4AE;margin-top:30px;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>การประเมินขวัญกำลังใจของพนักงาน</h1>
+  <p>Employee Morale Assessment</p>
+</div>
+
+<div class="container">
+
+  <div class="scale-box">
+    <h2>คำชี้แจง</h2>
+    <p style="font-size:0.88rem;margin-bottom:10px;">การประเมินนี้แสดงให้เห็นถึงระดับความสุขของพนักงานที่มีต่อการทำงาน ครอบคลุม 7 หัวข้อหลัก กรุณาให้คะแนนตามคำถามแต่ละข้อ โดยใช้เกณฑ์ดังนี้</p>
+    <div class="scale-row">
+      <div class="scale-item">0<br>ไม่เคย</div>
+      <div class="scale-item">1<br>นานๆ<br>ครั้ง</div>
+      <div class="scale-item">2<br>บางครั้ง</div>
+      <div class="scale-item">3<br>บ่อยครั้ง</div>
+      <div class="scale-item">4<br>ตลอด<br>เวลา</div>
+    </div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-text" id="progressText">ตอบแล้ว 0 / 21 ข้อ</div>
+  </div>
+
+  <div id="quizWrap">
+    <div id="questionsContainer"></div>
+    <div class="submit-wrap">
+      <button id="submitBtn">ดูผลการประเมิน</button>
+      <div class="warn" id="warnMsg">กรุณาตอบคำถามที่ไฮไลต์สีแดงให้ครบก่อนดูผลค่ะ</div>
+    </div>
+  </div>
+
+  <div id="results">
+    <div class="result-card">
+      <h2 id="levelTitle">ผลการประเมินขวัญกำลังใจของพนักงาน</h2>
+      <div class="total-label" id="totalLabel"></div>
+      <div style="text-align:center;">
+        <div id="levelBadgeWrap"></div>
+      </div>
+      <div class="level-desc" id="levelDesc"></div>
+
+      <div id="barsContainer"></div>
+
+      <div class="legend-scale">
+        <span>0–16<br>ต่ำมาก</span>
+        <span>17–33<br>ต่ำ</span>
+        <span>34–50<br>ปานกลาง</span>
+        <span>51–67<br>ดี</span>
+        <span>68–84<br>ยอดเยี่ยม</span>
+      </div>
+      <p class="disclaimer">* เกณฑ์การแปลผลนี้จัดทำเพิ่มเติมโดยอิงจากช่วงคะแนนที่เป็นไปได้ (0–84) เนื่องจากเอกสารต้นฉบับไม่ได้ระบุตารางแปลผลไว้</p>
+
+      <button type="button" class="restart" id="restartBtn">ทำแบบประเมินอีกครั้ง</button>
+    </div>
+  </div>
+
+  <footer>The Bridge Co., Ltd. · Employee Morale Assessment</footer>
+</div>
+
+<script>
+(function(){
+  var questions = [
+    "องค์กรส่งเสริมให้เกิดความสัมพันธ์ที่ดีระหว่างเพื่อนร่วมงาน",
+    "เพื่อนร่วมงานส่วนใหญ่ทำงานร่วมกันแทนที่จะแข่งขันกัน",
+    "เพื่อนร่วมงานดูแลเอาใจใส่กันด้วยความอบอุ่น และเป็นมิตร",
+    "ที่องค์กรจะมีประชุมพนักงานอย่างน้อยเดือนละ 1 ครั้ง",
+    "ผู้บริหารให้ความสำคัญกับการสื่อสารภายในองค์กรอย่างทั่วถึง",
+    "พนักงานมีความชัดเจนเรื่องเป้าหมาย หรือสิ่งที่องค์กรพยายามทำให้บรรลุผลสำเร็จ",
+    "ที่องค์กร พนักงานจะได้รับรางวัลหากงานมีความคืบหน้า",
+    "เพื่อนร่วมงานมักแสดงความซาบซึ้งต่อกันอย่างสม่ำเสมอ",
+    "พนักงานรู้สึกว่าหัวหน้าซาบซึ้งกับการทำงานของตน",
+    "พนักงานมักมีโอกาสในการแสดงความคิดเห็นอยู่เสมอ",
+    "องค์กรสร้างสิ่งแวดล้อมซึ่งช่วยส่งเสริมให้เกิดความคิดสร้างสรรค์",
+    "การรับงานเพิ่มจากงานประจำถือเป็นเรื่องปรกติสำหรับพนักงาน",
+    "พนักงานรู้สึกว่างานที่ตัวเองทำมีความสำคัญ หรือองค์กรเล็งเห็นความสำคัญของงานที่พนักงานทำ",
+    "พนักงานพึงพอใจกับงานที่ทำ และคิดว่างานน่าสนใจ",
+    "องค์กรให้การยอมรับสิ่งที่พนักงานสนใจนอกเหนือจากเรื่องงานที่ทำ",
+    "องค์กรเตรียมโอกาสต่างๆ มากมายไว้เพื่อรองรับการเติบโตทางด้านอาชีพของพนักงาน",
+    "องค์กรจัดฝึกอบรมให้พนักงานเพื่อพัฒนาทักษะความรู้ ทำให้เกิดความก้าวหน้าทางด้านอาชีพ",
+    "องค์กรมีระบบรองรับการทำงาน การปรับเพิ่มเงินเดือน ปรับตำแหน่งพนักงานเพื่อให้บรรลุเป้าหมายที่องค์กรวางไว้",
+    "พนักงานรู้สึกอยากมาทำงาน ขวัญกำลังใจของพนักงานอยู่ในระดับสูง",
+    "พนักงานทำงานด้วยความสนุกสนาน",
+    "พนักงานมีทัศนคติเชิงบวก หรือคิดบวก"
+  ];
+
+  var dimensions = [
+    { name:"ความสัมพันธ์ระหว่างพนักงาน (Employee Relationships)", idx:[0,1,2] },
+    { name:"การสื่อสารภายในองค์กร (Internal Communication)", idx:[3,4,5] },
+    { name:"การแสดงการยอมรับและการแสดงความซาบซึ้ง (Recognition & Appreciation)", idx:[6,7,8] },
+    { name:"การแสดงความคิดเห็นของพนักงาน (Employee Input)", idx:[9,10,11] },
+    { name:"ความพึงพอใจของพนักงาน (Employee Satisfaction)", idx:[12,13,14] },
+    { name:"การเติบโตทางด้านอาชีพและส่วนตัว (Career & Personal Growth)", idx:[15,16,17] },
+    { name:"ความมุ่งมั่นของพนักงาน (Employee Commitment)", idx:[18,19,20] }
+  ];
+
+  var answers = {};
+  var container = document.getElementById('questionsContainer');
+
+  dimensions.forEach(function(dim){
+    var dimHeader = document.createElement('div');
+    dimHeader.className = 'dim-title';
+    dimHeader.textContent = dim.name;
+    container.appendChild(dimHeader);
+
+    dim.idx.forEach(function(qIndex){
+      var qDiv = document.createElement('div');
+      qDiv.className = 'question';
+      qDiv.id = 'q-' + qIndex;
+
+      var qText = document.createElement('p');
+      qText.className = 'q-text';
+      var numSpan = document.createElement('span');
+      numSpan.className = 'q-num';
+      numSpan.textContent = (qIndex + 1);
+      qText.appendChild(numSpan);
+      qText.appendChild(document.createTextNode(questions[qIndex]));
+      qDiv.appendChild(qText);
+
+      var likertDiv = document.createElement('div');
+      likertDiv.className = 'likert';
+
+      for (var v = 0; v <= 4; v++) {
+        (function(val){
+          var btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'opt-btn';
+          btn.textContent = val;
+          btn.setAttribute('data-q', qIndex);
+          btn.setAttribute('data-v', val);
+          btn.addEventListener('click', function(){
+            answers[qIndex] = val;
+            var siblings = likertDiv.querySelectorAll('.opt-btn');
+            for (var s = 0; s < siblings.length; s++) siblings[s].classList.remove('selected');
+            btn.classList.add('selected');
+            qDiv.classList.remove('missing');
+            updateProgress();
+          });
+          likertDiv.appendChild(btn);
+        })(v);
+      }
+
+      qDiv.appendChild(likertDiv);
+      container.appendChild(qDiv);
+    });
+  });
+
+  var progressFill = document.getElementById('progressFill');
+  var progressText = document.getElementById('progressText');
+
+  function updateProgress(){
+    var n = Object.keys(answers).length;
+    progressFill.style.width = (n / questions.length * 100) + '%';
+    progressText.textContent = 'ตอบแล้ว ' + n + ' / ' + questions.length + ' ข้อ';
+  }
+
+  document.getElementById('submitBtn').addEventListener('click', function(){
+    var missing = [];
+    for (var i = 0; i < questions.length; i++) {
+      var qEl = document.getElementById('q-' + i);
+      if (typeof answers[i] === 'undefined') {
+        missing.push(i);
+        qEl.classList.add('missing');
+      } else {
+        qEl.classList.remove('missing');
+      }
+    }
+
+    if (missing.length > 0) {
+      document.getElementById('warnMsg').style.display = 'block';
+      document.getElementById('q-' + missing[0]).scrollIntoView({ behavior:'smooth', block:'center' });
+      return;
+    }
+    document.getElementById('warnMsg').style.display = 'none';
+
+    var total = 0;
+    var scores = dimensions.map(function(dim){
+      var s = dim.idx.reduce(function(sum, idx){ return sum + answers[idx]; }, 0);
+      total += s;
+      return { name: dim.name, score: s, max: 12 };
+    });
+
+    var levelKey, levelLabel, levelDesc;
+    if (total <= 16) { levelKey='verylow'; levelLabel='ต่ำมาก (Very Low)'; levelDesc='ขวัญกำลังใจของพนักงานอยู่ในระดับที่น่าเป็นห่วงมาก ควรเร่งหาสาเหตุและวางแผนปรับปรุงอย่างเร่งด่วนในหลายด้าน'; }
+    else if (total <= 33) { levelKey='low'; levelLabel='ต่ำ (Low)'; levelDesc='ขวัญกำลังใจของพนักงานอยู่ในระดับต่ำ ควรพิจารณาปรับปรุงในหัวข้อที่ได้คะแนนน้อยที่สุดก่อน'; }
+    else if (total <= 50) { levelKey='moderate'; levelLabel='ปานกลาง (Moderate)'; levelDesc='ขวัญกำลังใจของพนักงานอยู่ในระดับปานกลาง มีทั้งจุดแข็งและจุดที่ควรพัฒนาเพิ่มเติม'; }
+    else if (total <= 67) { levelKey='good'; levelLabel='ดี (Good)'; levelDesc='ขวัญกำลังใจของพนักงานอยู่ในระดับดี องค์กรดูแลพนักงานได้ค่อนข้างทั่วถึง ยังมีบางจุดที่พัฒนาต่อยอดได้'; }
+    else { levelKey='excellent'; levelLabel='ยอดเยี่ยม (Excellent)'; levelDesc='ขวัญกำลังใจของพนักงานอยู่ในระดับยอดเยี่ยม องค์กรดูแลพนักงานได้อย่างทั่วถึงและมีประสิทธิภาพในทุกด้าน'; }
+
+    document.getElementById('totalLabel').textContent = 'คะแนนรวม ' + total + ' จาก 84 คะแนน';
+    document.getElementById('levelBadgeWrap').innerHTML = '<span class="level-badge lvl-' + levelKey + '">' + levelLabel + '</span>';
+    document.getElementById('levelDesc').textContent = levelDesc;
+
+    var barsContainer = document.getElementById('barsContainer');
+    barsContainer.innerHTML = scores.map(function(s){
+      var pct = (s.score / s.max * 100);
+      return '<div class="bar-row">' +
+        '<div class="bar-label"><span>' + s.name + '</span><span>' + s.score + '/' + s.max + '</span></div>' +
+        '<div class="bar-bg"><div class="bar-fill" style="width:' + pct + '%"></div></div>' +
+        '</div>';
+    }).join('');
+
+    document.getElementById('quizWrap').style.display = 'none';
+    document.querySelector('.progress-wrap').style.display = 'none';
+    document.getElementById('results').style.display = 'block';
+    window.scrollTo(0, 0);
+  });
+
+  document.getElementById('restartBtn').addEventListener('click', function(){
+    answers = {};
+    var allBtns = document.querySelectorAll('.opt-btn.selected');
+    for (var i = 0; i < allBtns.length; i++) allBtns[i].classList.remove('selected');
+    document.getElementById('quizWrap').style.display = 'block';
+    document.querySelector('.progress-wrap').style.display = 'block';
+    document.getElementById('results').style.display = 'none';
+    updateProgress();
+    window.scrollTo(0, 0);
+  });
+
+  updateProgress();
+})();
+</script>
+</body>
+</html>
