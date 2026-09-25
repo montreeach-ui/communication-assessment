@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Talent Selection Form | The Bridge</title>
+<style>
+  :root{
+    --navy:#1A237E; --blue:#1565C0;
+    --gray:#37474F; --light:#ECEFF1;
+    --green:#2E7D32; --green-lt:#E8F5E9;
+    --red:#C62828;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  body{font-family:'Sarabun','TH Sarabun New',sans-serif;background:var(--light);color:var(--gray);font-size:16px;line-height:1.6;padding-bottom:60px;}
+
+  .header{background:linear-gradient(135deg,var(--navy),#283593);color:#fff;text-align:center;padding:32px 16px 28px;}
+  .header h1{font-size:1.35rem;font-weight:700;margin-bottom:6px;}
+  .header p{font-size:0.9rem;opacity:0.9;}
+
+  .container{max-width:720px;margin:0 auto;padding:0 16px;}
+
+  .card{background:#fff;border-radius:12px;padding:18px 20px;margin:16px 0;box-shadow:0 2px 10px rgba(0,0,0,0.08);}
+  .card h2{font-size:1.02rem;color:var(--navy);margin-bottom:12px;}
+  .card h2 .en{font-weight:500;color:#607D8B;font-size:0.85rem;display:block;margin-top:2px;}
+
+  .field-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;}
+  .field-row .field{flex:1;min-width:150px;}
+  .field label{font-size:0.82rem;color:#607D8B;display:block;margin-bottom:4px;}
+  .field input[type=text]{width:100%;border:1px solid #CFD8DC;border-radius:8px;padding:9px 10px;font-family:inherit;font-size:0.92rem;}
+  textarea{width:100%;border:1px solid #CFD8DC;border-radius:8px;padding:9px 10px;font-family:inherit;font-size:0.92rem;resize:vertical;min-height:70px;}
+
+  .sub-label{font-size:0.85rem;color:var(--navy);font-weight:600;margin:10px 0 6px;}
+
+  .rating-item{padding:14px 0;border-bottom:1px solid #ECEFF1;}
+  .rating-item:last-child{border-bottom:none;}
+  .rating-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+  .r-num{display:inline-block;background:var(--blue);color:#fff;border-radius:50%;width:24px;height:24px;text-align:center;line-height:24px;font-size:0.76rem;flex-shrink:0;}
+  .r-text{flex:1;min-width:200px;font-size:0.88rem;color:var(--gray);}
+  .r-text .en{display:block;color:#90A4AE;font-size:0.78rem;font-style:italic;}
+  .r-btns{display:flex;gap:6px;flex-shrink:0;}
+  .opt-btn{width:38px;height:38px;border-radius:8px;border:2px solid #dfe3e8;font-weight:700;color:var(--gray);background:#fff;cursor:pointer;font-size:0.9rem;font-family:inherit;}
+  .opt-btn.selected{background:var(--blue);border-color:var(--blue);color:#fff;}
+
+  .rating-item.missing{background:#FFEBEE;border-radius:8px;}
+
+  .section-total{text-align:right;font-size:0.85rem;font-weight:700;color:var(--navy);margin-top:10px;}
+
+  .submit-wrap{text-align:center;margin:30px 0;}
+  #submitBtn{background:var(--navy);color:#fff;border:none;padding:14px 40px;font-size:1.05rem;font-weight:700;border-radius:30px;cursor:pointer;box-shadow:0 4px 12px rgba(26,35,126,0.35);font-family:inherit;}
+  #submitBtn:hover{background:var(--blue);}
+  .warn{color:var(--red);text-align:center;font-size:0.85rem;margin-top:8px;display:none;}
+
+  #results{display:none;}
+  .result-card{background:#fff;border-radius:14px;padding:24px 20px;margin-top:10px;box-shadow:0 2px 12px rgba(0,0,0,0.08);}
+  .result-card h2{color:var(--navy);font-size:1.15rem;margin-bottom:16px;text-align:center;}
+  .summary-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px dashed #ECEFF1;font-size:0.9rem;}
+  .summary-row strong{color:var(--navy);}
+  .info-block{margin-bottom:14px;}
+  .info-block .lbl{font-size:0.78rem;color:#90A4AE;}
+  .info-block .val{font-size:0.92rem;color:var(--gray);white-space:pre-wrap;}
+
+  .restart{display:block;margin:22px auto 0;background:none;border:2px solid var(--navy);color:var(--navy);padding:10px 26px;border-radius:24px;font-weight:700;cursor:pointer;font-family:inherit;}
+  .restart:hover{background:var(--navy);color:#fff;}
+
+  footer{text-align:center;font-size:0.75rem;color:#90A4AE;margin-top:30px;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Talent Selection Form</h1>
+  <p>แบบฟอร์มคัดเลือกและประเมิน Talent</p>
+</div>
+
+<div class="container">
+
+  <div id="formWrap">
+
+    <div class="card">
+      <h2>ข้อมูลทั่วไป <span class="en">General Information</span></h2>
+      <div class="field-row">
+        <div class="field"><label>ชื่อ/นามสกุล (Name/Surname)</label><input type="text" id="f-name"></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>ตำแหน่ง (Position)</label><input type="text" id="f-position"></div>
+        <div class="field"><label>แผนก/ฝ่าย (Dept/Division)</label><input type="text" id="f-dept"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>ประสบการณ์ทำงาน <span class="en">Working Experiences</span></h2>
+      <textarea id="f-experience"></textarea>
+    </div>
+
+    <div class="card">
+      <h2>หน้าที่/ความรับผิดชอบโดยรวม <span class="en">Role &amp; Responsibilities in general</span></h2>
+      <textarea id="f-responsibility"></textarea>
+    </div>
+
+    <div class="card">
+      <h2>คุณสมบัติ <span class="en">Qualifications</span></h2>
+      <div class="sub-label">ประวัติการศึกษา (Educational Background)</div>
+      <textarea id="f-education"></textarea>
+      <div class="sub-label">ประวัติการฝึกอบรม/การศึกษาดูงานหรือทำงานในต่างประเทศ (Training &amp; Overseas Technical Visit)</div>
+      <textarea id="f-training"></textarea>
+    </div>
+
+    <div class="card">
+      <h2>ผลงานหรือสิ่งที่เคยทำสำเร็จ <span class="en">Quantification or Accomplishments</span></h2>
+      <textarea id="f-accomplishment"></textarea>
+    </div>
+
+    <div class="card">
+      <h2>คุณลักษณะของ Talent <span class="en">The Characteristics of Talent (ให้คะแนน 1–5, 5 = สูงสุด)</span></h2>
+      <div id="talentRatings"></div>
+      <div class="section-total" id="talentTotal">รวมคะแนน: 0 / 75</div>
+    </div>
+
+    <div class="card">
+      <h2>คุณสมบัติที่จะเป็น Potential (ตำแหน่งระดับผู้บริหาร) <span class="en">Potential for Managerial Roles</span></h2>
+      <div id="potentialRatings"></div>
+      <div class="section-total" id="potentialTotal">รวมคะแนน: 0 / 15</div>
+    </div>
+
+    <div class="card">
+      <h2>คุณลักษณะอื่นๆ เพิ่มเติมของ Talent <span class="en">Additional Characteristics of Talent (ไม่บังคับ)</span></h2>
+      <textarea id="f-additional"></textarea>
+    </div>
+
+    <div class="submit-wrap">
+      <button id="submitBtn">ดูสรุปผล</button>
+      <div class="warn" id="warnMsg">กรุณาให้คะแนนข้อที่ไฮไลต์สีแดงให้ครบก่อนดูสรุปผลค่ะ</div>
+    </div>
+  </div>
+
+  <div id="results">
+    <div class="result-card">
+      <h2>สรุปผล Talent Selection Form</h2>
+
+      <div class="info-block"><div class="lbl">ชื่อ/นามสกุล</div><div class="val" id="r-name"></div></div>
+      <div class="info-block"><div class="lbl">ตำแหน่ง / แผนก-ฝ่าย</div><div class="val" id="r-position"></div></div>
+
+      <div class="summary-row"><span>รวมคะแนนคุณลักษณะของ Talent</span><strong id="r-talent-total">0 / 75</strong></div>
+      <div class="summary-row"><span>รวมคะแนน Potential (ระดับผู้บริหาร)</span><strong id="r-potential-total">0 / 15</strong></div>
+      <div class="summary-row"><span>คะแนนรวมทั้งหมด</span><strong id="r-grand-total">0 / 90</strong></div>
+
+      <div class="info-block" style="margin-top:18px;"><div class="lbl">ประสบการณ์ทำงาน</div><div class="val" id="r-experience"></div></div>
+      <div class="info-block"><div class="lbl">หน้าที่/ความรับผิดชอบโดยรวม</div><div class="val" id="r-responsibility"></div></div>
+      <div class="info-block"><div class="lbl">ประวัติการศึกษา</div><div class="val" id="r-education"></div></div>
+      <div class="info-block"><div class="lbl">ประวัติการฝึกอบรม/ดูงานต่างประเทศ</div><div class="val" id="r-training"></div></div>
+      <div class="info-block"><div class="lbl">ผลงานหรือสิ่งที่เคยทำสำเร็จ</div><div class="val" id="r-accomplishment"></div></div>
+      <div class="info-block"><div class="lbl">คุณลักษณะอื่นๆ เพิ่มเติม</div><div class="val" id="r-additional"></div></div>
+
+      <p style="font-size:0.76rem;color:#90A4AE;text-align:center;margin-top:16px;font-style:italic;">* หน้านี้ไม่มีการบันทึกข้อมูลไปยังเซิร์ฟเวอร์ใดๆ กรุณาถ่ายภาพหน้าจอหรือคัดลอกข้อมูลนี้เพื่อเก็บไว้ใช้งานต่อ</p>
+
+      <button type="button" class="restart" id="restartBtn">กรอกแบบฟอร์มใหม่</button>
+    </div>
+  </div>
+
+  <footer>The Bridge Co., Ltd. · Talent Selection Form</footer>
+</div>
+
+<script>
+(function(){
+  var talentItems = [
+    { th:"ความกระตือรือร้น หรือระดับของพลังงาน", en:"Enthusiasm or Level of energy" },
+    { th:"ความสามารถในการตัดสินใจ", en:"Decision Making Competence" },
+    { th:"ความมุ่งมั่นและความทะเยอทะยาน", en:"Determination and Ambition" },
+    { th:"มีทักษะการใช้ภาษาต่างประเทศที่ดี", en:"The ability to use foreign language" },
+    { th:"ไม่กลัวการเปลี่ยนแปลง", en:"Acceptance of change" },
+    { th:"สามารถจัดการกับการเปลี่ยนแปลงได้ดี", en:"The ability to manage change effectively" },
+    { th:"เป็นคนชอบศึกษาหาความรู้หรือเป็นคนชอบเรียนรู้", en:"Willingness to learn or enhance his/her knowledge" },
+    { th:"สามารถเรียนรู้สิ่งต่างๆ ได้อย่างรวดเร็ว", en:"The ability to catch up and learn new things" },
+    { th:"เป็นคนเชื่อมั่นในตัวเอง", en:"Self-confidence" },
+    { th:"สื่อสารได้อย่างมีประสิทธิภาพ", en:"An Effective communicator" },
+    { th:"สามารถแก้ปัญหาได้ดี", en:"An effective problem-solver" },
+    { th:"เป็นคนสามารถหาเหตุผลมาสนับสนุนความคิดของตัวเองได้ดี", en:"The ability to support his/her ideas with evidences" },
+    { th:"มีความมุ่งมั่นที่จะทำงานให้บรรลุเป้าหมาย", en:"A determined person to accomplish tasks" },
+    { th:"ความคิดสร้างสรรค์", en:"Creativity" },
+    { th:"ความสามารถในการทำงานภายใต้ความกดดัน", en:"The ability to work under pressure" }
+  ];
+
+  var potentialItems = [
+    { th:"ความเป็นไปได้ในการทำงานในระดับตำแหน่งผู้จัดการหรือผู้บริหาร", en:"The possibility to work in a managerial level" },
+    { th:"ความเป็นไปได้ในการทำงานในระดับตำแหน่งผู้บริหารระดับสูง", en:"The possibility to work in a top managerial level" },
+    { th:"ผลงานการทำงานทุกตำแหน่งอยู่ในระดับสูง", en:"High performance in every level" }
+  ];
+
+  var talentAnswers = {};
+  var potentialAnswers = {};
+
+  function buildRatingList(containerId, items, answersObj, prefix, totalElId, maxScore){
+    var container = document.getElementById(containerId);
+    items.forEach(function(item, idx){
+      var itemDiv = document.createElement('div');
+      itemDiv.className = 'rating-item';
+      itemDiv.id = prefix + '-' + idx;
+
+      var row = document.createElement('div');
+      row.className = 'rating-row';
+
+      var num = document.createElement('span');
+      num.className = 'r-num';
+      num.textContent = (idx + 1);
+      row.appendChild(num);
+
+      var textSpan = document.createElement('span');
+      textSpan.className = 'r-text';
+      textSpan.innerHTML = item.th + '<span class="en">' + item.en + '</span>';
+      row.appendChild(textSpan);
+
+      var btnsWrap = document.createElement('div');
+      btnsWrap.className = 'r-btns';
+      for (var v = 1; v <= 5; v++) {
+        (function(val){
+          var btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'opt-btn';
+          btn.textContent = val;
+          btn.addEventListener('click', function(){
+            answersObj[idx] = val;
+            var siblings = btnsWrap.querySelectorAll('.opt-btn');
+            for (var s = 0; s < siblings.length; s++) siblings[s].classList.remove('selected');
+            btn.classList.add('selected');
+            itemDiv.classList.remove('missing');
+            updateSectionTotal(items, answersObj, totalElId, maxScore);
+          });
+          btnsWrap.appendChild(btn);
+        })(v);
+      }
+      row.appendChild(btnsWrap);
+      itemDiv.appendChild(row);
+      container.appendChild(itemDiv);
+    });
+  }
+
+  function updateSectionTotal(items, answersObj, totalElId, maxScore){
+    var sum = 0;
+    for (var i = 0; i < items.length; i++) sum += (answersObj[i] || 0);
+    document.getElementById(totalElId).textContent = 'รวมคะแนน: ' + sum + ' / ' + maxScore;
+  }
+
+  buildRatingList('talentRatings', talentItems, talentAnswers, 'talent', 'talentTotal', 75);
+  buildRatingList('potentialRatings', potentialItems, potentialAnswers, 'potential', 'potentialTotal', 15);
+
+  document.getElementById('submitBtn').addEventListener('click', function(){
+    var missing = [];
+
+    talentItems.forEach(function(item, idx){
+      var el = document.getElementById('talent-' + idx);
+      if (typeof talentAnswers[idx] === 'undefined') { missing.push(el); el.classList.add('missing'); }
+      else { el.classList.remove('missing'); }
+    });
+    potentialItems.forEach(function(item, idx){
+      var el = document.getElementById('potential-' + idx);
+      if (typeof potentialAnswers[idx] === 'undefined') { missing.push(el); el.classList.add('missing'); }
+      else { el.classList.remove('missing'); }
+    });
+
+    if (missing.length > 0) {
+      document.getElementById('warnMsg').style.display = 'block';
+      missing[0].scrollIntoView({ behavior:'smooth', block:'center' });
+      return;
+    }
+    document.getElementById('warnMsg').style.display = 'none';
+
+    var talentTotal = 0;
+    for (var i = 0; i < talentItems.length; i++) talentTotal += talentAnswers[i];
+    var potentialTotal = 0;
+    for (var i = 0; i < potentialItems.length; i++) potentialTotal += potentialAnswers[i];
+    var grandTotal = talentTotal + potentialTotal;
+
+    var name = document.getElementById('f-name').value.trim() || '-';
+    var position = document.getElementById('f-position').value.trim() || '-';
+    var dept = document.getElementById('f-dept').value.trim() || '-';
+
+    document.getElementById('r-name').textContent = name;
+    document.getElementById('r-position').textContent = position + ' / ' + dept;
+    document.getElementById('r-talent-total').textContent = talentTotal + ' / 75';
+    document.getElementById('r-potential-total').textContent = potentialTotal + ' / 15';
+    document.getElementById('r-grand-total').textContent = grandTotal + ' / 90';
+
+    document.getElementById('r-experience').textContent = document.getElementById('f-experience').value.trim() || '-';
+    document.getElementById('r-responsibility').textContent = document.getElementById('f-responsibility').value.trim() || '-';
+    document.getElementById('r-education').textContent = document.getElementById('f-education').value.trim() || '-';
+    document.getElementById('r-training').textContent = document.getElementById('f-training').value.trim() || '-';
+    document.getElementById('r-accomplishment').textContent = document.getElementById('f-accomplishment').value.trim() || '-';
+    document.getElementById('r-additional').textContent = document.getElementById('f-additional').value.trim() || '-';
+
+    document.getElementById('formWrap').style.display = 'none';
+    document.getElementById('results').style.display = 'block';
+    window.scrollTo(0, 0);
+  });
+
+  document.getElementById('restartBtn').addEventListener('click', function(){
+    talentAnswers = {};
+    potentialAnswers = {};
+    var allBtns = document.querySelectorAll('.opt-btn.selected');
+    for (var i = 0; i < allBtns.length; i++) allBtns[i].classList.remove('selected');
+    document.querySelectorAll('input[type=text], textarea').forEach(function(el){ el.value = ''; });
+    document.getElementById('talentTotal').textContent = 'รวมคะแนน: 0 / 75';
+    document.getElementById('potentialTotal').textContent = 'รวมคะแนน: 0 / 15';
+    document.getElementById('formWrap').style.display = 'block';
+    document.getElementById('results').style.display = 'none';
+    window.scrollTo(0, 0);
+  });
+})();
+</script>
+</body>
+</html>
