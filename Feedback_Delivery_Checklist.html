@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Worksheet ขั้นตอนการนำเสนอ Feedback แบบไม่เป็นทางการ | The Bridge</title>
+<style>
+  :root{
+    --navy:#1A237E; --blue:#1565C0;
+    --gray:#37474F; --light:#ECEFF1;
+    --green:#2E7D32; --green-lt:#E8F5E9;
+    --red:#C62828; --red-lt:#FFEBEE;
+    --amber:#EF6C00; --amber-lt:#FFF3E0;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  body{font-family:'Sarabun','TH Sarabun New',sans-serif;background:var(--light);color:var(--gray);font-size:16px;line-height:1.6;padding-bottom:60px;}
+
+  .header{background:linear-gradient(135deg,var(--navy),#283593);color:#fff;text-align:center;padding:32px 16px 28px;}
+  .header h1{font-size:1.25rem;font-weight:700;margin-bottom:6px;}
+  .header p{font-size:0.9rem;opacity:0.9;}
+
+  .container{max-width:720px;margin:0 auto;padding:0 16px;}
+
+  .scale-box{background:#fff;border-radius:12px;padding:18px 20px;margin-top:-18px;box-shadow:0 2px 10px rgba(0,0,0,0.08);}
+  .scale-box h2{font-size:1.05rem;color:var(--navy);margin-bottom:10px;}
+  .scale-box p{font-size:0.88rem;}
+
+  .progress-wrap{position:sticky;top:0;background:var(--light);padding:10px 16px 6px;z-index:10;}
+  .progress-bar{height:8px;background:#dfe3e8;border-radius:4px;overflow:hidden;}
+  .progress-fill{height:100%;background:var(--blue);width:0%;transition:width .2s;}
+  .progress-text{font-size:0.8rem;text-align:right;color:var(--gray);margin-top:4px;}
+
+  .question{background:#fff;border-radius:12px;padding:16px 18px;margin:12px 0;box-shadow:0 1px 6px rgba(0,0,0,0.06);}
+  .q-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+  .q-num{display:inline-block;background:var(--blue);color:#fff;border-radius:50%;width:26px;height:26px;text-align:center;line-height:26px;font-size:0.85rem;flex-shrink:0;}
+  .q-text{flex:1;min-width:200px;font-weight:600;color:var(--navy);font-size:0.92rem;}
+  .yn-btns{display:flex;gap:8px;flex-shrink:0;}
+  .opt-btn{padding:9px 22px;border-radius:8px;border:2px solid #dfe3e8;font-weight:700;color:var(--gray);background:#fff;cursor:pointer;font-size:0.92rem;font-family:inherit;}
+  .opt-btn.yes.selected{background:var(--green);border-color:var(--green);color:#fff;}
+  .opt-btn.no.selected{background:var(--red);border-color:var(--red);color:#fff;}
+
+  .note-field{margin-top:12px;display:none;}
+  .note-field.show{display:block;}
+  .note-field label{font-size:0.8rem;color:var(--amber);font-weight:600;display:block;margin-bottom:4px;}
+  .note-field textarea{width:100%;border:2px solid var(--amber);border-radius:8px;padding:8px 10px;font-family:inherit;font-size:0.88rem;resize:vertical;min-height:50px;background:var(--amber-lt);}
+
+  .submit-wrap{text-align:center;margin:30px 0;}
+  #submitBtn{background:var(--navy);color:#fff;border:none;padding:14px 40px;font-size:1.05rem;font-weight:700;border-radius:30px;cursor:pointer;box-shadow:0 4px 12px rgba(26,35,126,0.35);font-family:inherit;}
+  #submitBtn:hover{background:var(--blue);}
+
+  #results{display:none;}
+  .result-card{background:#fff;border-radius:14px;padding:24px 20px;margin-top:10px;box-shadow:0 2px 12px rgba(0,0,0,0.08);}
+  .result-card h2{color:var(--navy);font-size:1.15rem;margin-bottom:4px;text-align:center;}
+  .total-label{font-size:0.9rem;color:#607D8B;margin-bottom:16px;text-align:center;}
+
+  .level-badge{display:inline-block;padding:8px 22px;border-radius:20px;font-weight:700;font-size:1.02rem;margin-bottom:10px;}
+  .lvl-ready{background:var(--green-lt);color:var(--green);}
+  .lvl-caution{background:var(--amber-lt);color:var(--amber);}
+  .lvl-notready{background:var(--red-lt);color:var(--red);}
+  .level-desc{font-size:0.85rem;color:#607D8B;margin-bottom:18px;padding:0 8px;text-align:center;}
+
+  .gap-list{background:var(--red-lt);border-radius:10px;padding:14px 16px;margin-top:16px;}
+  .gap-list h3{color:var(--red);font-size:0.95rem;margin-bottom:8px;}
+  .gap-list .gap-item{margin-bottom:10px;font-size:0.85rem;color:var(--gray);}
+  .gap-list .gap-item .qtext{font-weight:600;}
+  .gap-list .gap-item .note{color:var(--amber);font-style:italic;margin-top:2px;}
+
+  .restart{display:block;margin:22px auto 0;background:none;border:2px solid var(--navy);color:var(--navy);padding:10px 26px;border-radius:24px;font-weight:700;cursor:pointer;font-family:inherit;}
+  .restart:hover{background:var(--navy);color:#fff;}
+
+  .warn{color:var(--red);text-align:center;font-size:0.85rem;margin-top:8px;display:none;}
+  .question.missing{outline:2px solid var(--red);}
+  footer{text-align:center;font-size:0.75rem;color:#90A4AE;margin-top:30px;}
+
+  @media (max-width:480px){
+    .q-row{flex-direction:column;align-items:flex-start;}
+    .yn-btns{width:100%;}
+    .opt-btn{flex:1;}
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Worksheet: ขั้นตอนการนำเสนอ Feedback แบบไม่เป็นทางการ</h1>
+  <p>Informal Feedback Delivery Checklist</p>
+</div>
+
+<div class="container">
+
+  <div class="scale-box">
+    <h2>คำแนะนำ</h2>
+    <p>ให้ใช้แบบฟอร์มชุดนี้เพื่อเป็นแนวทางในการนำเสนอ Feedback ในแต่ละวัน โดยทำเครื่องหมายว่าคุณได้ปฏิบัติตามขั้นตอนต่างๆ ของการนำเสนอ Feedback ที่มีประสิทธิภาพหรือไม่ หากข้อใด "ไม่ใช่" ให้จดบันทึกสิ่งที่คุณต้องปรับปรุงไว้ด้วย</p>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-text" id="progressText">ตอบแล้ว 0 / 12 ข้อ</div>
+  </div>
+
+  <div id="quizWrap">
+    <div id="questionsContainer"></div>
+    <div class="submit-wrap">
+      <button id="submitBtn">ดูสรุปผล</button>
+      <div class="warn" id="warnMsg">กรุณาตอบคำถามที่ไฮไลต์สีแดงให้ครบก่อนดูผลค่ะ</div>
+    </div>
+  </div>
+
+  <div id="results">
+    <div class="result-card">
+      <h2>สรุปผลการตรวจสอบตนเอง</h2>
+      <div class="total-label" id="totalLabel"></div>
+      <div style="text-align:center;">
+        <div id="levelBadgeWrap"></div>
+      </div>
+      <div class="level-desc" id="levelDesc"></div>
+
+      <div id="gapContainer"></div>
+
+      <button type="button" class="restart" id="restartBtn">ทำแบบตรวจสอบอีกครั้ง</button>
+    </div>
+  </div>
+
+  <footer>The Bridge Co., Ltd. · Feedback Delivery Checklist</footer>
+</div>
+
+<script>
+(function(){
+  var questions = [
+    "มีการระบุเป้าหมาย ผลลัพธ์ หรือพฤติกรรมที่ต้องการเห็นให้พนักงานรับทราบอย่างชัดเจนหรือไม่",
+    "มีการอธิบายขยายความถึงสิ่งที่พนักงานกำลังทำให้เห็นภาพชัดเจน และมีความเฉพาะเจาะจงมากพอ โดยไม่สื่อออกมาในลักษณะก้าวร้าว",
+    "ได้อธิบายชัดเจนถึงสิ่งที่พนักงานควรต้องทำในปัจจุบันเพื่อให้งานบรรลุเป้าหมายหรือ KPIs ที่ได้วางไว้",
+    "มีการอธิบายขยายความถึงวิธีการลดช่องว่าง (ปัญหา) ระหว่างสิ่งที่องค์กรหรือคุณคาดหวังกับผลงานที่เกิดขึ้นจริงให้มีความเฉพาะเจาะจงมากพอ",
+    "มีการเน้นย้ำอีกรอบถึงความสำคัญของเนื้องาน ผลลัพธ์หรือแม้แต่พฤติกรรมของพนักงานซึ่งเกี่ยวข้องกับงานซึ่งคุณต้องการเห็น",
+    "บอกให้พนักงานทราบว่าคุณรู้สึกอย่างไรต่อผลการทำงานของพนักงาน",
+    "สอบถามพนักงานว่ามีสิ่งไหนที่เขาสามารถปรับปรุงหรือพัฒนาผลงานให้ดีขึ้นได้บ้าง",
+    "ตั้งใจฟังพนักงานถึงสิ่งที่เขาพูดออกมา จากนั้นจึงค่อยให้คำแนะนำ",
+    "อธิบายให้เห็นถึงวิธีการปรับปรุงงานที่ถูกต้อง ในกรณีที่มีเวลามากพอ",
+    "ยืนยันอีกครั้งกับพนักงานถึงสิ่งที่เขาเข้าใจ รวมทั้งสิ่งที่ต้องทำ และวิธีการต่างๆ เพื่อปรับปรุงงานให้ดีขึ้น",
+    "สรุปทบทวนวิธีการปรับปรุงงานซึ่งพนักงานได้ตกลงร่วมกันกับคุณอีกครั้งก่อนสิ้นสุดการนำเสนอ Feedback",
+    "กล่าวคำขอบคุณด้วยความจริงใจ"
+  ];
+
+  var answers = {}; // qIndex -> 'yes' | 'no'
+  var container = document.getElementById('questionsContainer');
+
+  questions.forEach(function(qText, qIndex){
+    var qDiv = document.createElement('div');
+    qDiv.className = 'question';
+    qDiv.id = 'q-' + qIndex;
+
+    var rowDiv = document.createElement('div');
+    rowDiv.className = 'q-row';
+
+    var numSpan = document.createElement('span');
+    numSpan.className = 'q-num';
+    numSpan.textContent = (qIndex + 1);
+    rowDiv.appendChild(numSpan);
+
+    var textSpan = document.createElement('span');
+    textSpan.className = 'q-text';
+    textSpan.textContent = qText;
+    rowDiv.appendChild(textSpan);
+
+    var btnsWrap = document.createElement('div');
+    btnsWrap.className = 'yn-btns';
+
+    var noteField = document.createElement('div');
+    noteField.className = 'note-field';
+    var noteLabel = document.createElement('label');
+    noteLabel.textContent = 'สิ่งที่คุณต้องปรับปรุง:';
+    var noteTextarea = document.createElement('textarea');
+    noteTextarea.placeholder = 'พิมพ์สิ่งที่ต้องการปรับปรุง (ไม่บังคับ)';
+    noteField.appendChild(noteLabel);
+    noteField.appendChild(noteTextarea);
+
+    ['yes','no'].forEach(function(val){
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'opt-btn ' + val;
+      btn.textContent = (val === 'yes') ? 'ใช่' : 'ไม่ใช่';
+      btn.setAttribute('data-q', qIndex);
+      btn.setAttribute('data-v', val);
+      btn.addEventListener('click', function(){
+        answers[qIndex] = val;
+        var siblings = btnsWrap.querySelectorAll('.opt-btn');
+        for (var s = 0; s < siblings.length; s++) siblings[s].classList.remove('selected');
+        btn.classList.add('selected');
+        qDiv.classList.remove('missing');
+        if (val === 'no') {
+          noteField.classList.add('show');
+        } else {
+          noteField.classList.remove('show');
+        }
+        updateProgress();
+      });
+      btnsWrap.appendChild(btn);
+    });
+
+    rowDiv.appendChild(btnsWrap);
+    qDiv.appendChild(rowDiv);
+    qDiv.appendChild(noteField);
+    qDiv._noteTextarea = noteTextarea;
+    container.appendChild(qDiv);
+  });
+
+  var progressFill = document.getElementById('progressFill');
+  var progressText = document.getElementById('progressText');
+
+  function updateProgress(){
+    var n = Object.keys(answers).length;
+    progressFill.style.width = (n / questions.length * 100) + '%';
+    progressText.textContent = 'ตอบแล้ว ' + n + ' / ' + questions.length + ' ข้อ';
+  }
+
+  document.getElementById('submitBtn').addEventListener('click', function(){
+    var missing = [];
+    for (var i = 0; i < questions.length; i++) {
+      var qEl = document.getElementById('q-' + i);
+      if (typeof answers[i] === 'undefined') {
+        missing.push(i);
+        qEl.classList.add('missing');
+      } else {
+        qEl.classList.remove('missing');
+      }
+    }
+
+    if (missing.length > 0) {
+      document.getElementById('warnMsg').style.display = 'block';
+      document.getElementById('q-' + missing[0]).scrollIntoView({ behavior:'smooth', block:'center' });
+      return;
+    }
+    document.getElementById('warnMsg').style.display = 'none';
+
+    var yesCount = 0, noItems = [];
+    for (var i = 0; i < questions.length; i++) {
+      if (answers[i] === 'yes') {
+        yesCount++;
+      } else {
+        var qEl = document.getElementById('q-' + i);
+        var note = qEl._noteTextarea ? qEl._noteTextarea.value.trim() : '';
+        noItems.push({ idx: i, note: note });
+      }
+    }
+    var noCount = questions.length - yesCount;
+
+    var levelKey, levelLabel, levelDesc;
+    if (noCount === 0) {
+      levelKey='ready'; levelLabel='ปฏิบัติครบทุกขั้นตอน';
+      levelDesc='ยอดเยี่ยมครับ คุณปฏิบัติตามขั้นตอนการนำเสนอ Feedback ที่มีประสิทธิภาพได้ครบถ้วนทุกข้อ';
+    } else if (noCount <= questions.length / 2) {
+      levelKey='caution'; levelLabel='ปฏิบัติได้เป็นส่วนใหญ่';
+      levelDesc='คุณปฏิบัติตามขั้นตอนส่วนใหญ่ได้ดี แต่ยังมีบางจุดที่ควรปรับปรุง (ดูรายการด้านล่าง)';
+    } else {
+      levelKey='notready'; levelLabel='ยังต้องปรับปรุงอีกหลายจุด';
+      levelDesc='คุณยังไม่ได้ปฏิบัติตามขั้นตอนสำคัญมากกว่าครึ่งหนึ่ง ลองทบทวนรายการด้านล่างและฝึกฝนเพิ่มเติมในการนำเสนอ Feedback ครั้งต่อไป';
+    }
+
+    document.getElementById('totalLabel').textContent = 'ปฏิบัติแล้ว "ใช่" ' + yesCount + ' ข้อ จากทั้งหมด ' + questions.length + ' ข้อ (ไม่ใช่ ' + noCount + ' ข้อ)';
+    document.getElementById('levelBadgeWrap').innerHTML = '<span class="level-badge lvl-' + levelKey + '">' + levelLabel + '</span>';
+    document.getElementById('levelDesc').textContent = levelDesc;
+
+    var gapContainer = document.getElementById('gapContainer');
+    if (noItems.length > 0) {
+      var itemsHtml = noItems.map(function(item){
+        var noteHtml = item.note ? '<div class="note">📝 ' + item.note + '</div>' : '';
+        return '<div class="gap-item"><span class="qtext">ข้อ ' + (item.idx + 1) + ':</span> ' + questions[item.idx] + noteHtml + '</div>';
+      }).join('');
+      gapContainer.innerHTML = '<div class="gap-list"><h3>รายการที่ยังไม่ได้ปฏิบัติ (ควรปรับปรุง):</h3>' + itemsHtml + '</div>';
+    } else {
+      gapContainer.innerHTML = '';
+    }
+
+    document.getElementById('quizWrap').style.display = 'none';
+    document.querySelector('.progress-wrap').style.display = 'none';
+    document.getElementById('results').style.display = 'block';
+    window.scrollTo(0, 0);
+  });
+
+  document.getElementById('restartBtn').addEventListener('click', function(){
+    answers = {};
+    var allBtns = document.querySelectorAll('.opt-btn.selected');
+    for (var i = 0; i < allBtns.length; i++) allBtns[i].classList.remove('selected');
+    var allNotes = document.querySelectorAll('.note-field');
+    for (var i = 0; i < allNotes.length; i++) allNotes[i].classList.remove('show');
+    var allTextareas = document.querySelectorAll('.note-field textarea');
+    for (var i = 0; i < allTextareas.length; i++) allTextareas[i].value = '';
+    document.getElementById('quizWrap').style.display = 'block';
+    document.querySelector('.progress-wrap').style.display = 'block';
+    document.getElementById('results').style.display = 'none';
+    updateProgress();
+    window.scrollTo(0, 0);
+  });
+
+  updateProgress();
+})();
+</script>
+</body>
+</html>
