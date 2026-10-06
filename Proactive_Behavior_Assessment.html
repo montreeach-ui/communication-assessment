@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>แบบประเมินตนเอง: พฤติกรรมการทำงานเชิงรุก | The Bridge</title>
+<style>
+  :root{
+    --navy:#1A237E; --blue:#1565C0;
+    --gold-lt:#FDF6E3;
+    --gray:#37474F; --light:#ECEFF1;
+    --green:#2E7D32; --green-lt:#E8F5E9;
+    --red:#C62828; --red-lt:#FFEBEE;
+    --amber:#EF6C00; --amber-lt:#FFF3E0;
+    --teal:#00695C; --teal-lt:#E0F2F1;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  body{font-family:'Sarabun','TH Sarabun New',sans-serif;background:var(--light);color:var(--gray);font-size:16px;line-height:1.6;padding-bottom:60px;}
+
+  .header{background:linear-gradient(135deg,var(--navy),#283593);color:#fff;text-align:center;padding:32px 16px 28px;}
+  .header h1{font-size:1.3rem;font-weight:700;margin-bottom:6px;}
+  .header p{font-size:0.9rem;opacity:0.9;}
+
+  .container{max-width:720px;margin:0 auto;padding:0 16px;}
+
+  .scale-box{background:#fff;border-radius:12px;padding:18px 20px;margin-top:-18px;box-shadow:0 2px 10px rgba(0,0,0,0.08);}
+  .scale-box h2{font-size:1.05rem;color:var(--navy);margin-bottom:10px;}
+  .scale-row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;font-size:0.82rem;}
+  .scale-item{flex:1 1 18%;text-align:center;background:var(--gold-lt);border-radius:8px;padding:8px 4px;font-weight:600;color:var(--navy);}
+
+  .progress-wrap{position:sticky;top:0;background:var(--light);padding:10px 16px 6px;z-index:10;}
+  .progress-bar{height:8px;background:#dfe3e8;border-radius:4px;overflow:hidden;}
+  .progress-fill{height:100%;background:var(--blue);width:0%;transition:width .2s;}
+  .progress-text{font-size:0.8rem;text-align:right;color:var(--gray);margin-top:4px;}
+
+  .dim-title{background:var(--navy);color:#fff;padding:10px 16px;border-radius:10px;font-size:0.95rem;font-weight:700;margin:22px 0 6px;}
+
+  .question{background:#fff;border-radius:12px;padding:18px;margin:12px 0;box-shadow:0 1px 6px rgba(0,0,0,0.06);}
+  .question p.q-text{font-weight:600;color:var(--navy);margin-bottom:12px;font-size:0.96rem;}
+  .q-num{display:inline-block;background:var(--blue);color:#fff;border-radius:50%;width:26px;height:26px;text-align:center;line-height:26px;font-size:0.85rem;margin-right:8px;}
+
+  .likert{display:flex;justify-content:space-between;gap:6px;}
+  .opt-btn{flex:1;text-align:center;padding:10px 0;border-radius:8px;border:2px solid #dfe3e8;font-weight:700;color:var(--gray);background:#fff;cursor:pointer;font-size:1rem;font-family:inherit;-webkit-appearance:none;appearance:none;}
+  .opt-btn.selected{background:var(--blue);border-color:var(--blue);color:#fff;}
+
+  .submit-wrap{text-align:center;margin:30px 0;}
+  #submitBtn{background:var(--navy);color:#fff;border:none;padding:14px 40px;font-size:1.05rem;font-weight:700;border-radius:30px;cursor:pointer;box-shadow:0 4px 12px rgba(26,35,126,0.35);font-family:inherit;}
+  #submitBtn:hover{background:var(--blue);}
+
+  #results{display:none;}
+  .result-card{background:#fff;border-radius:14px;padding:24px 20px;margin-top:10px;box-shadow:0 2px 12px rgba(0,0,0,0.08);}
+  .result-card h2{color:var(--navy);font-size:1.15rem;margin-bottom:4px;text-align:center;}
+  .total-label{font-size:0.9rem;color:#607D8B;margin-bottom:20px;text-align:center;}
+
+  .dim-result{border-radius:10px;padding:14px 16px;margin-bottom:14px;}
+  .dim-result .dim-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+  .dim-result .dim-name{font-weight:700;color:var(--navy);font-size:0.94rem;}
+  .dim-result .dim-score{font-weight:700;font-size:0.94rem;}
+  .bar-bg{background:#ECEFF1;border-radius:6px;height:12px;overflow:hidden;margin-bottom:8px;}
+  .bar-fill{height:100%;border-radius:6px;transition:width .6s ease;}
+  .dim-level{display:inline-block;padding:4px 14px;border-radius:14px;font-size:0.8rem;font-weight:700;margin-bottom:6px;}
+  .lvl-strength{background:var(--green-lt);color:var(--green);}
+  .lvl-good{background:var(--teal-lt);color:var(--teal);}
+  .lvl-develop{background:var(--amber-lt);color:var(--amber);}
+  .lvl-priority{background:var(--red-lt);color:var(--red);}
+  .dim-desc{font-size:0.82rem;color:#607D8B;}
+
+  .legend-scale{display:flex;justify-content:space-between;font-size:0.72rem;color:#90A4AE;margin:20px 0 4px;border-top:1px dashed #CFD8DC;padding-top:10px;flex-wrap:wrap;gap:4px;}
+
+  .restart{display:block;margin:22px auto 0;background:none;border:2px solid var(--navy);color:var(--navy);padding:10px 26px;border-radius:24px;font-weight:700;cursor:pointer;font-family:inherit;}
+  .restart:hover{background:var(--navy);color:#fff;}
+
+  .warn{color:var(--red);text-align:center;font-size:0.85rem;margin-top:8px;display:none;}
+  .question.missing{outline:2px solid var(--red);}
+  footer{text-align:center;font-size:0.75rem;color:#90A4AE;margin-top:30px;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>แบบประเมินตนเอง: พฤติกรรมการทำงานเชิงรุก</h1>
+  <p>Proactive Working Behavior Self-Assessment</p>
+</div>
+
+<div class="container">
+
+  <div class="scale-box">
+    <h2>คำชี้แจง</h2>
+    <p style="font-size:0.88rem;margin-bottom:10px;">โปรดประเมินตนเองจากพฤติกรรมที่ท่านปฏิบัติจริงในการทำงานปัจจุบัน ไม่ใช่สิ่งที่คิดว่าควรทำ โดยเลือกคะแนนที่ตรงกับพฤติกรรมของท่านมากที่สุด</p>
+    <div class="scale-row">
+      <div class="scale-item">1<br>แทบไม่เคย</div>
+      <div class="scale-item">2<br>นานๆ ครั้ง</div>
+      <div class="scale-item">3<br>บางครั้ง</div>
+      <div class="scale-item">4<br>บ่อยครั้ง</div>
+      <div class="scale-item">5<br>สม่ำเสมอ</div>
+    </div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-text" id="progressText">ตอบแล้ว 0 / 12 ข้อ</div>
+  </div>
+
+  <div id="quizWrap">
+    <div id="questionsContainer"></div>
+    <div class="submit-wrap">
+      <button id="submitBtn">ดูผลการประเมิน</button>
+      <div class="warn" id="warnMsg">กรุณาตอบคำถามที่ไฮไลต์สีแดงให้ครบก่อนดูผลค่ะ</div>
+    </div>
+  </div>
+
+  <div id="results">
+    <div class="result-card">
+      <h2>ผลการประเมินพฤติกรรมการทำงานเชิงรุก</h2>
+      <div class="total-label" id="totalLabel"></div>
+
+      <div id="dimsContainer"></div>
+
+      <div class="legend-scale">
+        <span>13–15<br>จุดแข็ง</span>
+        <span>10–12<br>ระดับดี</span>
+        <span>7–9<br>ควรพัฒนา</span>
+        <span>3–6<br>ควรเร่งปรับปรุง</span>
+      </div>
+
+      <button type="button" class="restart" id="restartBtn">ทำแบบประเมินอีกครั้ง</button>
+    </div>
+  </div>
+
+  <footer>The Bridge Co., Ltd. · Proactive Working Behavior Self-Assessment</footer>
+</div>
+
+<script>
+(function(){
+  var questions = [
+    "ฉันมองล่วงหน้าว่างานที่รับผิดชอบจะต้องดำเนินการอะไรต่อ โดยไม่รอให้มีคนมาติดตาม",
+    "เมื่อพบประเด็นที่อาจกระทบงาน ฉันลงมือจัดการสิ่งที่สามารถทำได้โดยไม่รอให้ปัญหาเกิดขึ้น",
+    "เมื่อรายงานปัญหา ฉันพยายามเสนอข้อมูล สาเหตุ หรือทางเลือกในการแก้ไขไปพร้อมกัน",
+    "ฉันสังเกตสัญญาณเตือนที่อาจทำให้งานล่าช้า ผิดพลาด หรือไม่เป็นไปตามเป้าหมาย",
+    "ก่อนเริ่มงานสำคัญ ฉันพิจารณาความเสี่ยงหรืออุปสรรคที่อาจเกิดขึ้นล่วงหน้า",
+    "ฉันเตรียมแนวทางป้องกันหรือแผนรองรับสำหรับความเสี่ยงสำคัญก่อนที่จะกลายเป็นปัญหา",
+    "เมื่อมีหลายงานพร้อมกัน ฉันพิจารณาความสำคัญ ความเร่งด่วน ความเสี่ยง และผลกระทบก่อนตัดสินใจว่าจะทำอะไรก่อน",
+    "ฉันให้เวลากับงานที่มีผลกระทบต่อเป้าหมาย ลูกค้า หรือผู้เกี่ยวข้อง มากกว่าทำตามลำดับที่งานเข้ามา",
+    "ฉันปรับลำดับงานเมื่อสถานการณ์เปลี่ยน และสื่อสารกับผู้เกี่ยวข้องได้ทันเวลา",
+    "ฉันมองหาโอกาสทำให้งานเร็วขึ้น ง่ายขึ้น ถูกต้องขึ้น หรือมีประสิทธิภาพมากขึ้น",
+    "ฉันคิดถึงความต้องการของผู้รับงานต่อจากฉัน และเตรียมข้อมูลหรือผลงานให้พร้อมต่อการใช้งาน",
+    "เมื่อพบขั้นตอนที่ซ้ำซ้อนหรือสร้างความสูญเปล่า ฉันเสนอแนวทางปรับปรุงแทนที่จะทำตามวิธีเดิมต่อไป"
+  ];
+
+  var dimensions = [
+    { name:"การคิดและทำงานเชิงรุก", idx:[0,1,2], color:"#1565C0" },
+    { name:"การคาดการณ์และป้องกันปัญหา", idx:[3,4,5], color:"#00695C" },
+    { name:"การจัดลำดับความสำคัญของงาน", idx:[6,7,8], color:"#EF6C00" },
+    { name:"การสร้างคุณค่าเพิ่มให้กับงาน", idx:[9,10,11], color:"#C62828" }
+  ];
+
+  var answers = {};
+  var container = document.getElementById('questionsContainer');
+
+  dimensions.forEach(function(dim){
+    var dimHeader = document.createElement('div');
+    dimHeader.className = 'dim-title';
+    dimHeader.textContent = dim.name;
+    container.appendChild(dimHeader);
+
+    dim.idx.forEach(function(qIndex){
+      var qDiv = document.createElement('div');
+      qDiv.className = 'question';
+      qDiv.id = 'q-' + qIndex;
+
+      var qText = document.createElement('p');
+      qText.className = 'q-text';
+      var numSpan = document.createElement('span');
+      numSpan.className = 'q-num';
+      numSpan.textContent = (qIndex + 1);
+      qText.appendChild(numSpan);
+      qText.appendChild(document.createTextNode(questions[qIndex]));
+      qDiv.appendChild(qText);
+
+      var likertDiv = document.createElement('div');
+      likertDiv.className = 'likert';
+
+      for (var v = 1; v <= 5; v++) {
+        (function(val){
+          var btn = document.createElement('button');
+          btn.type = 'button';
+          btn.className = 'opt-btn';
+          btn.textContent = val;
+          btn.setAttribute('data-q', qIndex);
+          btn.setAttribute('data-v', val);
+          btn.addEventListener('click', function(){
+            answers[qIndex] = val;
+            var siblings = likertDiv.querySelectorAll('.opt-btn');
+            for (var s = 0; s < siblings.length; s++) siblings[s].classList.remove('selected');
+            btn.classList.add('selected');
+            qDiv.classList.remove('missing');
+            updateProgress();
+          });
+          likertDiv.appendChild(btn);
+        })(v);
+      }
+
+      qDiv.appendChild(likertDiv);
+      container.appendChild(qDiv);
+    });
+  });
+
+  var progressFill = document.getElementById('progressFill');
+  var progressText = document.getElementById('progressText');
+
+  function updateProgress(){
+    var n = Object.keys(answers).length;
+    progressFill.style.width = (n / questions.length * 100) + '%';
+    progressText.textContent = 'ตอบแล้ว ' + n + ' / ' + questions.length + ' ข้อ';
+  }
+
+  function levelFor(score){
+    if (score >= 13) return { key:'strength', label:'จุดแข็ง (13–15)', desc:'แสดงพฤติกรรมด้านนี้อย่างสม่ำเสมอ' };
+    if (score >= 10) return { key:'good', label:'ระดับดี (10–12)', desc:'สามารถนำไปใช้ได้ แต่ยังเพิ่มความสม่ำเสมอได้' };
+    if (score >= 7)  return { key:'develop', label:'ควรพัฒนา (7–9)', desc:'มีพฤติกรรมบางครั้ง แต่ยังไม่เป็นนิสัยในการทำงาน' };
+    return { key:'priority', label:'ควรเร่งปรับปรุง (3–6)', desc:'มีแนวโน้มทำงานเชิงรับในด้านนี้ และควรกำหนดพฤติกรรมใหม่ที่ชัดเจน' };
+  }
+
+  document.getElementById('submitBtn').addEventListener('click', function(){
+    var missing = [];
+    for (var i = 0; i < questions.length; i++) {
+      var qEl = document.getElementById('q-' + i);
+      if (typeof answers[i] === 'undefined') {
+        missing.push(i);
+        qEl.classList.add('missing');
+      } else {
+        qEl.classList.remove('missing');
+      }
+    }
+
+    if (missing.length > 0) {
+      document.getElementById('warnMsg').style.display = 'block';
+      document.getElementById('q-' + missing[0]).scrollIntoView({ behavior:'smooth', block:'center' });
+      return;
+    }
+    document.getElementById('warnMsg').style.display = 'none';
+
+    var total = 0;
+    var scores = dimensions.map(function(dim){
+      var s = dim.idx.reduce(function(sum, idx){ return sum + answers[idx]; }, 0);
+      total += s;
+      return { name: dim.name, score: s, max: 15, color: dim.color, level: levelFor(s) };
+    });
+
+    document.getElementById('totalLabel').textContent = 'คะแนนรวมทั้งหมด ' + total + ' จาก 60 คะแนน';
+
+    var dimsHtml = scores.map(function(s){
+      var pct = (s.score / s.max * 100);
+      return '<div class="dim-result">' +
+        '<div class="dim-head"><span class="dim-name">' + s.name + '</span><span class="dim-score">' + s.score + '/' + s.max + '</span></div>' +
+        '<div class="bar-bg"><div class="bar-fill" style="width:' + pct + '%;background:' + s.color + ';"></div></div>' +
+        '<span class="dim-level lvl-' + s.level.key + '">' + s.level.label + '</span>' +
+        '<div class="dim-desc">' + s.level.desc + '</div>' +
+        '</div>';
+    }).join('');
+    document.getElementById('dimsContainer').innerHTML = dimsHtml;
+
+    document.getElementById('quizWrap').style.display = 'none';
+    document.querySelector('.progress-wrap').style.display = 'none';
+    document.getElementById('results').style.display = 'block';
+    window.scrollTo(0, 0);
+  });
+
+  document.getElementById('restartBtn').addEventListener('click', function(){
+    answers = {};
+    var allBtns = document.querySelectorAll('.opt-btn.selected');
+    for (var i = 0; i < allBtns.length; i++) allBtns[i].classList.remove('selected');
+    document.getElementById('quizWrap').style.display = 'block';
+    document.querySelector('.progress-wrap').style.display = 'block';
+    document.getElementById('results').style.display = 'none';
+    updateProgress();
+    window.scrollTo(0, 0);
+  });
+
+  updateProgress();
+})();
+</script>
+</body>
+</html>
