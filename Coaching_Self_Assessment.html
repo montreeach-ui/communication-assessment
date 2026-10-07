@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>แบบประเมินตนเองด้านทักษะการโค้ช | The Bridge</title>
+<style>
+  :root{
+    --navy:#1A237E; --blue:#1565C0;
+    --gold-lt:#FDF6E3;
+    --gray:#37474F; --light:#ECEFF1;
+    --green:#2E7D32; --green-lt:#E8F5E9;
+    --red:#C62828; --red-lt:#FFEBEE;
+    --amber:#EF6C00; --amber-lt:#FFF3E0;
+    --teal:#00695C; --teal-lt:#E0F2F1;
+    --purple:#6A1B9A; --purple-lt:#F3E5F5;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  body{font-family:'Sarabun','TH Sarabun New',sans-serif;background:var(--light);color:var(--gray);font-size:16px;line-height:1.6;padding-bottom:60px;}
+
+  .header{background:linear-gradient(135deg,var(--navy),#283593);color:#fff;text-align:center;padding:32px 16px 28px;}
+  .header h1{font-size:1.3rem;font-weight:700;margin-bottom:6px;}
+  .header p{font-size:0.9rem;opacity:0.9;}
+
+  .container{max-width:720px;margin:0 auto;padding:0 16px;}
+
+  .scale-box{background:#fff;border-radius:12px;padding:18px 20px;margin-top:-18px;box-shadow:0 2px 10px rgba(0,0,0,0.08);}
+  .scale-box h2{font-size:1.05rem;color:var(--navy);margin-bottom:10px;}
+  .scale-box .lead{font-size:0.88rem;margin-bottom:10px;}
+  .scale-row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;font-size:0.8rem;}
+  .scale-item{flex:1 1 18%;text-align:center;background:var(--gold-lt);border-radius:8px;padding:8px 4px;font-weight:600;color:var(--navy);}
+
+  .progress-wrap{position:sticky;top:0;background:var(--light);padding:10px 16px 6px;z-index:10;}
+  .progress-bar{height:8px;background:#dfe3e8;border-radius:4px;overflow:hidden;}
+  .progress-fill{height:100%;background:var(--blue);width:0%;transition:width .2s;}
+  .progress-text{font-size:0.8rem;text-align:right;color:var(--gray);margin-top:4px;}
+
+  .dim-title{background:var(--navy);color:#fff;padding:10px 16px;border-radius:10px;font-size:0.95rem;font-weight:700;margin:22px 0 6px;}
+
+  .question{background:#fff;border-radius:12px;padding:18px;margin:12px 0;box-shadow:0 1px 6px rgba(0,0,0,0.06);}
+  .question p.q-text{font-weight:600;color:var(--navy);margin-bottom:12px;font-size:0.96rem;}
+  .q-num{display:inline-block;background:var(--blue);color:#fff;border-radius:50%;width:26px;height:26px;text-align:center;line-height:26px;font-size:0.85rem;margin-right:8px;}
+
+  .likert{display:flex;justify-content:space-between;gap:6px;}
+  .opt-btn{flex:1;text-align:center;padding:10px 0;border-radius:8px;border:2px solid #dfe3e8;font-weight:700;color:var(--gray);background:#fff;cursor:pointer;font-size:1rem;font-family:inherit;-webkit-appearance:none;appearance:none;}
+  .opt-btn.selected{background:var(--blue);border-color:var(--blue);color:#fff;}
+
+  .submit-wrap{text-align:center;margin:30px 0;}
+  #submitBtn{background:var(--navy);color:#fff;border:none;padding:14px 40px;font-size:1.05rem;font-weight:700;border-radius:30px;cursor:pointer;box-shadow:0 4px 12px rgba(26,35,126,0.35);font-family:inherit;}
+  #submitBtn:hover{background:var(--blue);}
+
+  #results{display:none;}
+  .result-card{background:#fff;border-radius:14px;padding:24px 20px;margin-top:10px;box-shadow:0 2px 12px rgba(0,0,0,0.08);}
+  .result-card h2{color:var(--navy);font-size:1.15rem;margin-bottom:4px;text-align:center;}
+  .total-label{font-size:0.9rem;color:#607D8B;margin-bottom:16px;text-align:center;}
+
+  .overall-badge{text-align:center;margin-bottom:20px;}
+  .overall-badge .score-big{font-size:2.4rem;font-weight:800;color:var(--navy);}
+  .overall-badge .score-sub{font-size:0.85rem;color:#607D8B;margin-bottom:10px;}
+  .overall-level{display:inline-block;padding:6px 20px;border-radius:18px;font-size:0.95rem;font-weight:700;margin-bottom:8px;}
+  .overall-desc{font-size:0.88rem;color:var(--gray);max-width:480px;margin:0 auto;}
+  .lvl-excellent{background:var(--green-lt);color:var(--green);}
+  .lvl-good{background:var(--teal-lt);color:var(--teal);}
+  .lvl-developing{background:var(--amber-lt);color:var(--amber);}
+  .lvl-telling{background:#FFF3E0;color:#E65100;}
+  .lvl-priority{background:var(--red-lt);color:var(--red);}
+
+  .sub-heading{font-weight:700;color:var(--navy);font-size:0.92rem;margin:18px 0 10px;border-top:1px dashed #CFD8DC;padding-top:16px;}
+
+  .dim-result{border-radius:10px;padding:14px 16px;margin-bottom:12px;background:#FAFBFC;}
+  .dim-result .dim-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+  .dim-result .dim-name{font-weight:700;color:var(--navy);font-size:0.92rem;}
+  .dim-result .dim-score{font-weight:700;font-size:0.92rem;white-space:nowrap;margin-left:8px;}
+  .bar-bg{background:#ECEFF1;border-radius:6px;height:12px;overflow:hidden;}
+  .bar-fill{height:100%;border-radius:6px;transition:width .6s ease;}
+
+  .legend-scale{font-size:0.78rem;color:#607D8B;margin:20px 0 4px;border-top:1px dashed #CFD8DC;padding-top:10px;}
+  .legend-scale table{width:100%;border-collapse:collapse;}
+  .legend-scale td{padding:4px 6px;border-bottom:1px solid #ECEFF1;}
+  .legend-scale td:first-child{font-weight:700;color:var(--navy);white-space:nowrap;}
+
+  .restart{display:block;margin:22px auto 0;background:none;border:2px solid var(--navy);color:var(--navy);padding:10px 26px;border-radius:24px;font-weight:700;cursor:pointer;font-family:inherit;}
+  .restart:hover{background:var(--navy);color:#fff;}
+
+  .warn{color:var(--red);text-align:center;font-size:0.85rem;margin-top:8px;display:none;}
+  .question.missing{outline:2px solid var(--red);}
+  footer{text-align:center;font-size:0.75rem;color:#90A4AE;margin-top:30px;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>แบบประเมินตนเองด้านทักษะการโค้ช</h1>
+  <p>Coaching Skills Self-Assessment</p>
+</div>
+
+<div class="container">
+
+  <div class="scale-box">
+    <h2>คำชี้แจง</h2>
+    <p class="lead">แบบประเมินนี้ผสมผสานพฤติกรรมสำคัญจากแบบประเมินต้นฉบับ เช่น การสร้างความไว้วางใจ การรับฟัง การส่งเสริมจุดแข็ง การให้อิสระ ความรับผิดชอบ การให้ข้อมูลย้อนกลับ และการให้การยอมรับ เข้ากับกระบวนการ <strong>GROW</strong> เพื่อให้สามารถนำผลประเมินไปใช้พัฒนาทักษะการโค้ชได้อย่างเป็นระบบ</p>
+    <p class="lead">โปรดประเมินตนเองโดยคิดว่า <strong>"หากลูกทีมเป็นผู้ประเมินเรา เขาจะให้คะแนนเราเท่าไร"</strong> และเลือกคะแนนที่ตรงกับพฤติกรรมจริงของท่านมากที่สุด</p>
+    <div class="scale-row">
+      <div class="scale-item">1<br>แทบไม่เคย</div>
+      <div class="scale-item">2<br>นานๆ ครั้ง</div>
+      <div class="scale-item">3<br>บางครั้ง</div>
+      <div class="scale-item">4<br>บ่อยครั้ง</div>
+      <div class="scale-item">5<br>เกือบทุกครั้ง</div>
+    </div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-text" id="progressText">ตอบแล้ว 0 / 20 ข้อ</div>
+  </div>
+
+  <div id="quizWrap">
+    <div id="questionsContainer"></div>
+    <div class="submit-wrap">
+      <button id="submitBtn">ดูผลการประเมิน</button>
+      <div class="warn" id="warnMsg">กรุณาตอบคำถามที่ไฮไลต์สีแดงให้ครบก่อนดูผลค่ะ</div>
+    </div>
+  </div>
+
+  <div id="results">
+    <div class="result-card">
+      <h2>ผลการประเมินทักษะการโค้ช</h2>
+      <div class="total-label">คะแนนรวม 100 คะแนน</div>
+
+      <div class="overall-badge">
+        <div class="score-big" id="scoreBig"></div>
+        <div class="score-sub">จาก 100 คะแนน</div>
+        <div class="overall-level" id="overallLevel"></div>
+        <div class="overall-desc" id="overallDesc"></div>
+      </div>
+
+      <div class="sub-heading">คะแนนแยกตามด้าน</div>
+      <div id="dimsContainer"></div>
+
+      <div class="legend-scale">
+        <table>
+          <tr><td>86–100</td><td>ดีเยี่ยม</td></tr>
+          <tr><td>71–85</td><td>ดี</td></tr>
+          <tr><td>56–70</td><td>กำลังพัฒนา</td></tr>
+          <tr><td>41–55</td><td>เน้นการบอกมากกว่าการโค้ช</td></tr>
+          <tr><td>20–40</td><td>ควรพัฒนาทักษะการโค้ช</td></tr>
+        </table>
+      </div>
+
+      <button type="button" class="restart" id="restartBtn">ทำแบบประเมินอีกครั้ง</button>
+    </div>
+  </div>
+
+  <footer>The Bridge Co., Ltd. · Coaching Skills Self-Assessment</footer>
+</div>
+
+<script>
+(function(){
+  var questions = [
+    "ฉันสร้างความไว้วางใจและบรรยากาศที่ทำให้ลูกทีมกล้าพูดคุยอย่างเปิดใจ",
+    "ฉันรับฟังความคิดเห็นของลูกทีมอย่างตั้งใจ โดยไม่รีบตัดสินหรือแทรกคำตอบ",
+    "ฉันมองเห็นและช่วยให้ลูกทีมใช้จุดแข็งของตนเองให้เกิดประโยชน์",
+    "ฉันให้อิสระและเปิดโอกาสให้ลูกทีมคิด ตัดสินใจ และรับผิดชอบงานของตนเอง",
+    "ฉันให้ Feedback การสนับสนุน และการชื่นชม เพื่อช่วยให้ลูกทีมพัฒนาและมีกำลังใจ",
+    "ฉันช่วยให้ลูกทีมกำหนดเป้าหมายและผลลัพธ์ที่ต้องการอย่างชัดเจน",
+    "ฉันช่วยให้ลูกทีมเห็นความเชื่อมโยงระหว่างเป้าหมายของตนเองกับเป้าหมายของทีมและองค์กร",
+    "ฉันใช้คำถามเพื่อช่วยให้ลูกทีมคิดและกำหนดเป้าหมายด้วยตนเอง แทนการบอกเพียงฝ่ายเดียว",
+    "ฉันทำให้ความคาดหวัง ลำดับความสำคัญ และมาตรฐานของผลงานมีความชัดเจน",
+    "ฉันใช้คำถามเพื่อช่วยให้ลูกทีมอธิบายสถานการณ์ ปัญหา และสิ่งที่เกิดขึ้นจริง",
+    "ฉันช่วยให้ลูกทีมแยกข้อเท็จจริง (Fact) ออกจากความคิดเห็นและสมมติฐาน (Opinion)",
+    "ฉันช่วยให้ลูกทีมมองเห็นจุดแข็ง ช่องว่าง และอุปสรรคที่มีผลต่อผลงาน",
+    "ฉันให้ Feedback อย่างตรงไปตรงมาและสร้างสรรค์ เพื่อช่วยให้ลูกทีมเข้าใจสถานการณ์ของตนเอง",
+    "ฉันไม่รีบให้คำตอบ แต่ใช้คำถามที่ช่วยกระตุ้นให้ลูกทีมคิดด้วยตนเอง",
+    "ฉันกระตุ้นให้ลูกทีมคิดหาทางเลือกมากกว่าหนึ่งทางในการแก้ปัญหา",
+    "ฉันช่วยให้ลูกทีมพิจารณาข้อดี ข้อจำกัด ความเสี่ยง และผลกระทบของแต่ละทางเลือกในการแก้ปัญหา",
+    "ฉันสนับสนุนให้ลูกทีมกล้าคิด ทดลอง และเสนอแนวทางใหม่ๆ",
+    "ฉันช่วยให้ลูกทีมเลือกแนวทางและตัดสินใจว่าจะลงมือทำอะไรด้วยตนเอง",
+    "ฉันช่วยให้ลูกทีมกำหนดสิ่งที่จะทำ ระยะเวลา และความรับผิดชอบอย่างชัดเจน",
+    "ฉันติดตามผล ให้ข้อมูลย้อนกลับ และสร้างความรับผิดชอบ โดยไม่ควบคุมหรือเข้าไปกำกับทุกรายละเอียด"
+  ];
+
+  var dimensions = [
+    { name:"พื้นฐานการเป็นโค้ช", idx:[0,1,2,3,4], max:25, color:"#1565C0" },
+    { name:"G – เป้าหมาย (Goal)", idx:[5,6,7,8], max:20, color:"#00695C" },
+    { name:"R – สถานการณ์ปัจจุบัน (Reality)", idx:[9,10,11,12], max:20, color:"#EF6C00" },
+    { name:"O – ทางเลือก (Options)", idx:[13,14,15,16], max:20, color:"#6A1B9A" },
+    { name:"W – ความมุ่งมั่นและแนวทางลงมือทำ (Will)", idx:[17,18,19], max:15, color:"#C62828" }
+  ];
+
+  var dimTitleMap = [
+    { label:"ส่วนที่ 1: พื้นฐานการเป็นโค้ช", first:0 },
+    { label:"ส่วนที่ 2: G – เป้าหมาย", first:5 },
+    { label:"ส่วนที่ 3: R – สถานการณ์ปัจจุบัน", first:9 },
+    { label:"ส่วนที่ 4: O – ทางเลือก", first:13 },
+    { label:"ส่วนที่ 5: W – ความมุ่งมั่นและแนวทางลงมือทำ", first:17 }
+  ];
+
+  var answers = {};
+  var container = document.getElementById('questionsContainer');
+
+  function titleForIndex(qIndex){
+    for (var i = 0; i < dimTitleMap.length; i++) {
+      if (dimTitleMap[i].first === qIndex) return dimTitleMap[i].label;
+    }
+    return null;
+  }
+
+  questions.forEach(function(qText, qIndex){
+    var title = titleForIndex(qIndex);
+    if (title) {
+      var dimHeader = document.createElement('div');
+      dimHeader.className = 'dim-title';
+      dimHeader.textContent = title;
+      container.appendChild(dimHeader);
+    }
+
+    var qDiv = document.createElement('div');
+    qDiv.className = 'question';
+    qDiv.id = 'q-' + qIndex;
+
+    var qP = document.createElement('p');
+    qP.className = 'q-text';
+    var numSpan = document.createElement('span');
+    numSpan.className = 'q-num';
+    numSpan.textContent = (qIndex + 1);
+    qP.appendChild(numSpan);
+    qP.appendChild(document.createTextNode(qText));
+    qDiv.appendChild(qP);
+
+    var likertDiv = document.createElement('div');
+    likertDiv.className = 'likert';
+
+    for (var v = 1; v <= 5; v++) {
+      (function(val){
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'opt-btn';
+        btn.textContent = val;
+        btn.setAttribute('data-q', qIndex);
+        btn.setAttribute('data-v', val);
+        btn.addEventListener('click', function(){
+          answers[qIndex] = val;
+          var siblings = likertDiv.querySelectorAll('.opt-btn');
+          for (var s = 0; s < siblings.length; s++) siblings[s].classList.remove('selected');
+          btn.classList.add('selected');
+          qDiv.classList.remove('missing');
+          updateProgress();
+        });
+        likertDiv.appendChild(btn);
+      })(v);
+    }
+
+    qDiv.appendChild(likertDiv);
+    container.appendChild(qDiv);
+  });
+
+  var progressFill = document.getElementById('progressFill');
+  var progressText = document.getElementById('progressText');
+
+  function updateProgress(){
+    var n = Object.keys(answers).length;
+    progressFill.style.width = (n / questions.length * 100) + '%';
+    progressText.textContent = 'ตอบแล้ว ' + n + ' / ' + questions.length + ' ข้อ';
+  }
+
+  function levelForTotal(score){
+    if (score >= 86) return { key:'excellent', label:'ดีเยี่ยม (86–100)', desc:'มีทักษะและพฤติกรรมการโค้ชที่เข้มแข็งและสม่ำเสมอ' };
+    if (score >= 71) return { key:'good', label:'ดี (71–85)', desc:'มีพื้นฐานการโค้ชที่ดี และสามารถพัฒนาบางด้านให้แข็งแกร่งขึ้น' };
+    if (score >= 56) return { key:'developing', label:'กำลังพัฒนา (56–70)', desc:'มีพฤติกรรมการโค้ชบางส่วน แต่ควรพัฒนาอย่างเป็นระบบ' };
+    if (score >= 41) return { key:'telling', label:'เน้นการบอกมากกว่าการโค้ช (41–55)', desc:'มีแนวโน้มใช้การบอก สั่ง หรือให้คำตอบ มากกว่าการกระตุ้นให้ลูกทีมคิด' };
+    return { key:'priority', label:'ควรพัฒนาทักษะการโค้ช (20–40)', desc:'ควรพัฒนาการฟัง การตั้งคำถาม การให้อิสระ และการสร้างความรับผิดชอบ' };
+  }
+
+  document.getElementById('submitBtn').addEventListener('click', function(){
+    var missing = [];
+    for (var i = 0; i < questions.length; i++) {
+      var qEl = document.getElementById('q-' + i);
+      if (typeof answers[i] === 'undefined') {
+        missing.push(i);
+        qEl.classList.add('missing');
+      } else {
+        qEl.classList.remove('missing');
+      }
+    }
+
+    if (missing.length > 0) {
+      document.getElementById('warnMsg').style.display = 'block';
+      document.getElementById('q-' + missing[0]).scrollIntoView({ behavior:'smooth', block:'center' });
+      return;
+    }
+    document.getElementById('warnMsg').style.display = 'none';
+
+    var total = 0;
+    var scores = dimensions.map(function(dim){
+      var s = dim.idx.reduce(function(sum, idx){ return sum + answers[idx]; }, 0);
+      total += s;
+      return { name: dim.name, score: s, max: dim.max, color: dim.color };
+    });
+
+    var level = levelForTotal(total);
+
+    document.getElementById('scoreBig').textContent = total;
+    var levelEl = document.getElementById('overallLevel');
+    levelEl.textContent = level.label;
+    levelEl.className = 'overall-level lvl-' + level.key;
+    document.getElementById('overallDesc').textContent = level.desc;
+
+    var dimsHtml = scores.map(function(s){
+      var pct = (s.score / s.max * 100);
+      return '<div class="dim-result">' +
+        '<div class="dim-head"><span class="dim-name">' + s.name + '</span><span class="dim-score">' + s.score + '/' + s.max + '</span></div>' +
+        '<div class="bar-bg"><div class="bar-fill" style="width:' + pct + '%;background:' + s.color + ';"></div></div>' +
+        '</div>';
+    }).join('');
+    document.getElementById('dimsContainer').innerHTML = dimsHtml;
+
+    document.getElementById('quizWrap').style.display = 'none';
+    document.querySelector('.progress-wrap').style.display = 'none';
+    document.getElementById('results').style.display = 'block';
+    window.scrollTo(0, 0);
+  });
+
+  document.getElementById('restartBtn').addEventListener('click', function(){
+    answers = {};
+    var allBtns = document.querySelectorAll('.opt-btn.selected');
+    for (var i = 0; i < allBtns.length; i++) allBtns[i].classList.remove('selected');
+    document.getElementById('quizWrap').style.display = 'block';
+    document.querySelector('.progress-wrap').style.display = 'block';
+    document.getElementById('results').style.display = 'none';
+    updateProgress();
+    window.scrollTo(0, 0);
+  });
+
+  updateProgress();
+})();
+</script>
+</body>
+</html>
