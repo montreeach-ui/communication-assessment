@@ -1,0 +1,678 @@
+<title>Service Excellence Self-Assessment</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700&family=Noto+Serif+Thai:wght@600;700&display=swap">
+<style>
+:root {
+  --bg: #F6F7FA; --surface: #FFFFFF; --surface-2: #F0F2F7;
+  --border: #D8DCE8; --border-lt: #EAECF4;
+  --fg: #1A1D2E; --fg-mid: #4A5068; --fg-muted: #8B90A8;
+  --accent: #1B4FBF; --accent-lt: #E8EDFB; --accent-dk: #0F336E;
+  --gold: #B87A00; --gold-lt: #FDF6E3;
+  --r1: #FDE8E8; --r2: #FEF3D8; --r3: #E8F4FD; --r4: #E4F0FF; --r5: #1B4FBF;
+  --r1-fg: #8B1A1A; --r2-fg: #7A5000; --r3-fg: #0A5A8A; --r4-fg: #0F336E; --r5-fg: #FFFFFF;
+  --excellent: #1A7A45; --good: #1B4FBF; --dev: #A06000; --imp: #C04000; --urgent: #8B1A1A;
+  --score-bg: #EEF1FB;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0F1120; --surface: #181B2E; --surface-2: #1E2238;
+    --border: #2A2F4A; --border-lt: #232744;
+    --fg: #E2E6F8; --fg-mid: #9BA3C8; --fg-muted: #5A6080;
+    --accent: #5B8AFF; --accent-lt: #1A2350; --accent-dk: #90AAFF;
+    --gold: #F0C060; --gold-lt: #1E1900;
+    --r1: #2A1010; --r2: #1E1800; --r3: #0A1E2A; --r4: #0A1440; --r5: #1B4FBF;
+    --r1-fg: #FF9090; --r2-fg: #F0C060; --r3-fg: #60CCFF; --r4-fg: #90AAFF; --r5-fg: #FFFFFF;
+    --excellent: #4CAF78; --good: #5B8AFF; --dev: #E0A040; --imp: #FF8050; --urgent: #FF6060;
+    --score-bg: #161A2E;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0F1120; --surface: #181B2E; --surface-2: #1E2238;
+  --border: #2A2F4A; --border-lt: #232744;
+  --fg: #E2E6F8; --fg-mid: #9BA3C8; --fg-muted: #5A6080;
+  --accent: #5B8AFF; --accent-lt: #1A2350; --accent-dk: #90AAFF;
+  --gold: #F0C060; --gold-lt: #1E1900;
+  --r1: #2A1010; --r2: #1E1800; --r3: #0A1E2A; --r4: #0A1440; --r5: #1B4FBF;
+  --r1-fg: #FF9090; --r2-fg: #F0C060; --r3-fg: #60CCFF; --r4-fg: #90AAFF; --r5-fg: #FFFFFF;
+  --excellent: #4CAF78; --good: #5B8AFF; --dev: #E0A040; --imp: #FF8050; --urgent: #FF6060;
+  --score-bg: #161A2E;
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg); color: var(--fg);
+  font-family: 'Noto Sans Thai', system-ui, sans-serif;
+  font-size: 15px; line-height: 1.7;
+}
+
+/* Header */
+.site-header {
+  background: var(--accent); color: #fff;
+  padding: 28px 24px 24px;
+  text-align: center;
+}
+.site-header .logo-tag {
+  font-size: 0.72rem; letter-spacing: .12em; text-transform: uppercase;
+  opacity: .75; margin-bottom: 8px;
+}
+.site-header h1 {
+  font-family: 'Noto Serif Thai', serif;
+  font-size: clamp(1.25rem, 4vw, 1.65rem);
+  font-weight: 700; line-height: 1.3;
+  text-wrap: balance;
+}
+.site-header h2 {
+  font-size: 0.85rem; font-weight: 400; opacity: .8; margin-top: 4px;
+}
+.site-header .purpose {
+  max-width: 640px; margin: 18px auto 0;
+  font-size: 0.82rem; opacity: .85; line-height: 1.6;
+}
+
+/* Scale legend */
+.scale-bar {
+  background: var(--surface-2); border-bottom: 1px solid var(--border);
+  padding: 12px 24px;
+  display: flex; flex-wrap: wrap; gap: 8px 20px;
+  justify-content: center; align-items: center;
+}
+.scale-bar .scale-label {
+  font-size: 0.72rem; color: var(--fg-muted); letter-spacing: .06em; text-transform: uppercase;
+  margin-right: 4px;
+}
+.scale-item { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; color: var(--fg-mid); }
+.scale-dot {
+  width: 22px; height: 22px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 700;
+}
+
+/* Progress bar at top */
+.progress-bar-wrap {
+  background: var(--border-lt); height: 4px;
+  position: sticky; top: 0; z-index: 100;
+}
+.progress-bar-fill {
+  height: 100%; background: var(--accent);
+  transition: width .3s ease; width: 0%;
+}
+
+/* Main layout */
+.main { max-width: 780px; margin: 0 auto; padding: 32px 16px 60px; }
+
+/* Section card */
+.section-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px; margin-bottom: 28px;
+}
+.section-header {
+  background: var(--accent-lt);
+  border-bottom: 1px solid var(--border-lt);
+  padding: 16px 22px;
+  display: flex; align-items: center; gap: 14px;
+}
+.section-num {
+  background: var(--accent); color: #fff;
+  width: 34px; height: 34px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.9rem; font-weight: 700; flex-shrink: 0;
+}
+.section-header-text {}
+.section-title-th {
+  font-weight: 700; font-size: 1rem; color: var(--fg);
+}
+.section-title-en {
+  font-size: 0.75rem; color: var(--fg-muted); letter-spacing: .04em;
+}
+.section-score-chip {
+  margin-left: auto; flex-shrink: 0;
+  background: var(--score-bg); color: var(--accent);
+  border-radius: 20px; padding: 4px 14px;
+  font-size: 0.85rem; font-weight: 700;
+  transition: background .2s, color .2s;
+}
+.section-score-chip.full { background: var(--accent); color: #fff; }
+
+/* Question rows */
+.question-row {
+  padding: 22px 22px;
+  border-bottom: 1px solid var(--border-lt);
+}
+.question-row:last-child { border-bottom: none; }
+.q-text { font-size: 1rem; margin-bottom: 16px; color: var(--fg); line-height: 1.6; }
+.q-num { font-weight: 700; color: var(--accent); margin-right: 6px; }
+.rating-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+/* Hide native radio */
+.rating-row input[type="radio"] { position: absolute; opacity: 0; width: 0; height: 0; }
+/* Large tappable label */
+.rating-row label {
+  display: flex; align-items: center; gap: 12px;
+  min-height: 54px; padding: 0 16px;
+  border-radius: 10px;
+  border: 2px solid var(--border);
+  background: var(--surface);
+  color: var(--fg-mid);
+  font-size: 0.95rem; font-weight: 500;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background .15s, border-color .15s, color .15s;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.rating-row label .r-num {
+  width: 30px; height: 30px; border-radius: 50%;
+  background: var(--surface-2); color: var(--fg-mid);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.9rem; font-weight: 700; flex-shrink: 0;
+  border: 1px solid var(--border);
+  transition: background .15s, color .15s;
+}
+.rating-row label:active { opacity: 0.7; }
+
+.rating-row input[value="1"]:checked + label { background: var(--r1); border-color: var(--r1-fg); color: var(--r1-fg); }
+.rating-row input[value="1"]:checked + label .r-num { background: var(--r1-fg); color: #fff; border-color: var(--r1-fg); }
+.rating-row input[value="2"]:checked + label { background: var(--r2); border-color: var(--r2-fg); color: var(--r2-fg); }
+.rating-row input[value="2"]:checked + label .r-num { background: var(--r2-fg); color: #fff; border-color: var(--r2-fg); }
+.rating-row input[value="3"]:checked + label { background: var(--r3); border-color: var(--r3-fg); color: var(--r3-fg); }
+.rating-row input[value="3"]:checked + label .r-num { background: var(--r3-fg); color: #fff; border-color: var(--r3-fg); }
+.rating-row input[value="4"]:checked + label { background: var(--r4); border-color: var(--r4-fg); color: var(--r4-fg); }
+.rating-row input[value="4"]:checked + label .r-num { background: var(--r4-fg); color: #fff; border-color: var(--r4-fg); }
+.rating-row input[value="5"]:checked + label { background: var(--r5); border-color: var(--r5); color: var(--r5-fg); }
+.rating-row input[value="5"]:checked + label .r-num { background: rgba(255,255,255,.3); color: #fff; border-color: rgba(255,255,255,.5); }
+
+.r-label {
+  font-size: 0.7rem; color: var(--fg-muted);
+  align-self: center; margin-left: 4px;
+}
+
+/* Results panel */
+.results-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  margin-bottom: 28px;
+  overflow: hidden;
+}
+.results-header {
+  background: var(--accent); color: #fff;
+  padding: 18px 22px;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+}
+.results-header h3 { font-size: 1rem; font-weight: 700; }
+.total-score-chip {
+  background: rgba(255,255,255,.2);
+  border-radius: 20px; padding: 4px 16px;
+  font-size: 1.1rem; font-weight: 700;
+  white-space: nowrap;
+}
+.results-body { padding: 22px; }
+.section-result-row {
+  display: flex; align-items: center; gap: 12px; margin-bottom: 14px;
+}
+.sr-label { font-size: 0.8rem; color: var(--fg-mid); width: 170px; flex-shrink: 0; line-height: 1.3; }
+.sr-bar-wrap { flex: 1; background: var(--border-lt); border-radius: 6px; height: 10px; min-width: 0; }
+.sr-bar-fill { height: 100%; border-radius: 6px; background: var(--accent); transition: width .4s ease; }
+.sr-score { font-size: 0.82rem; font-weight: 700; color: var(--accent); width: 44px; text-align: right; flex-shrink: 0; }
+.answered-note { font-size: 0.78rem; color: var(--fg-muted); margin-top: 6px; }
+
+/* Interpretation */
+.interp-box {
+  display: none;
+  margin-top: 18px;
+  padding: 18px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+}
+.interp-box.visible { display: block; }
+.interp-level {
+  font-size: 0.72rem; letter-spacing: .1em; text-transform: uppercase;
+  font-weight: 700; margin-bottom: 4px;
+}
+.interp-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 8px; }
+.interp-desc { font-size: 0.85rem; color: var(--fg-mid); line-height: 1.7; }
+.interp-dev { font-size: 0.82rem; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); color: var(--fg-mid); }
+.interp-dev strong { color: var(--fg); }
+
+/* Section-level analysis */
+.section-analysis { margin-top: 18px; }
+.sa-row {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px 14px; border-radius: 8px;
+  margin-bottom: 8px; border: 1px solid var(--border-lt);
+  background: var(--surface);
+}
+.sa-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+.sa-content { flex: 1; min-width: 0; }
+.sa-name { font-size: 0.82rem; font-weight: 600; }
+.sa-level { font-size: 0.75rem; }
+.sa-dev { font-size: 0.75rem; color: var(--fg-muted); margin-top: 2px; }
+
+/* Reset / action */
+.action-bar {
+  text-align: center; margin-top: 8px;
+  display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;
+}
+.reset-btn {
+  background: transparent; border: 1px solid var(--border);
+  color: var(--fg-mid); border-radius: 8px;
+  padding: 9px 24px; font-size: 0.85rem; cursor: pointer;
+  font-family: inherit; transition: all .15s;
+}
+.reset-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Submit button */
+.submit-wrap {
+  max-width: 780px; margin: 0 auto 40px;
+  padding: 0 16px;
+}
+.submit-btn {
+  width: 100%; padding: 16px 24px;
+  background: var(--accent); color: #fff;
+  border: none; border-radius: 12px;
+  font-size: 1rem; font-weight: 700;
+  font-family: inherit; cursor: pointer;
+  transition: opacity .15s, background .2s;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+}
+.submit-btn:disabled {
+  background: var(--border); color: var(--fg-muted); cursor: not-allowed;
+}
+.submit-btn:not(:disabled):hover { opacity: .88; }
+.submit-btn.done { background: #1A7A45; }
+.submit-pending {
+  font-size: 0.8rem; text-align: center; color: var(--fg-muted);
+  margin-top: 8px;
+}
+
+/* Confirmation banner */
+.confirm-banner {
+  display: none;
+  background: #E8F7EE; border: 1px solid #4CAF78; border-radius: 12px;
+  padding: 18px 22px; margin-top: 12px; text-align: center;
+}
+.confirm-banner.visible { display: block; }
+.confirm-banner .cb-icon { font-size: 2rem; margin-bottom: 6px; }
+.confirm-banner .cb-title { font-weight: 700; color: #1A7A45; font-size: 1rem; margin-bottom: 4px; }
+.confirm-banner .cb-sub { font-size: 0.82rem; color: #2D6A4F; }
+
+/* Instruction box */
+.instruction-box {
+  background: var(--gold-lt); border: 1px solid var(--gold);
+  border-radius: 10px; padding: 14px 18px; margin-bottom: 24px;
+}
+.instruction-box .inst-q {
+  font-weight: 700; color: var(--gold); margin-bottom: 6px; font-size: 0.9rem;
+}
+.instruction-box .inst-text { font-size: 0.82rem; color: var(--fg-mid); line-height: 1.7; }
+</style>
+
+<div class="progress-bar-wrap"><div class="progress-bar-fill" id="prog"></div></div>
+
+<div class="site-header">
+  <div class="logo-tag">ISUZU Thailand · Customer Service Training</div>
+  <h1>แบบประเมินตนเองด้านการบริการที่เป็นเลิศ</h1>
+  <h2>Service Excellence Self-Assessment</h2>
+  <p class="purpose">
+    สำรวจทัศนคติ ทักษะ และพฤติกรรมการให้บริการของท่าน ทั้งต่อลูกค้าภายในและลูกค้าภายนอก<br>
+    Assess your service attitude, skills, and behaviour toward both internal and external customers.
+  </p>
+</div>
+
+<div class="scale-bar">
+  <span class="scale-label">เกณฑ์คะแนน</span>
+  <span class="scale-item"><span class="scale-dot" style="background:var(--r1);color:var(--r1-fg)">1</span>แทบไม่เคย</span>
+  <span class="scale-item"><span class="scale-dot" style="background:var(--r2);color:var(--r2-fg)">2</span>นานๆ ครั้ง</span>
+  <span class="scale-item"><span class="scale-dot" style="background:var(--r3);color:var(--r3-fg)">3</span>บางครั้ง</span>
+  <span class="scale-item"><span class="scale-dot" style="background:var(--r4);color:var(--r4-fg)">4</span>บ่อยครั้ง</span>
+  <span class="scale-item"><span class="scale-dot" style="background:var(--r5);color:var(--r5-fg)">5</span>สม่ำเสมอ</span>
+</div>
+
+<div class="main">
+
+  <div class="instruction-box">
+    <div class="inst-q">"หากลูกค้าภายในหรือลูกค้าภายนอกเป็นผู้ประเมินเรา เขาจะให้คะแนนเราเท่าไร?"</div>
+    <div class="inst-text">
+      โปรดพิจารณาพฤติกรรมการทำงานของท่านใน <strong>3 เดือนที่ผ่านมา</strong> และประเมินตนเองตามความเป็นจริง
+      ให้เลือกคะแนนเพียงหนึ่งระดับในแต่ละข้อ (25 ข้อ คะแนนเต็ม 125)
+    </div>
+  </div>
+
+  <!-- Sections -->
+  <div id="sections-wrap"></div>
+
+  <!-- Submit button -->
+  <div class="submit-wrap" style="margin-bottom:32px">
+    <button class="submit-btn" id="submit-btn" disabled onclick="submitAssessment()">
+      <span id="submit-label">ส่งผลการประเมิน</span>
+    </button>
+    <div class="submit-pending" id="submit-pending">กรุณาตอบให้ครบทั้ง 25 ข้อก่อนส่ง</div>
+    <div class="confirm-banner" id="confirm-banner">
+      <div class="cb-icon">✅</div>
+      <div class="cb-title">ส่งผลการประเมินเรียบร้อยแล้ว</div>
+      <div class="cb-sub">ขอบคุณที่ร่วมประเมินตนเอง</div>
+    </div>
+  </div>
+
+  <!-- Results panel (below questions) -->
+  <div class="results-panel">
+    <div class="results-header">
+      <h3>ส่วนที่ 6: สรุปคะแนน · Score Summary</h3>
+      <div class="total-score-chip" id="total-chip">0 / 125</div>
+    </div>
+    <div class="results-body">
+      <div id="section-results"></div>
+      <div class="answered-note" id="answered-note">ตอบแล้ว 0 / 25 ข้อ · Answered 0 of 25</div>
+      <div class="interp-box" id="interp-box">
+        <div class="interp-level" id="interp-level"></div>
+        <div class="interp-title" id="interp-title"></div>
+        <div class="interp-desc" id="interp-desc"></div>
+        <div class="interp-dev" id="interp-dev"></div>
+      </div>
+      <div class="section-analysis" id="section-analysis" style="display:none"></div>
+      <div class="action-bar" style="margin-top:16px">
+        <button class="reset-btn" onclick="resetAll()">เริ่มประเมินใหม่ · Reset</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- old submit removed --><div style="display:none">
+  <div class="cb-title">placeholder</div>
+    <div class="cb-sub">ขอบคุณที่ร่วมประเมินตนเอง · Thank you for completing the self-assessment</div>
+  </div>
+</div>
+
+<script>
+const SECTIONS = [
+  {
+    num: 1,
+    th: "จิตใจแห่งการบริการ",
+    en: "Service Mind & Customer-Centric Mindset",
+    questions: [
+      "ฉันตระหนักว่าทุกคนที่มาติดต่อหรือขอความช่วยเหลือจากฉันคือบุคคลสำคัญที่ควรได้รับการบริการที่ดี",
+      "ฉันให้บริการด้วยความเต็มใจ สุภาพ และมีทัศนคติเชิงบวก แม้ในวันที่มีภาระงานมาก",
+      "ฉันแสดงความกระตือรือร้นและพร้อมช่วยเหลือ โดยไม่รอให้ลูกค้าต้องร้องขอซ้ำ",
+      "ฉันรับผิดชอบต่อปัญหาของลูกค้า โดยไม่รีบปฏิเสธหรือผลักภาระให้ผู้อื่น",
+      "ฉันตระหนักว่าพฤติกรรมและคุณภาพงานของฉันส่งผลต่อภาพลักษณ์และความเชื่อมั่นที่ลูกค้ามีต่อ ISUZU"
+    ],
+    analysis: "ทัศนคติเชิงบวก ความรับผิดชอบ และการช่วยเหลือเชิงรุก",
+    lowNote: "ยังไม่แสดงความเต็มใจหรือความกระตือรือร้นอย่างสม่ำเสมอ"
+  },
+  {
+    num: 2,
+    th: "การเข้าใจความต้องการและความคาดหวัง",
+    en: "Customer Understanding & Expectations",
+    questions: [
+      "ฉันตั้งใจรับฟังเพื่อเข้าใจความต้องการที่แท้จริงของลูกค้าก่อนเสนอแนวทางช่วยเหลือ",
+      "ฉันใช้คำถามที่เหมาะสมเพื่อค้นหาความต้องการหรือปัญหาที่ลูกค้าอาจยังไม่ได้อธิบายอย่างชัดเจน",
+      "ฉันให้ข้อมูลที่ถูกต้อง ชัดเจน และตรงกับสิ่งที่ลูกค้าต้องการทราบ",
+      "ฉันตอบกลับและดำเนินการภายในเวลาที่เหมาะสม พร้อมแจ้งความคืบหน้าเมื่อมีความล่าช้า",
+      "ฉันพยายามสร้างประสบการณ์ที่ดีและความประทับใจ โดยไม่หยุดอยู่เพียงการทำตามหน้าที่ขั้นต่ำ"
+    ],
+    analysis: "การฟัง การถาม และการคาดการณ์ความต้องการ",
+    lowNote: "อาจตอบสนองตามหน้าที่โดยยังไม่เข้าใจความต้องการที่แท้จริง"
+  },
+  {
+    num: 3,
+    th: "การสื่อสารและการสร้างความประทับใจ",
+    en: "Service Communication & Customer Experience",
+    questions: [
+      "ฉันใช้ถ้อยคำ น้ำเสียง และท่าทางที่สุภาพและเหมาะสมกับผู้รับบริการ",
+      "ฉันแสดงความเข้าใจความรู้สึกและมุมมองของลูกค้า แม้ลูกค้าจะมีความคิดเห็นแตกต่างจากฉัน",
+      "ฉันสื่อสารอย่างชัดเจนและตรวจสอบความเข้าใจร่วมกัน เพื่อลดความผิดพลาดในการให้บริการ",
+      "ฉันรักษาคำพูดและข้อตกลงที่ให้ไว้กับลูกค้า หรือรีบแจ้งเมื่อไม่สามารถดำเนินการตามที่ตกลงได้",
+      "ฉันปรับรูปแบบการสื่อสารให้เหมาะกับลูกค้าแต่ละคนและสถานการณ์ที่แตกต่างกัน"
+    ],
+    analysis: "น้ำเสียง ภาษากาย ความชัดเจน และการรักษาคำพูด",
+    lowNote: "อาจมีความเข้าใจคลาดเคลื่อนหรือสร้างความประทับใจได้ไม่ต่อเนื่อง"
+  },
+  {
+    num: 4,
+    th: "การจัดการข้อร้องเรียนและสถานการณ์ยาก",
+    en: "Complaint Handling & Service Recovery",
+    questions: [
+      "ฉันรับฟังข้อร้องเรียนโดยควบคุมอารมณ์และไม่ตอบโต้ลูกค้าด้วยความหงุดหงิด",
+      "ฉันพยายามเข้าใจข้อเท็จจริงและสาเหตุของปัญหาก่อนสรุปหรือเสนอวิธีแก้ไข",
+      "ฉันแสดงความเข้าใจต่อความไม่สะดวกของลูกค้า โดยไม่กล่าวโทษผู้อื่น",
+      "ฉันเสนอแนวทางแก้ไขที่เหมาะสม หรือประสานผู้เกี่ยวข้องเพื่อช่วยแก้ปัญหาอย่างรวดเร็ว",
+      "ฉันติดตามผลและแจ้งความคืบหน้าจนกว่าปัญหาจะได้รับการจัดการอย่างเหมาะสม"
+    ],
+    analysis: "การควบคุมอารมณ์ ความเข้าอกเข้าใจ การแก้ปัญหา และติดตามผล",
+    lowNote: "อาจขาดความมั่นใจในการรับมืออารมณ์หรือแก้ไขปัญหา"
+  },
+  {
+    num: 5,
+    th: "การบริการลูกค้าภายในและการทำงานร่วมกัน",
+    en: "Internal Customer Service & Collaboration",
+    questions: [
+      "ฉันปฏิบัติต่อเพื่อนร่วมงานและหน่วยงานอื่นด้วยความใส่ใจเช่นเดียวกับลูกค้าภายนอก",
+      "ฉันเข้าใจว่าคุณภาพและความตรงเวลาของงานที่ฉันส่งต่อมีผลต่อการทำงานของหน่วยงานถัดไป",
+      "ฉันสื่อสารและประสานงานข้ามหน่วยงานอย่างชัดเจน เพื่อลดความเข้าใจผิดและความล่าช้า",
+      "ฉันให้ความร่วมมือและช่วยเหลือหน่วยงานอื่นเมื่อมีปัญหา โดยไม่ยึดติดกับขอบเขตหน้าที่ของตนมากเกินไป",
+      "ฉันรับฟังข้อเสนอแนะจากลูกค้าภายในและนำมาปรับปรุงกระบวนการทำงานอย่างต่อเนื่อง"
+    ],
+    analysis: "การทำงานร่วมกัน การส่งต่องาน และความรับผิดชอบต่อเป้าหมายร่วมกัน",
+    lowNote: "อาจเกิดความล่าช้า การประสานงานไม่ชัดเจน หรือการทำงานแยกส่วน"
+  }
+];
+
+const INTERP = [
+  { min: 108, max: 125, level: "ระดับ 5", color: "var(--excellent)",
+    title: "การบริการที่เป็นเลิศ · Service Excellence",
+    desc: "มีจิตใจแห่งการบริการที่เข้มแข็ง เข้าใจความต้องการของลูกค้า และแสดงพฤติกรรมการบริการที่ดีอย่างสม่ำเสมอ สามารถรับมือสถานการณ์ยากได้อย่างเหมาะสม รวมถึงให้ความร่วมมือกับหน่วยงานต่างๆ เพื่อสร้างประสบการณ์ที่ดีแก่ลูกค้า",
+    dev: "รักษามาตรฐาน เป็นแบบอย่าง และแบ่งปันแนวปฏิบัติที่ดีให้เพื่อนร่วมงาน" },
+  { min: 89, max: 107, level: "ระดับ 4", color: "var(--good)",
+    title: "การบริการระดับดี · Good Service",
+    desc: "มีทัศนคติและทักษะการบริการที่ดี สามารถตอบสนองความต้องการของลูกค้าได้อย่างเหมาะสม แต่อาจมีบางสถานการณ์ที่ยังขาดความต่อเนื่อง เช่น การติดตามปัญหา การจัดการอารมณ์ หรือการประสานงาน",
+    dev: "พัฒนาความสม่ำเสมอ การคาดการณ์ความต้องการ และการสร้างความประทับใจเหนือความคาดหวัง" },
+  { min: 70, max: 88, level: "ระดับ 3", color: "var(--dev)",
+    title: "กำลังพัฒนา · Developing",
+    desc: "เข้าใจหลักการบริการและแสดงพฤติกรรมที่ดีได้ในบางสถานการณ์ แต่ยังไม่สม่ำเสมอ โดยเฉพาะเมื่อต้องเผชิญความเร่งด่วน ข้อร้องเรียน หรือการประสานงานหลายฝ่าย",
+    dev: "ฝึกการฟัง การตั้งคำถาม การสื่อสารเชิงบวก และการติดตามผลอย่างเป็นระบบ" },
+  { min: 50, max: 69, level: "ระดับ 2", color: "var(--imp)",
+    title: "ควรปรับปรุง · Needs Improvement",
+    desc: "พฤติกรรมการบริการหลายด้านยังไม่ต่อเนื่อง อาจให้ความสำคัญกับการทำงานตามหน้าที่มากกว่าความต้องการของผู้รับบริการ หรือยังขาดความมั่นใจในการแก้ไขปัญหาและประสานงาน",
+    dev: "เริ่มจากทัศนคติการบริการ ความรับผิดชอบ การตอบสนองอย่างสุภาพ และการช่วยเหลือเชิงรุก" },
+  { min: 25, max: 49, level: "ระดับ 1", color: "var(--urgent)",
+    title: "ควรเร่งพัฒนา · Urgent Development Needed",
+    desc: "ผลการประเมินตนเองสะท้อนว่ายังมีพฤติกรรมการบริการที่ควรพัฒนาหลายด้าน เช่น การรับฟัง การตอบสนอง การรับผิดชอบปัญหา และการทำงานร่วมกับผู้อื่น",
+    dev: "กำหนดพฤติกรรมพื้นฐานที่ต้องปรับปรุง ฝึกจากสถานการณ์จริง และรับคำแนะนำอย่างต่อเนื่อง" }
+];
+
+const SA_BANDS = [
+  { min: 22, max: 25, label: "ดีเยี่ยม", color: "var(--excellent)", dev: "รักษาจุดแข็งและเป็นแบบอย่าง" },
+  { min: 18, max: 21, label: "ดี", color: "var(--good)", dev: "พัฒนาให้สม่ำเสมอมากขึ้น" },
+  { min: 14, max: 17, label: "ปานกลาง", color: "var(--dev)", dev: "เลือกพฤติกรรมที่ต้องปรับปรุง" },
+  { min: 10, max: 13, label: "ควรปรับปรุง", color: "var(--imp)", dev: "ฝึกทักษะเฉพาะด้านอย่างจริงจัง" },
+  { min: 5, max: 9, label: "ควรเร่งพัฒนา", color: "var(--urgent)", dev: "วางแผนพัฒนาร่วมกับหัวหน้างาน" }
+];
+
+const ratings = {};
+let qCounter = 0;
+
+// Build sections
+const wrap = document.getElementById('sections-wrap');
+SECTIONS.forEach((sec, si) => {
+  const card = document.createElement('div');
+  card.className = 'section-card';
+  card.innerHTML = `
+    <div class="section-header">
+      <div class="section-num">${sec.num}</div>
+      <div class="section-header-text">
+        <div class="section-title-th">${sec.th}</div>
+        <div class="section-title-en">${sec.en}</div>
+      </div>
+      <div class="section-score-chip" id="sc-${si}">0 / 25</div>
+    </div>
+  `;
+  sec.questions.forEach((q, qi) => {
+    const globalNum = si * 5 + qi + 1;
+    const row = document.createElement('div');
+    row.className = 'question-row';
+    row.innerHTML = `
+      <div class="q-text"><span class="q-num">${globalNum}.</span>${q}</div>
+      <div class="rating-row" id="rr-${globalNum}">
+        ${[1,2,3,4,5].map((v,i) => {
+          const lbls = ['แทบไม่เคย','นานๆ ครั้ง','บางครั้ง','บ่อยครั้ง','สม่ำเสมอ'];
+          return `<input type="radio" name="q${globalNum}" id="rb-${globalNum}-${v}" value="${v}"><label for="rb-${globalNum}-${v}"><span class="r-num">${v}</span>${lbls[i]}</label>`;
+        }).join('')}
+      </div>
+    `;
+    card.appendChild(row);
+  });
+  wrap.appendChild(card);
+});
+
+// Build section results rows
+const srWrap = document.getElementById('section-results');
+SECTIONS.forEach((sec, si) => {
+  const row = document.createElement('div');
+  row.className = 'section-result-row';
+  row.innerHTML = `
+    <div class="sr-label">${sec.num}. ${sec.th}</div>
+    <div class="sr-bar-wrap"><div class="sr-bar-fill" id="srb-${si}" style="width:0%"></div></div>
+    <div class="sr-score" id="srs-${si}">0/25</div>
+  `;
+  srWrap.appendChild(row);
+});
+
+// Radio change — native, works on all mobile browsers
+document.getElementById('sections-wrap').addEventListener('change', function(e) {
+  if (e.target.type !== 'radio') return;
+  const name = e.target.name; // "q1", "q2", etc.
+  const qNum = +name.replace('q', '');
+  const val = +e.target.value;
+  ratings[qNum] = val;
+  updateScores();
+  saveState();
+});
+
+function updateScores() {
+  let totalScore = 0;
+  let totalAnswered = 0;
+
+  SECTIONS.forEach((sec, si) => {
+    let sScore = 0;
+    let sAnswered = 0;
+    sec.questions.forEach((_, qi) => {
+      const gn = si * 5 + qi + 1;
+      if (ratings[gn]) { sScore += ratings[gn]; sAnswered++; }
+    });
+    totalScore += sScore;
+    totalAnswered += sAnswered;
+
+    const chip = document.getElementById(`sc-${si}`);
+    chip.textContent = `${sScore} / 25`;
+    chip.className = 'section-score-chip' + (sScore === 25 ? ' full' : '');
+
+    document.getElementById(`srb-${si}`).style.width = (sScore / 25 * 100) + '%';
+    document.getElementById(`srs-${si}`).textContent = `${sScore}/25`;
+  });
+
+  document.getElementById('total-chip').textContent = `${totalScore} / 125`;
+  document.getElementById('answered-note').textContent =
+    `ตอบแล้ว ${totalAnswered} / 25 ข้อ · Answered ${totalAnswered} of 25`;
+
+  document.getElementById('prog').style.width = (totalAnswered / 25 * 100) + '%';
+
+  // Enable/disable submit button
+  const submitBtn = document.getElementById('submit-btn');
+  const submitPending = document.getElementById('submit-pending');
+  if (totalAnswered === 25) {
+    submitBtn.disabled = false;
+    submitPending.style.display = 'none';
+  } else {
+    submitBtn.disabled = true;
+    submitPending.style.display = 'block';
+    submitPending.textContent = `กรุณาตอบอีก ${25 - totalAnswered} ข้อ`;
+    document.getElementById('confirm-banner').classList.remove('visible');
+    submitBtn.classList.remove('done');
+    document.getElementById('submit-label').textContent = 'ส่งผลการประเมิน';
+  }
+
+  // Interpretation — show when all answered
+  const box = document.getElementById('interp-box');
+  const saWrap = document.getElementById('section-analysis');
+  if (totalAnswered === 25) {
+    const interp = INTERP.find(i => totalScore >= i.min && totalScore <= i.max);
+    if (interp) {
+      document.getElementById('interp-level').textContent = interp.level;
+      document.getElementById('interp-level').style.color = interp.color;
+      document.getElementById('interp-title').textContent = interp.title;
+      document.getElementById('interp-title').style.color = interp.color;
+      document.getElementById('interp-desc').textContent = interp.desc;
+      document.getElementById('interp-dev').innerHTML = `<strong>แนวทางพัฒนา:</strong> ${interp.dev}`;
+      box.classList.add('visible');
+    }
+
+    // Section analysis
+    saWrap.style.display = 'block';
+    saWrap.innerHTML = '<div style="font-size:.8rem;font-weight:700;color:var(--fg-mid);margin-bottom:10px;letter-spacing:.04em;text-transform:uppercase">วิเคราะห์รายด้าน · Section Analysis</div>';
+    SECTIONS.forEach((sec, si) => {
+      let sScore = 0;
+      sec.questions.forEach((_, qi) => { const gn = si * 5 + qi + 1; if (ratings[gn]) sScore += ratings[gn]; });
+      const band = SA_BANDS.find(b => sScore >= b.min && sScore <= b.max) || SA_BANDS[SA_BANDS.length - 1];
+      const saRow = document.createElement('div');
+      saRow.className = 'sa-row';
+      saRow.innerHTML = `
+        <div class="sa-dot" style="background:${band.color}"></div>
+        <div class="sa-content">
+          <div class="sa-name">${sec.num}. ${sec.th} — <span style="color:${band.color}">${band.label} (${sScore}/25)</span></div>
+          <div class="sa-dev">${band.dev}</div>
+        </div>
+      `;
+      saWrap.appendChild(saRow);
+    });
+  } else {
+    box.classList.remove('visible');
+    saWrap.style.display = 'none';
+  }
+}
+
+function resetAll() {
+  for (let k in ratings) delete ratings[k];
+  document.querySelectorAll('#sections-wrap input[type="radio"]').forEach(r => r.checked = false);
+  document.getElementById('submit-btn').classList.remove('done');
+  document.getElementById('submit-label').textContent = 'ส่งผลการประเมิน';
+  document.getElementById('confirm-banner').classList.remove('visible');
+  updateScores();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  try { localStorage.removeItem('svc_ratings'); } catch(e) {}
+}
+
+function saveState() {
+  try { localStorage.setItem('svc_ratings', JSON.stringify(ratings)); } catch(e) {}
+}
+
+function submitAssessment() {
+  const btn = document.getElementById('submit-btn');
+  btn.classList.add('done');
+  document.getElementById('submit-label').textContent = '✓ ส่งแล้ว · Submitted';
+  document.getElementById('confirm-banner').classList.add('visible');
+  document.getElementById('submit-pending').style.display = 'none';
+  // Scroll to results
+  document.querySelector('.results-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function loadState() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('svc_ratings') || '{}');
+    Object.entries(saved).forEach(([k, v]) => {
+      ratings[parseInt(k)] = v;
+      const radio = document.getElementById(`rb-${k}-${v}`);
+      if (radio) radio.checked = true;
+    });
+    updateScores();
+  } catch(e) {}
+}
+
+loadState();
+</script>
