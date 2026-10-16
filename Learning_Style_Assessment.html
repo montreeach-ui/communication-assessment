@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>การประเมินสไตล์การเรียนรู้ | The Bridge</title>
+<style>
+  :root{
+    --navy:#1A237E; --blue:#1565C0;
+    --gold-lt:#FDF6E3;
+    --gray:#37474F; --light:#ECEFF1;
+    --green:#2E7D32; --green-lt:#E8F5E9;
+    --red:#C62828; --red-lt:#FFEBEE;
+    --amber:#EF6C00; --amber-lt:#FFF3E0;
+    --teal:#00695C; --teal-lt:#E0F2F1;
+    --purple:#6A1B9A; --purple-lt:#F3E5F5;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  body{font-family:'Sarabun','TH Sarabun New',sans-serif;background:var(--light);color:var(--gray);font-size:16px;line-height:1.6;padding-bottom:60px;}
+
+  .header{background:linear-gradient(135deg,var(--navy),#283593);color:#fff;text-align:center;padding:32px 16px 28px;}
+  .header h1{font-size:1.25rem;font-weight:700;margin-bottom:6px;}
+  .header p{font-size:0.9rem;opacity:0.9;}
+
+  .container{max-width:720px;margin:0 auto;padding:0 16px;}
+
+  .scale-box{background:#fff;border-radius:12px;padding:18px 20px;margin-top:-18px;box-shadow:0 2px 10px rgba(0,0,0,0.08);}
+  .scale-box h2{font-size:1.05rem;color:var(--navy);margin-bottom:10px;}
+  .scale-box .lead{font-size:0.88rem;margin-bottom:10px;}
+  .scale-row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;font-size:0.78rem;}
+  .scale-item{flex:1 1 20%;text-align:center;background:var(--gold-lt);border-radius:8px;padding:8px 4px;font-weight:600;color:var(--navy);}
+
+  .progress-wrap{position:sticky;top:0;background:var(--light);padding:10px 16px 6px;z-index:10;}
+  .progress-bar{height:8px;background:#dfe3e8;border-radius:4px;overflow:hidden;}
+  .progress-fill{height:100%;background:var(--blue);width:0%;transition:width .2s;}
+  .progress-text{font-size:0.8rem;text-align:right;color:var(--gray);margin-top:4px;}
+
+  .question{background:#fff;border-radius:12px;padding:18px;margin:14px 0;box-shadow:0 1px 6px rgba(0,0,0,0.06);}
+  .question p.q-text{font-weight:600;color:var(--navy);margin-bottom:14px;font-size:0.96rem;}
+  .q-num{display:inline-block;background:var(--blue);color:#fff;border-radius:50%;width:26px;height:26px;text-align:center;line-height:26px;font-size:0.85rem;margin-right:8px;}
+
+  .opt-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid #ECEFF1;}
+  .opt-row:first-of-type{border-top:none;}
+  .opt-letter{flex:0 0 22px;font-weight:700;color:var(--blue);}
+  .opt-text{flex:1 1 auto;font-size:0.88rem;min-width:0;}
+  .rank-btns{flex:0 0 auto;display:flex;gap:4px;}
+  .rank-btn{width:30px;height:30px;border-radius:6px;border:2px solid #dfe3e8;background:#fff;color:var(--gray);font-weight:700;font-size:0.82rem;cursor:pointer;font-family:inherit;-webkit-appearance:none;appearance:none;}
+  .rank-btn.selected{background:var(--blue);border-color:var(--blue);color:#fff;}
+
+  .submit-wrap{text-align:center;margin:30px 0;}
+  #submitBtn{background:var(--navy);color:#fff;border:none;padding:14px 40px;font-size:1.05rem;font-weight:700;border-radius:30px;cursor:pointer;box-shadow:0 4px 12px rgba(26,35,126,0.35);font-family:inherit;}
+  #submitBtn:hover{background:var(--blue);}
+
+  #results{display:none;}
+  .result-card{background:#fff;border-radius:14px;padding:24px 20px;margin-top:10px;box-shadow:0 2px 12px rgba(0,0,0,0.08);}
+  .result-card h2{color:var(--navy);font-size:1.15rem;margin-bottom:4px;text-align:center;}
+  .total-label{font-size:0.9rem;color:#607D8B;margin-bottom:16px;text-align:center;}
+
+  .top-style{text-align:center;margin-bottom:10px;}
+  .top-style .style-big{font-size:1.6rem;font-weight:800;color:var(--navy);}
+  .top-style .style-sub{font-size:0.85rem;color:#607D8B;margin-bottom:6px;}
+  .top-desc{font-size:0.88rem;color:var(--gray);max-width:480px;margin:6px auto 0;}
+
+  .disclaimer{font-size:0.76rem;color:#90A4AE;text-align:center;margin:10px 0 16px;font-style:italic;}
+
+  .sub-heading{font-weight:700;color:var(--navy);font-size:0.92rem;margin:18px 0 10px;border-top:1px dashed #CFD8DC;padding-top:16px;}
+
+  .dim-result{border-radius:10px;padding:14px 16px;margin-bottom:12px;background:#FAFBFC;}
+  .dim-result .dim-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+  .dim-result .dim-name{font-weight:700;color:var(--navy);font-size:0.92rem;}
+  .dim-result .dim-score{font-weight:700;font-size:0.92rem;white-space:nowrap;margin-left:8px;}
+  .bar-bg{background:#ECEFF1;border-radius:6px;height:12px;overflow:hidden;}
+  .bar-fill{height:100%;border-radius:6px;transition:width .6s ease;}
+  .dim-desc{font-size:0.82rem;color:#607D8B;margin-top:6px;}
+
+  .restart{display:block;margin:22px auto 0;background:none;border:2px solid var(--navy);color:var(--navy);padding:10px 26px;border-radius:24px;font-weight:700;cursor:pointer;font-family:inherit;}
+  .restart:hover{background:var(--navy);color:#fff;}
+
+  .warn{color:var(--red);text-align:center;font-size:0.85rem;margin-top:8px;display:none;}
+  .question.missing{outline:2px solid var(--red);}
+  footer{text-align:center;font-size:0.75rem;color:#90A4AE;margin-top:30px;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>การประเมินสไตล์การเรียนรู้</h1>
+  <p>Adult Learning Style Assessment</p>
+</div>
+
+<div class="container">
+
+  <div class="scale-box">
+    <h2>คำชี้แจง</h2>
+    <p class="lead">ให้เรียงลำดับคำตอบซึ่งเหมาะสมกับพฤติกรรม หรือ สิ่งที่คุณทำมากที่สุด โดยการให้คะแนน <strong>4</strong> หมายถึงตรงกับตัวคุณมากที่สุด จากนั้นเป็น <strong>3 2</strong> และ <strong>1</strong> ซึ่งใกล้เคียงกับคุณน้อยที่สุด แตะตัวเลขข้างแต่ละตัวเลือกเพื่อให้คะแนน โดยแต่ละข้อต้องใช้คะแนน 4, 3, 2 และ 1 ครบทั้ง 4 ตัวเลือก ไม่ซ้ำกัน</p>
+    <div class="scale-row">
+      <div class="scale-item">4<br>มากที่สุด</div>
+      <div class="scale-item">3</div>
+      <div class="scale-item">2</div>
+      <div class="scale-item">1<br>น้อยที่สุด</div>
+    </div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-text" id="progressText">ตอบแล้ว 0 / 12 ข้อ</div>
+  </div>
+
+  <div id="quizWrap">
+    <div id="questionsContainer"></div>
+    <div class="submit-wrap">
+      <button id="submitBtn">ดูผลการประเมิน</button>
+      <div class="warn" id="warnMsg">กรุณาให้คะแนนครบทั้ง 4 ตัวเลือก (4,3,2,1) ในข้อที่ไฮไลต์สีแดงให้ครบก่อนดูผลค่ะ</div>
+    </div>
+  </div>
+
+  <div id="results">
+    <div class="result-card">
+      <h2>ผลการประเมินสไตล์การเรียนรู้</h2>
+      <div class="total-label">คะแนนรวมทั้งหมด 120 คะแนน แบ่งเป็น 4 สไตล์</div>
+
+      <div class="top-style">
+        <div class="style-sub">สไตล์การเรียนรู้หลักของคุณคือ</div>
+        <div class="style-big" id="topStyle"></div>
+        <div class="top-desc" id="topDesc"></div>
+      </div>
+      <div class="disclaimer">* คำอธิบายสไตล์การเรียนรู้แต่ละแบบจัดทำเพิ่มเติมโดยทีมงาน เนื่องจากแบบประเมินต้นฉบับมีเฉพาะเกณฑ์การให้คะแนน ไม่มีคำอธิบายกำกับไว้</div>
+
+      <div class="sub-heading">คะแนนแยกตามสไตล์การเรียนรู้</div>
+      <div id="dimsContainer"></div>
+
+      <button type="button" class="restart" id="restartBtn">ทำแบบประเมินอีกครั้ง</button>
+    </div>
+  </div>
+
+  <footer>The Bridge Co., Ltd. · Adult Learning Style Assessment</footer>
+</div>
+
+<script>
+(function(){
+  // Each question: stem + options a-d in fixed order, plus which style each option belongs to
+  var questions = [
+    { stem:"เมื่อมีการแก้ปัญหา ฉันชอบที่จะ", opts:{
+      a:{text:"ทำตามขั้นตอนทีละขั้นเพื่อแก้ปัญหา", style:"Observer"},
+      b:{text:"ลงมือแก้ปัญหาทันที", style:"Doer"},
+      c:{text:"พิจารณาถึงผลที่จะกระทบต่อคนอื่น", style:"Feeler"},
+      d:{text:"ให้แน่ใจว่ามีข้อมูลความจริงทั้งหมดก่อน", style:"Thinker"}
+    }},
+    { stem:"ในฐานะที่เป็นผู้เรียนคนหนึ่ง ฉันชอบที่จะ", opts:{
+      a:{text:"ฟังการบรรยาย", style:"Observer"},
+      b:{text:"ทำงานเป็นกลุ่มเล็กๆ", style:"Feeler"},
+      c:{text:"อ่านบทความ และ ทำกรณีศึกษา", style:"Thinker"},
+      d:{text:"แสดงบทบาทสมมติ", style:"Doer"}
+    }},
+    { stem:"เมื่อวิทยากรฝึกอบรมถามคำถามซึ่งฉันรู้คำตอบ ฉัน", opts:{
+      a:{text:"ปล่อยให้คนอื่นตอบก่อน", style:"Observer"},
+      b:{text:"ตอบคำถามทันที", style:"Doer"},
+      c:{text:"พิจารณาว่าคำตอบของฉันจะถูกใจวิทยากรหรือไม่", style:"Feeler"},
+      d:{text:"คิดพิจารณาอย่างรอบคอบก่อนตัดสินใจตอบ", style:"Thinker"}
+    }},
+    { stem:"ในการทำงานเป็นกลุ่ม ฉัน", opts:{
+      a:{text:"กระตุ้นให้คนอื่นๆ แสดงความคิดเห็น", style:"Feeler"},
+      b:{text:"สอบถามความคิดเห็นของคนอื่น", style:"Thinker"},
+      c:{text:"พร้อมที่จะให้คำเสนอแนะ", style:"Doer"},
+      d:{text:"ฟังคนอื่นเสนอแนะก่อน จากนั้นฉันจึงจะเสนอแนะ", style:"Observer"}
+    }},
+    { stem:"ฉันเรียนรู้ได้ดีจากกิจกรรมซึ่งฉัน", opts:{
+      a:{text:"สามารถมีปฏิสัมพันธ์กับคนอื่นได้", style:"Feeler"},
+      b:{text:"ไม่ต้องอาศัยการมีส่วนร่วม", style:"Observer"},
+      c:{text:"ได้ใช้บทบาทการเป็นผู้นำ", style:"Doer"},
+      d:{text:"สามารถทำตอนไหนก็ได้", style:"Thinker"}
+    }},
+    { stem:"ในระหว่างการบรรยาย ฉันจะฟัง", opts:{
+      a:{text:"วิธีการซึ่งสามารถปฏิบัติได้จริง", style:"Doer"},
+      b:{text:"ประเด็นหรือหัวข้อต่างๆ ซึ่งดูสมเหตุสมผล", style:"Thinker"},
+      c:{text:"ประเด็นสำคัญๆ หรือ ประเด็นหลัก", style:"Observer"},
+      d:{text:"เรื่องราว และ เรื่องเล่าต่างๆ", style:"Feeler"}
+    }},
+    { stem:"ฉันประทับใจกับวิทยากรฝึกอบรมซึ่ง", opts:{
+      a:{text:"มีความรู้ และมีความเชี่ยวชาญ", style:"Thinker"},
+      b:{text:"มีสไตล์การนำเสนอ และบุคลิกภาพดี", style:"Feeler"},
+      c:{text:"ใช้วิธีการสอนแบบต่างๆ รวมทั้งมีการใช้กิจกรรม", style:"Doer"},
+      d:{text:"จัดการสิ่งต่างๆ และสามารถควบคุมสถานการณ์ได้ดี", style:"Observer"}
+    }},
+    { stem:"ฉันชอบที่จะเห็นวิทยากรนำเสนอข้อมูลต่างๆ โดยวิธี", opts:{
+      a:{text:"การใช้โมเดล เช่น Flow chart", style:"Observer"},
+      b:{text:"การเรียงลำดับเนื้อหาเป็นข้อๆ", style:"Doer"},
+      c:{text:"ให้คำอธิบายอย่างละเอียด", style:"Thinker"},
+      d:{text:"มีการใช้การทดสอบหรือแบบทดสอบร่วมด้วย", style:"Feeler"}
+    }},
+    { stem:"ฉันเรียนรู้ได้ดีเมื่อฉัน", opts:{
+      a:{text:"เห็นถึงความสัมพันธ์ของแนวคิด เหตุการณ์ และสถานการณ์ต่างๆ ซึ่งมีต่อกัน", style:"Thinker"},
+      b:{text:"ได้มีโอกาสสร้างปฏิสัมพันธ์กับคนอื่น", style:"Feeler"},
+      c:{text:"ได้เคล็ดลับต่างๆ ซึ่งสามารถปฏิบัติได้จริง", style:"Doer"},
+      d:{text:"สังเกตจากการสาธิต หรือ ดูจากวิดีโอ", style:"Observer"}
+    }},
+    { stem:"ก่อนเข้าร่วมฝึกอบรม ฉันจะถามตัวเองว่าฉันจะ", opts:{
+      a:{text:"ได้เคล็ดลับอะไรดีๆ เพื่อใช้ในการทำงานหรือไม่", style:"Doer"},
+      b:{text:"ได้รับข้อมูลมากมายหรือไม่", style:"Thinker"},
+      c:{text:"ต้องมีส่วนร่วมในการอบรมหรือไม่", style:"Observer"},
+      d:{text:"ได้เรียนรู้อะไรใหม่ๆ หรือไม่", style:"Feeler"}
+    }},
+    { stem:"หลังการเข้าร่วมฝึกอบรม ฉัน", opts:{
+      a:{text:"มักจะคิดถึงสิ่งที่ตัวเองได้เรียนมา", style:"Thinker"},
+      b:{text:"รู้สึกเป็นกังวลที่จะนำความรู้ไปสู่การปฏิบัติจริง", style:"Doer"},
+      c:{text:"ครุ่นคิดเกี่ยวกับประสบการณ์ที่ได้ทั้งหมดจากการอบรม", style:"Observer"},
+      d:{text:"บอกให้คนอื่นทราบเกี่ยวกับประสบการณ์ที่ได้รับ", style:"Feeler"}
+    }},
+    { stem:"วิธีการฝึกอบรมที่ฉันไม่ชอบมากที่สุด คือ", opts:{
+      a:{text:"การทำงานร่วมกันกับกลุ่มเล็กๆ", style:"Observer"},
+      b:{text:"การนั่งฟังการบรรยาย", style:"Doer"},
+      c:{text:"การอ่าน และวิเคราะห์กรณีศึกษา", style:"Feeler"},
+      d:{text:"การแสดงบทบาทสมมติ", style:"Thinker"}
+    }}
+  ];
+
+  var styleInfo = {
+    Feeler:  { color:"#C62828", desc:"เรียนรู้ได้ดีผ่านความรู้สึก ความสัมพันธ์กับผู้อื่น และประสบการณ์ตรง มักให้ความสำคัญกับผลกระทบต่อคนรอบข้าง" },
+    Observer:{ color:"#00695C", desc:"เรียนรู้ได้ดีด้วยการสังเกต ไตร่ตรอง และรวบรวมข้อมูลก่อนตัดสินใจหรือลงมือทำ" },
+    Thinker: { color:"#1565C0", desc:"เรียนรู้ได้ดีผ่านการวิเคราะห์เชิงเหตุผล แนวคิด ทฤษฎี และข้อมูลที่เป็นระบบ" },
+    Doer:    { color:"#6A1B9A", desc:"เรียนรู้ได้ดีผ่านการลงมือทำ ทดลองปฏิบัติจริง และนำไปประยุกต์ใช้ทันที" }
+  };
+
+  var answers = {}; // answers[qIndex] = {a:rank|null, b:.., c:.., d:..}
+  var container = document.getElementById('questionsContainer');
+  var optLetters = ['a','b','c','d'];
+
+  questions.forEach(function(q, qIndex){
+    answers[qIndex] = { a:null, b:null, c:null, d:null };
+
+    var qDiv = document.createElement('div');
+    qDiv.className = 'question';
+    qDiv.id = 'q-' + qIndex;
+
+    var qP = document.createElement('p');
+    qP.className = 'q-text';
+    var numSpan = document.createElement('span');
+    numSpan.className = 'q-num';
+    numSpan.textContent = (qIndex + 1);
+    qP.appendChild(numSpan);
+    qP.appendChild(document.createTextNode(q.stem));
+    qDiv.appendChild(qP);
+
+    optLetters.forEach(function(letter){
+      var row = document.createElement('div');
+      row.className = 'opt-row';
+      row.id = 'q-' + qIndex + '-' + letter;
+
+      var letterSpan = document.createElement('span');
+      letterSpan.className = 'opt-letter';
+      letterSpan.textContent = letter + '.';
+      row.appendChild(letterSpan);
+
+      var textSpan = document.createElement('span');
+      textSpan.className = 'opt-text';
+      textSpan.textContent = q.opts[letter].text;
+      row.appendChild(textSpan);
+
+      var rankDiv = document.createElement('div');
+      rankDiv.className = 'rank-btns';
+
+      [4,3,2,1].forEach(function(rank){
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'rank-btn';
+        btn.textContent = rank;
+        btn.setAttribute('data-q', qIndex);
+        btn.setAttribute('data-opt', letter);
+        btn.setAttribute('data-rank', rank);
+        btn.addEventListener('click', function(){
+          // if this rank already used by another option in this question, clear it
+          optLetters.forEach(function(ol){
+            if (ol !== letter && answers[qIndex][ol] === rank) {
+              answers[qIndex][ol] = null;
+              var otherBtns = document.querySelectorAll('#q-' + qIndex + '-' + ol + ' .rank-btn');
+              otherBtns.forEach(function(b){ b.classList.remove('selected'); });
+            }
+          });
+          answers[qIndex][letter] = rank;
+          var thisBtns = row.querySelectorAll('.rank-btn');
+          thisBtns.forEach(function(b){
+            b.classList.toggle('selected', parseInt(b.getAttribute('data-rank'),10) === rank);
+          });
+          qDiv.classList.remove('missing');
+          updateProgress();
+        });
+        rankDiv.appendChild(btn);
+      });
+
+      row.appendChild(rankDiv);
+      qDiv.appendChild(row);
+    });
+
+    container.appendChild(qDiv);
+  });
+
+  var progressFill = document.getElementById('progressFill');
+  var progressText = document.getElementById('progressText');
+
+  function isQuestionComplete(qIndex){
+    return optLetters.every(function(l){ return answers[qIndex][l] !== null; });
+  }
+
+  function updateProgress(){
+    var n = 0;
+    for (var i = 0; i < questions.length; i++) if (isQuestionComplete(i)) n++;
+    progressFill.style.width = (n / questions.length * 100) + '%';
+    progressText.textContent = 'ตอบแล้ว ' + n + ' / ' + questions.length + ' ข้อ';
+  }
+
+  document.getElementById('submitBtn').addEventListener('click', function(){
+    var missing = [];
+    for (var i = 0; i < questions.length; i++) {
+      var qEl = document.getElementById('q-' + i);
+      if (!isQuestionComplete(i)) {
+        missing.push(i);
+        qEl.classList.add('missing');
+      } else {
+        qEl.classList.remove('missing');
+      }
+    }
+
+    if (missing.length > 0) {
+      document.getElementById('warnMsg').style.display = 'block';
+      document.getElementById('q-' + missing[0]).scrollIntoView({ behavior:'smooth', block:'center' });
+      return;
+    }
+    document.getElementById('warnMsg').style.display = 'none';
+
+    var totals = { Feeler:0, Observer:0, Thinker:0, Doer:0 };
+    questions.forEach(function(q, qIndex){
+      optLetters.forEach(function(letter){
+        var style = q.opts[letter].style;
+        totals[style] += answers[qIndex][letter];
+      });
+    });
+
+    var styleOrder = ['Feeler','Observer','Thinker','Doer'];
+    var maxScore = Math.max.apply(null, styleOrder.map(function(s){ return totals[s]; }));
+    var topStyles = styleOrder.filter(function(s){ return totals[s] === maxScore; });
+
+    document.getElementById('topStyle').textContent = topStyles.join(' / ');
+    document.getElementById('topDesc').textContent = topStyles.map(function(s){ return styleInfo[s].desc; }).join(' ');
+
+    var dimsHtml = styleOrder.map(function(s){
+      var score = totals[s];
+      var pct = (score / 48 * 100);
+      return '<div class="dim-result">' +
+        '<div class="dim-head"><span class="dim-name">' + s + '</span><span class="dim-score">' + score + '/48</span></div>' +
+        '<div class="bar-bg"><div class="bar-fill" style="width:' + pct + '%;background:' + styleInfo[s].color + ';"></div></div>' +
+        '<div class="dim-desc">' + styleInfo[s].desc + '</div>' +
+        '</div>';
+    }).join('');
+    document.getElementById('dimsContainer').innerHTML = dimsHtml;
+
+    document.getElementById('quizWrap').style.display = 'none';
+    document.querySelector('.progress-wrap').style.display = 'none';
+    document.getElementById('results').style.display = 'block';
+    window.scrollTo(0, 0);
+  });
+
+  document.getElementById('restartBtn').addEventListener('click', function(){
+    questions.forEach(function(q, qIndex){
+      answers[qIndex] = { a:null, b:null, c:null, d:null };
+      optLetters.forEach(function(letter){
+        var btns = document.querySelectorAll('#q-' + qIndex + '-' + letter + ' .rank-btn');
+        btns.forEach(function(b){ b.classList.remove('selected'); });
+      });
+    });
+    document.getElementById('quizWrap').style.display = 'block';
+    document.querySelector('.progress-wrap').style.display = 'block';
+    document.getElementById('results').style.display = 'none';
+    updateProgress();
+    window.scrollTo(0, 0);
+  });
+
+  updateProgress();
+})();
+</script>
+</body>
+</html>
