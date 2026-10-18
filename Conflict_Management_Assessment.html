@@ -1,0 +1,534 @@
+<title>Conflict Management Style Assessment</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700&family=Noto+Serif+Thai:wght@600;700&display=swap">
+<style>
+:root {
+  --bg: #F6F7FA; --surface: #FFFFFF; --surface-2: #F0F2F7;
+  --border: #D8DCE8; --border-lt: #EAECF4;
+  --fg: #1A1D2E; --fg-mid: #4A5068; --fg-muted: #8B90A8;
+  --accent: #7B3FA0; --accent-lt: #F3EAF9; --accent-dk: #541C72;
+  --r1: #FDE8E8; --r2: #FEF3D8; --r3: #E8F4FD; --r4: #E4F0FF; --r5: #7B3FA0;
+  --r1-fg: #8B1A1A; --r2-fg: #7A5000; --r3-fg: #0A5A8A; --r4-fg: #1B4FBF; --r5-fg: #FFFFFF;
+  --s1: #E05A2B; --s2: #D4A017; --s3: #1B4FBF; --s4: #1A7A45; --s5: #6B7280;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0F1120; --surface: #181B2E; --surface-2: #1E2238;
+    --border: #2A2F4A; --border-lt: #232744;
+    --fg: #E2E6F8; --fg-mid: #9BA3C8; --fg-muted: #5A6080;
+    --accent: #B07FD0; --accent-lt: #2A1540; --accent-dk: #D0A8F0;
+    --r1: #2A1010; --r2: #1E1800; --r3: #0A1E2A; --r4: #0A1440; --r5: #7B3FA0;
+    --r1-fg: #FF9090; --r2-fg: #F0C060; --r3-fg: #60CCFF; --r4-fg: #90AAFF; --r5-fg: #FFFFFF;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0F1120; --surface: #181B2E; --surface-2: #1E2238;
+  --border: #2A2F4A; --border-lt: #232744;
+  --fg: #E2E6F8; --fg-mid: #9BA3C8; --fg-muted: #5A6080;
+  --accent: #B07FD0; --accent-lt: #2A1540; --accent-dk: #D0A8F0;
+  --r1: #2A1010; --r2: #1E1800; --r3: #0A1E2A; --r4: #0A1440; --r5: #7B3FA0;
+  --r1-fg: #FF9090; --r2-fg: #F0C060; --r3-fg: #60CCFF; --r4-fg: #90AAFF; --r5-fg: #FFFFFF;
+  color-scheme: dark;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg); color: var(--fg);
+  font-family: 'Noto Sans Thai', system-ui, sans-serif;
+  font-size: 15px; line-height: 1.7;
+}
+
+.site-header {
+  background: var(--accent); color: #fff;
+  padding: 28px 24px 24px; text-align: center;
+}
+.site-header .logo-tag {
+  font-size: 0.72rem; letter-spacing: .12em; text-transform: uppercase;
+  opacity: .75; margin-bottom: 8px;
+}
+.site-header h1 {
+  font-family: 'Noto Serif Thai', serif;
+  font-size: clamp(1.2rem, 4vw, 1.6rem);
+  font-weight: 700; line-height: 1.3; text-wrap: balance;
+}
+.site-header h2 { font-size: 0.85rem; font-weight: 400; opacity: .8; margin-top: 4px; }
+.site-header .purpose {
+  max-width: 640px; margin: 16px auto 0;
+  font-size: 0.82rem; opacity: .85; line-height: 1.6;
+}
+
+.progress-bar-wrap { background: var(--border-lt); height: 4px; position: sticky; top: 0; z-index: 100; }
+.progress-bar-fill { height: 100%; background: var(--accent); transition: width .3s ease; width: 0%; }
+
+.scale-bar {
+  background: var(--surface-2); border-bottom: 1px solid var(--border);
+  padding: 10px 24px;
+  display: flex; flex-wrap: wrap; gap: 6px 16px;
+  justify-content: center; align-items: center;
+}
+.scale-label { font-size: 0.72rem; color: var(--fg-muted); letter-spacing: .06em; text-transform: uppercase; }
+.scale-item { display: flex; align-items: center; gap: 5px; font-size: 0.78rem; color: var(--fg-mid); }
+.scale-dot {
+  width: 20px; height: 20px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.68rem; font-weight: 700;
+}
+
+.main { max-width: 760px; margin: 0 auto; padding: 28px 16px 60px; }
+
+.instruction-box {
+  background: var(--accent-lt); border: 1px solid var(--border);
+  border-radius: 12px; padding: 18px 20px; margin-bottom: 28px;
+  font-size: 0.88rem; color: var(--fg-mid); line-height: 1.7;
+}
+.instruction-box strong { color: var(--accent); }
+
+.section-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 14px; margin-bottom: 28px;
+}
+.section-header {
+  background: var(--accent-lt); border-bottom: 1px solid var(--border-lt);
+  padding: 14px 20px;
+  display: flex; align-items: center; gap: 12px;
+}
+.section-num {
+  background: var(--accent); color: #fff;
+  width: 32px; height: 32px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.85rem; font-weight: 700; flex-shrink: 0;
+}
+.section-title { font-weight: 700; font-size: 0.95rem; color: var(--fg); }
+
+.question-row {
+  padding: 20px 20px;
+  border-bottom: 1px solid var(--border-lt);
+}
+.question-row:last-child { border-bottom: none; }
+.q-text { font-size: 0.97rem; margin-bottom: 14px; color: var(--fg); line-height: 1.6; }
+.q-num { font-weight: 700; color: var(--accent); margin-right: 6px; }
+
+.rating-row { display: flex; flex-direction: column; gap: 6px; }
+.score-btn {
+  display: flex; align-items: center; gap: 12px;
+  width: 100%; min-height: 50px; padding: 0 14px;
+  border-radius: 10px; border: 2px solid var(--border);
+  background: var(--surface); color: var(--fg-mid);
+  font-size: 0.92rem; font-weight: 500; font-family: inherit;
+  cursor: pointer; text-align: left;
+  touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+  transition: background .15s, border-color .15s, color .15s;
+  user-select: none;
+}
+.score-btn .r-num {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--surface-2); color: var(--fg-mid);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.85rem; font-weight: 700; flex-shrink: 0;
+  border: 1px solid var(--border);
+  transition: background .15s, color .15s;
+}
+.score-btn:active { opacity: 0.7; }
+.score-btn[data-v="1"].sel { background: var(--r1); border-color: var(--r1-fg); color: var(--r1-fg); }
+.score-btn[data-v="1"].sel .r-num { background: var(--r1-fg); color: #fff; border-color: var(--r1-fg); }
+.score-btn[data-v="2"].sel { background: var(--r2); border-color: var(--r2-fg); color: var(--r2-fg); }
+.score-btn[data-v="2"].sel .r-num { background: var(--r2-fg); color: #fff; border-color: var(--r2-fg); }
+.score-btn[data-v="3"].sel { background: var(--r3); border-color: var(--r3-fg); color: var(--r3-fg); }
+.score-btn[data-v="3"].sel .r-num { background: var(--r3-fg); color: #fff; border-color: var(--r3-fg); }
+.score-btn[data-v="4"].sel { background: var(--r4); border-color: var(--r4-fg); color: var(--r4-fg); }
+.score-btn[data-v="4"].sel .r-num { background: var(--r4-fg); color: #fff; border-color: var(--r4-fg); }
+.score-btn[data-v="5"].sel { background: var(--r5); border-color: var(--r5); color: var(--r5-fg); }
+.score-btn[data-v="5"].sel .r-num { background: rgba(255,255,255,.3); color: #fff; border-color: rgba(255,255,255,.5); }
+
+/* Submit */
+.submit-wrap { margin-top: 8px; margin-bottom: 32px; }
+.submit-btn {
+  width: 100%; padding: 16px 24px;
+  background: var(--accent); color: #fff;
+  border: none; border-radius: 12px;
+  font-size: 1rem; font-weight: 700; font-family: inherit;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: opacity .15s, background .2s;
+}
+.submit-btn:hover { opacity: .88; }
+.submit-btn.done { background: #1A7A45; }
+.submit-pending {
+  font-size: 0.8rem; text-align: center; color: var(--fg-muted); margin-top: 8px;
+}
+
+.confirm-banner {
+  background: #E8F7EE; border: 1px solid #1A7A45; border-radius: 10px;
+  padding: 16px 20px; margin-top: 16px; text-align: center;
+  display: none;
+}
+.confirm-banner.visible { display: block; }
+.cb-title { font-weight: 700; color: #1A7A45; font-size: 1rem; }
+.cb-sub { font-size: 0.85rem; color: #2A5A38; margin-top: 4px; }
+
+/* Results */
+.results-panel {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 14px; margin-bottom: 28px; overflow: hidden;
+}
+.results-header {
+  background: var(--accent); color: #fff;
+  padding: 16px 20px;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+}
+.results-header h3 { font-size: 0.95rem; font-weight: 700; }
+
+.style-result-row {
+  display: grid; grid-template-columns: 1fr auto;
+  align-items: center; gap: 12px;
+  padding: 14px 20px; border-bottom: 1px solid var(--border-lt);
+}
+.style-result-row:last-child { border-bottom: none; }
+.sr-info { display: flex; flex-direction: column; gap: 4px; }
+.sr-label { font-size: 0.9rem; font-weight: 600; color: var(--fg); }
+.sr-bar-wrap { height: 8px; background: var(--surface-2); border-radius: 4px; margin-top: 4px; }
+.sr-bar-fill { height: 100%; border-radius: 4px; transition: width .5s ease; width: 0%; }
+.sr-score { font-size: 0.9rem; font-weight: 700; color: var(--accent); white-space: nowrap; }
+
+.dominant-badge {
+  display: inline-block; background: var(--accent-lt); color: var(--accent);
+  border-radius: 6px; padding: 2px 8px; font-size: 0.72rem; font-weight: 700;
+  letter-spacing: .04em; margin-left: 6px;
+}
+
+.reset-btn {
+  display: block; margin: 0 auto 40px;
+  background: none; border: 1.5px solid var(--border);
+  color: var(--fg-mid); border-radius: 8px;
+  padding: 10px 28px; font-size: 0.85rem; font-family: inherit;
+  cursor: pointer; touch-action: manipulation;
+  transition: border-color .15s, color .15s;
+}
+.reset-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Interpretation cards */
+.interp-section {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 14px; margin-bottom: 28px; overflow: hidden;
+}
+.interp-header {
+  background: var(--accent); color: #fff;
+  padding: 14px 20px; font-size: 0.95rem; font-weight: 700;
+}
+.interp-card {
+  border-bottom: 1px solid var(--border-lt);
+  padding: 18px 20px;
+}
+.interp-card:last-child { border-bottom: none; }
+.interp-title {
+  display: flex; align-items: center; gap: 10px;
+  font-weight: 700; font-size: 0.97rem; margin-bottom: 10px;
+}
+.interp-dot {
+  width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0;
+}
+.interp-en { font-size: 0.78rem; font-weight: 400; color: var(--fg-muted); margin-left: 2px; }
+.interp-body { font-size: 0.88rem; color: var(--fg-mid); line-height: 1.75; }
+.interp-body strong { color: var(--fg); font-weight: 600; }
+.tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.tag {
+  font-size: 0.72rem; font-weight: 600; letter-spacing: .04em;
+  padding: 3px 10px; border-radius: 20px;
+}
+</style>
+
+<div class="progress-bar-wrap"><div class="progress-bar-fill" id="prog"></div></div>
+
+<div class="site-header">
+  <div class="logo-tag">The Bridge Co., Ltd. · Self-Assessment</div>
+  <h1>แบบประเมินสไตล์การจัดการกับความขัดแย้ง</h1>
+  <h2>Conflict Management Style Assessment</h2>
+  <div class="purpose">ประเมินตนเองเพื่อค้นหาสไตล์การบริหารจัดการความขัดแย้งของคุณ</div>
+</div>
+
+<div class="scale-bar">
+  <span class="scale-label">เกณฑ์การให้คะแนน :</span>
+  <span class="scale-item"><span class="scale-dot" style="background:#FDE8E8;color:#8B1A1A">1</span>ไม่เคย</span>
+  <span class="scale-item"><span class="scale-dot" style="background:#FEF3D8;color:#7A5000">2</span>แทบไม่เคย</span>
+  <span class="scale-item"><span class="scale-dot" style="background:#E8F4FD;color:#0A5A8A">3</span>บางครั้ง</span>
+  <span class="scale-item"><span class="scale-dot" style="background:#E4F0FF;color:#1B4FBF">4</span>บ่อยครั้ง</span>
+  <span class="scale-item"><span class="scale-dot" style="background:#7B3FA0;color:#fff">5</span>เป็นประจำ</span>
+</div>
+
+<div class="main">
+  <div class="instruction-box">
+    <strong>คำแนะนำ :</strong> อ่านข้อความแต่ละข้อด้านล่าง แล้วเลือกคะแนนที่สะท้อนพฤติกรรมของคุณ<strong>มากที่สุด</strong>
+    เมื่อเผชิญกับความขัดแย้งในที่ทำงาน
+  </div>
+
+  <div id="questions-wrap"></div>
+
+  <div class="submit-wrap">
+    <button class="submit-btn" id="submit-btn" onclick="submitAssessment()">
+      <span id="submit-label">ส่งผลการประเมิน</span>
+    </button>
+    <div class="submit-pending" id="submit-pending">ตอบแล้ว 0 / 20 ข้อ</div>
+    <div class="confirm-banner" id="confirm-banner">
+      <div class="cb-title">✅ ส่งผลการประเมินเรียบร้อยแล้ว</div>
+      <div class="cb-sub">ขอบคุณที่ร่วมประเมินตนเอง ดูผลสรุปด้านล่าง</div>
+    </div>
+  </div>
+
+  <div class="results-panel">
+    <div class="results-header">
+      <h3>สรุปผล · Score Summary</h3>
+      <span style="font-size:0.85rem;opacity:.8" id="total-answered">0 / 20 ข้อ</span>
+    </div>
+    <div id="style-results"></div>
+  </div>
+
+  <!-- Interpretation -->
+  <div class="interp-section">
+    <div class="interp-header">📖 การตีความผลการประเมิน · Style Interpretation</div>
+
+    <div class="interp-card">
+      <div class="interp-title">
+        <span class="interp-dot" style="background:#E05A2B"></span>
+        ปรับตัวหรือยินยอม <span class="interp-en">Accommodating</span>
+      </div>
+      <div class="interp-body">
+        คุณให้ความสำคัญกับ<strong>ความสัมพันธ์และความพึงพอใจของอีกฝ่าย</strong>มากกว่าผลลัพธ์ของตัวเอง มักยอมถอยหรือยินยอมเพื่อรักษาบรรยากาศที่ดี
+        <br><br>
+        <strong>จุดแข็ง :</strong> สร้างความไว้วางใจ รักษาความสัมพันธ์ระยะยาว เหมาะเมื่อประเด็นนั้นไม่สำคัญสำหรับคุณมากนัก
+        <br>
+        <strong>จุดระวัง :</strong> อาจถูกมองว่าขาดความมั่นใจ ความต้องการแท้จริงของคุณอาจไม่ได้รับการตอบสนอง
+        <div class="tag-row">
+          <span class="tag" style="background:#FDE8E8;color:#8B1A1A">ให้ความสำคัญกับผู้อื่น</span>
+          <span class="tag" style="background:#FDE8E8;color:#8B1A1A">รักษาความสัมพันธ์</span>
+          <span class="tag" style="background:#FDE8E8;color:#8B1A1A">ยืดหยุ่นสูง</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="interp-card">
+      <div class="interp-title">
+        <span class="interp-dot" style="background:#D4A017"></span>
+        ประนีประนอม <span class="interp-en">Compromising</span>
+      </div>
+      <div class="interp-body">
+        คุณแสวงหา<strong>จุดกึ่งกลางที่ทั้งสองฝ่ายพอรับได้</strong> โดยแต่ละฝ่ายยอมสละบางส่วนเพื่อบรรลุข้อตกลง ให้ความสำคัญกับความยุติธรรมและประสิทธิภาพ
+        <br><br>
+        <strong>จุดแข็ง :</strong> แก้ปัญหาได้รวดเร็ว เหมาะเมื่อทั้งสองฝ่ายมีอำนาจเท่ากันและมีเวลาจำกัด
+        <br>
+        <strong>จุดระวัง :</strong> อาจได้ผลลัพธ์ที่ไม่ดีที่สุดสำหรับใครเลย เนื่องจากต่างฝ่ายต่างสละบางอย่าง
+        <div class="tag-row">
+          <span class="tag" style="background:#FEF3D8;color:#7A5000">แบ่งกันคนละครึ่ง</span>
+          <span class="tag" style="background:#FEF3D8;color:#7A5000">ยุติธรรม</span>
+          <span class="tag" style="background:#FEF3D8;color:#7A5000">แก้ปัญหาเร็ว</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="interp-card">
+      <div class="interp-title">
+        <span class="interp-dot" style="background:#1B4FBF"></span>
+        เอาชนะ <span class="interp-en">Competing</span>
+      </div>
+      <div class="interp-body">
+        คุณมีความ<strong>มุ่งมั่นสูงในการยืนหยัดเพื่อเป้าหมายของตัวเอง</strong> และพร้อมเผชิญหน้าเพื่อให้ได้ผลลัพธ์ที่ต้องการ ให้ความสำคัญกับประสิทธิผลและความถูกต้อง
+        <br><br>
+        <strong>จุดแข็ง :</strong> เหมาะเมื่อต้องตัดสินใจเร่งด่วน หรือเมื่อประเด็นนั้นสำคัญมากและต้องการความชัดเจน
+        <br>
+        <strong>จุดระวัง :</strong> อาจสร้างความขัดแย้งและทำลายความสัมพันธ์หากใช้บ่อยเกินไป
+        <div class="tag-row">
+          <span class="tag" style="background:#E4F0FF;color:#1B4FBF">กล้าแสดงออก</span>
+          <span class="tag" style="background:#E4F0FF;color:#1B4FBF">มุ่งเป้าหมาย</span>
+          <span class="tag" style="background:#E4F0FF;color:#1B4FBF">ตัดสินใจเด็ดขาด</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="interp-card">
+      <div class="interp-title">
+        <span class="interp-dot" style="background:#1A7A45"></span>
+        ให้ความร่วมมือ <span class="interp-en">Collaborating</span>
+      </div>
+      <div class="interp-body">
+        คุณมุ่งหา<strong>ทางออกที่ตอบสนองความต้องการของทุกฝ่ายอย่างแท้จริง</strong> โดยทำงานร่วมกันเพื่อสร้างผลลัพธ์ที่ดีที่สุด ให้ความสำคัญกับการแก้ปัญหาระยะยาว
+        <br><br>
+        <strong>จุดแข็ง :</strong> ได้ผลลัพธ์ที่ดีที่สุดสำหรับทุกฝ่าย สร้างความไว้วางใจและนวัตกรรม เหมาะเมื่อประเด็นสำคัญสำหรับทั้งสองฝ่าย
+        <br>
+        <strong>จุดระวัง :</strong> ใช้เวลาและพลังงานมาก ต้องการความร่วมมือและความจริงใจจากทุกฝ่าย
+        <div class="tag-row">
+          <span class="tag" style="background:#E8F7EE;color:#1A7A45">Win-Win</span>
+          <span class="tag" style="background:#E8F7EE;color:#1A7A45">คิดสร้างสรรค์</span>
+          <span class="tag" style="background:#E8F7EE;color:#1A7A45">แก้ปัญหาระยะยาว</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="interp-card">
+      <div class="interp-title">
+        <span class="interp-dot" style="background:#6B7280"></span>
+        หลีกหนี <span class="interp-en">Avoiding</span>
+      </div>
+      <div class="interp-body">
+        คุณมักเลือก<strong>ถอยออกจากความขัดแย้งหรือเลื่อนการเผชิญปัญหา</strong>ออกไป อาจรู้สึกว่าการเผชิญหน้าไม่คุ้มค่าหรือยังไม่ถึงเวลาที่เหมาะสม
+        <br><br>
+        <strong>จุดแข็ง :</strong> เหมาะเมื่อประเด็นนั้นไม่สำคัญ หรือต้องการเวลาให้อารมณ์สงบก่อนแก้ปัญหา
+        <br>
+        <strong>จุดระวัง :</strong> ปัญหาอาจสะสมและรุนแรงขึ้น ความต้องการของทั้งสองฝ่ายไม่ได้รับการแก้ไข
+        <div class="tag-row">
+          <span class="tag" style="background:#F3F4F6;color:#374151">หลีกเลี่ยงการเผชิญหน้า</span>
+          <span class="tag" style="background:#F3F4F6;color:#374151">รอเวลาที่เหมาะสม</span>
+          <span class="tag" style="background:#F3F4F6;color:#374151">รักษาพลังงาน</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button class="reset-btn" onclick="resetAll()">เริ่มประเมินใหม่ · Reset</button>
+</div>
+
+<script>
+const QUESTIONS = [
+  'ฉันปล่อยให้อีกฝ่ายได้ในสิ่งที่เขาต้องการ',
+  'ฉันพยายามที่จะตระหนักถึง "สิ่งที่เกิดขึ้นระหว่างทาง" หากเกิดความขัดแย้ง หรือผลกระทบจากความขัดแย้ง',
+  'โดยปกติฉันมักจะแสดงมุมมองของตัวเองออกมาได้อย่างชัดเจน',
+  'ฉันมีการประเมินสถานการณ์ก่อนที่จะหาทางแก้ปัญหา เพื่อตอบสนองความพึงพอใจของทั้งสองฝ่าย',
+  'ฉันหลีกหนีการเผชิญหน้าในกรณีที่สองฝ่ายมีความคิดเห็นไม่ตรงกัน',
+  'ฉันกล้าที่จะเอาชนะอีกฝ่าย',
+  'ฉันมุ่งเน้นเรื่องการแก้ปัญหาแบบประนีประนอม',
+  'ฉันมองหาสิ่งที่ตัวเองต้องการเป็นหลัก',
+  'ฉันยืนอยู่บนระหว่างความต้องการ เป้าหมาย และความสนใจของตัวเอง และความต้องการของอีกฝ่าย',
+  'ฉันหลีกเลี่ยงการออกความคิดเห็นที่แตกต่างจากอีกฝ่าย',
+  'ฉันพยายามที่จะทำตามหรือยินยอมอีกฝ่าย',
+  'ฉันยืนยันว่าทั้งสองฝ่ายควรตกลงแก้ปัญหาต่างๆ ร่วมกัน',
+  'ฉันต่อสู้เพื่อให้ได้ผลลัพธ์ที่ดีที่สุดสำหรับตัวเอง',
+  'ฉันประเมินความคิดของทั้งสองฝ่ายเพื่อหาทางแก้ปัญหาที่ดีที่สุดร่วมกัน',
+  'ฉันพยายามที่จะทำให้ความแตกต่างที่เกิดขึ้นกลายเป็นเรื่องเล็กๆ',
+  'ฉันมักจะปรับตัวเองให้เข้ากับสิ่งที่อีกฝ่ายสนใจหรือต้องการ',
+  'ฉันดิ้นรนเพื่อให้ทั้งสองฝ่ายเกิดการประนีประนอมแบบ 50-50',
+  'ฉันทำทุกวิถีทางเพื่อให้ตัวเองเป็นผู้ชนะ หรือได้มาซึ่งสิ่งที่ตัวเองต้องการ',
+  'ฉันหาวิธีการแก้ปัญหาซึ่งสามารถตอบสนองความต้องการของตัวเองและของอีกฝ่าย',
+  'ฉันพยายามที่จะหลีกหนีการเผชิญหน้ากับคนรอบข้าง'
+];
+
+// Scoring map: style → question indices (0-based)
+const STYLES = [
+  { name: 'ปรับตัวหรือยินยอม', en: 'Accommodating', qs: [0,10,15,5], color: '#E05A2B' },
+  { name: 'ประนีประนอม',        en: 'Compromising',  qs: [1,6,11,16], color: '#D4A017' },
+  { name: 'เอาชนะ',             en: 'Competing',     qs: [2,7,12,17], color: '#1B4FBF' },
+  { name: 'ให้ความร่วมมือ',     en: 'Collaborating', qs: [3,8,13,18], color: '#1A7A45' },
+  { name: 'หลีกหนี',            en: 'Avoiding',      qs: [4,9,14,19], color: '#6B7280' },
+];
+
+// Wait — re-check PDF scoring:
+// ปรับตัว: (1)(6)(11)(16) → indices 0,5,10,15
+// ประนีประนอม: (2)(7)(12)(17) → 1,6,11,16
+// เอาชนะ: (3)(8)(13)(18) → 2,7,12,17
+// ให้ความร่วมมือ: (4)(9)(14)(19) → 3,8,13,18
+// หลีกหนี: (5)(10)(15)(20) → 4,9,14,19
+
+const STYLES_CORRECT = [
+  { name: 'ปรับตัวหรือยินยอม', en: 'Accommodating', qs: [0,5,10,15], color: '#E05A2B' },
+  { name: 'ประนีประนอม',        en: 'Compromising',  qs: [1,6,11,16], color: '#D4A017' },
+  { name: 'เอาชนะ',             en: 'Competing',     qs: [2,7,12,17], color: '#1B4FBF' },
+  { name: 'ให้ความร่วมมือ',     en: 'Collaborating', qs: [3,8,13,18], color: '#1A7A45' },
+  { name: 'หลีกหนี',            en: 'Avoiding',      qs: [4,9,14,19], color: '#6B7280' },
+];
+
+const ratings = {};
+const LBLS = ['ไม่เคย','แทบไม่เคย','บางครั้ง','บ่อยครั้ง','เป็นประจำ'];
+
+// Build questions
+const wrap = document.getElementById('questions-wrap');
+QUESTIONS.forEach((q, qi) => {
+  const row = document.createElement('div');
+  row.style.cssText = 'background:var(--surface);border:1px solid var(--border);border-radius:14px;margin-bottom:16px;padding:20px;';
+  row.innerHTML = `
+    <div class="q-text"><span class="q-num">${qi+1}.</span>${q}</div>
+    <div class="rating-row" id="rr-${qi}">
+      ${[1,2,3,4,5].map((v,i) =>
+        `<button type="button" class="score-btn" data-q="${qi}" data-v="${v}" onclick="selectScore(this,${qi},${v})"><span class="r-num">${v}</span>${LBLS[i]}</button>`
+      ).join('')}
+    </div>
+  `;
+  wrap.appendChild(row);
+});
+
+// Build style result rows
+const srWrap = document.getElementById('style-results');
+STYLES_CORRECT.forEach((s, si) => {
+  const row = document.createElement('div');
+  row.className = 'style-result-row';
+  row.innerHTML = `
+    <div class="sr-info">
+      <div class="sr-label">${s.name} <span style="font-size:0.78rem;color:var(--fg-muted);font-weight:400">${s.en}</span><span class="dominant-badge" id="dom-${si}" style="display:none">สูงสุด</span></div>
+      <div class="sr-bar-wrap"><div class="sr-bar-fill" id="srb-${si}" style="background:${s.color}"></div></div>
+    </div>
+    <div class="sr-score" id="srs-${si}" style="color:${s.color}">0/20</div>
+  `;
+  srWrap.appendChild(row);
+});
+
+function selectScore(btn, qi, val) {
+  document.querySelectorAll(`#rr-${qi} .score-btn`).forEach(b => b.classList.remove('sel'));
+  btn.classList.add('sel');
+  ratings[qi] = val;
+  updateScores();
+}
+
+function updateScores() {
+  const answered = Object.keys(ratings).length;
+  document.getElementById('prog').style.width = (answered / 20 * 100) + '%';
+  document.getElementById('total-answered').textContent = `${answered} / 20 ข้อ`;
+
+  const pending = document.getElementById('submit-pending');
+  if (answered < 20) {
+    pending.style.display = 'block';
+    pending.style.color = '';
+    pending.textContent = `ตอบแล้ว ${answered} / 20 ข้อ`;
+  } else {
+    pending.style.display = 'none';
+  }
+
+  // Calculate style scores
+  let maxScore = 0;
+  const scores = STYLES_CORRECT.map(s => {
+    const total = s.qs.reduce((sum, qi) => sum + (ratings[qi] || 0), 0);
+    if (total > maxScore) maxScore = total;
+    return total;
+  });
+
+  scores.forEach((score, si) => {
+    document.getElementById('srs-' + si).textContent = score + '/20';
+    document.getElementById('srb-' + si).style.width = (score / 20 * 100) + '%';
+    const domBadge = document.getElementById('dom-' + si);
+    domBadge.style.display = (score === maxScore && maxScore > 0) ? 'inline-block' : 'none';
+  });
+}
+
+function submitAssessment() {
+  const answered = Object.keys(ratings).length;
+  if (answered < 20) {
+    const pending = document.getElementById('submit-pending');
+    pending.style.display = 'block';
+    pending.style.color = '#C04000';
+    pending.textContent = `กรุณาตอบให้ครบทั้ง 20 ข้อก่อนส่ง (ตอบแล้ว ${answered}/20 ข้อ)`;
+    return;
+  }
+  document.getElementById('submit-btn').classList.add('done');
+  document.getElementById('submit-label').textContent = '✓ ส่งแล้ว';
+  document.getElementById('confirm-banner').classList.add('visible');
+  document.getElementById('submit-pending').style.display = 'none';
+  document.querySelector('.results-panel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function resetAll() {
+  for (let k in ratings) delete ratings[k];
+  document.querySelectorAll('.score-btn').forEach(b => b.classList.remove('sel'));
+  document.getElementById('submit-btn').classList.remove('done');
+  document.getElementById('submit-label').textContent = 'ส่งผลการประเมิน';
+  document.getElementById('confirm-banner').classList.remove('visible');
+  updateScores();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+updateScores();
+</script>
