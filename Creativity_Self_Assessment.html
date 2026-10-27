@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>คุณเป็นคนมีความคิดสร้างสรรค์หรือไม่ | The Bridge</title>
+<style>
+  :root{
+    --navy:#1A237E; --blue:#1565C0;
+    --gray:#37474F; --light:#ECEFF1;
+    --green:#2E7D32; --green-lt:#E8F5E9;
+    --red:#C62828; --red-lt:#FFEBEE;
+    --amber:#EF6C00; --amber-lt:#FFF3E0;
+    --teal:#00695C; --teal-lt:#E0F2F1;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  body{font-family:'Sarabun','TH Sarabun New',sans-serif;background:var(--light);color:var(--gray);font-size:16px;line-height:1.6;padding-bottom:60px;}
+
+  .header{background:linear-gradient(135deg,var(--navy),#283593);color:#fff;text-align:center;padding:32px 16px 28px;}
+  .header h1{font-size:1.2rem;font-weight:700;margin-bottom:6px;}
+  .header p{font-size:0.9rem;opacity:0.9;}
+
+  .container{max-width:720px;margin:0 auto;padding:0 16px;}
+
+  .scale-box{background:#fff;border-radius:12px;padding:18px 20px;margin-top:-18px;box-shadow:0 2px 10px rgba(0,0,0,0.08);}
+  .scale-box h2{font-size:1.05rem;color:var(--navy);margin-bottom:10px;}
+  .scale-box .lead{font-size:0.88rem;}
+  .scale-box .lead strong{color:var(--navy);}
+
+  .progress-wrap{position:sticky;top:0;background:var(--light);padding:10px 16px 6px;z-index:10;}
+  .progress-bar{height:8px;background:#dfe3e8;border-radius:4px;overflow:hidden;}
+  .progress-fill{height:100%;background:var(--blue);width:0%;transition:width .2s;}
+  .progress-text{font-size:0.8rem;text-align:right;color:var(--gray);margin-top:4px;}
+
+  .question{background:#fff;border-radius:12px;padding:18px;margin:14px 0;box-shadow:0 1px 6px rgba(0,0,0,0.06);}
+  .question p.q-text{font-weight:600;color:var(--navy);margin-bottom:14px;font-size:0.96rem;}
+  .q-num{display:inline-block;background:var(--blue);color:#fff;border-radius:50%;width:26px;height:26px;text-align:center;line-height:26px;font-size:0.85rem;margin-right:8px;flex:0 0 auto;}
+
+  .opt-btn{display:flex;align-items:flex-start;gap:10px;width:100%;text-align:left;padding:12px 14px;border-radius:10px;border:2px solid #dfe3e8;background:#fff;color:var(--gray);font-family:inherit;font-size:0.88rem;cursor:pointer;margin-bottom:10px;-webkit-appearance:none;appearance:none;}
+  .opt-btn:last-child{margin-bottom:0;}
+  .opt-btn .opt-letter{flex:0 0 auto;font-weight:700;color:var(--blue);}
+  .opt-btn.selected{background:#E3EAFD;border-color:var(--blue);}
+  .opt-btn.selected .opt-letter{color:var(--navy);}
+
+  .submit-wrap{text-align:center;margin:30px 0;}
+  #submitBtn{background:var(--navy);color:#fff;border:none;padding:14px 40px;font-size:1.05rem;font-weight:700;border-radius:30px;cursor:pointer;box-shadow:0 4px 12px rgba(26,35,126,0.35);font-family:inherit;}
+  #submitBtn:hover{background:var(--blue);}
+
+  #results{display:none;}
+  .result-card{background:#fff;border-radius:14px;padding:24px 20px;margin-top:10px;box-shadow:0 2px 12px rgba(0,0,0,0.08);}
+  .result-card h2{color:var(--navy);font-size:1.15rem;margin-bottom:4px;text-align:center;}
+  .total-label{font-size:0.9rem;color:#607D8B;margin-bottom:16px;text-align:center;}
+
+  .overall-badge{text-align:center;margin-bottom:10px;}
+  .overall-badge .score-big{font-size:2.4rem;font-weight:800;color:var(--navy);}
+  .overall-badge .score-sub{font-size:0.85rem;color:#607D8B;margin-bottom:10px;}
+  .overall-level{display:inline-block;padding:6px 20px;border-radius:18px;font-size:0.95rem;font-weight:700;margin-bottom:8px;}
+  .overall-desc{font-size:0.88rem;color:var(--gray);max-width:480px;margin:0 auto;}
+  .lvl-high{background:var(--green-lt);color:var(--green);}
+  .lvl-midhigh{background:var(--teal-lt);color:var(--teal);}
+  .lvl-mid{background:var(--amber-lt);color:var(--amber);}
+  .lvl-low{background:var(--red-lt);color:var(--red);}
+
+  .disclaimer{font-size:0.76rem;color:#90A4AE;text-align:center;margin:10px 0 4px;font-style:italic;}
+
+  .legend-scale{font-size:0.78rem;color:#607D8B;margin:20px 0 4px;border-top:1px dashed #CFD8DC;padding-top:10px;}
+  .legend-scale table{width:100%;border-collapse:collapse;}
+  .legend-scale td{padding:4px 6px;border-bottom:1px solid #ECEFF1;}
+  .legend-scale td:first-child{font-weight:700;color:var(--navy);white-space:nowrap;}
+
+  .restart{display:block;margin:22px auto 0;background:none;border:2px solid var(--navy);color:var(--navy);padding:10px 26px;border-radius:24px;font-weight:700;cursor:pointer;font-family:inherit;}
+  .restart:hover{background:var(--navy);color:#fff;}
+
+  .warn{color:var(--red);text-align:center;font-size:0.85rem;margin-top:8px;display:none;}
+  .question.missing{outline:2px solid var(--red);}
+  footer{text-align:center;font-size:0.75rem;color:#90A4AE;margin-top:30px;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>คุณเป็นคนมีความคิดสร้างสรรค์หรือไม่</h1>
+  <p>Creativity Self-Assessment</p>
+</div>
+
+<div class="container">
+
+  <div class="scale-box">
+    <h2>คำชี้แจง</h2>
+    <p class="lead">กรุณาตอบคำถามต่อไปนี้<strong>ตามความเป็นจริงมากที่สุด หรือ ให้สอดคล้องกับคุณลักษณะหรือพฤติกรรมของตัวเองมากที่สุด</strong> เนื่องจากไม่มีคำตอบใดที่ผิด และการประเมินชุดนี้<strong>ไม่ได้เป็นแบบทดสอบก่อนเรียน</strong> (Pre-test)</p>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-text" id="progressText">ตอบแล้ว 0 / 10 ข้อ</div>
+  </div>
+
+  <div id="quizWrap">
+    <div id="questionsContainer"></div>
+    <div class="submit-wrap">
+      <button id="submitBtn">ดูผลการประเมิน</button>
+      <div class="warn" id="warnMsg">กรุณาตอบคำถามที่ไฮไลต์สีแดงให้ครบก่อนดูผลค่ะ</div>
+    </div>
+  </div>
+
+  <div id="results">
+    <div class="result-card">
+      <h2>ผลการประเมินความคิดสร้างสรรค์</h2>
+      <div class="total-label">คะแนนรวม 20 คะแนน</div>
+
+      <div class="overall-badge">
+        <div class="score-big" id="scoreBig"></div>
+        <div class="score-sub">จาก 20 คะแนน</div>
+        <div class="overall-level" id="overallLevel"></div>
+        <div class="overall-desc" id="overallDesc"></div>
+      </div>
+      <div class="disclaimer">* เกณฑ์การแปลผลคะแนนนี้จัดทำเพิ่มเติมโดยทีมงาน โดยอ้างอิงจากเกณฑ์การให้คะแนนรายข้อของแบบประเมินต้นฉบับ เนื่องจากต้นฉบับไม่มีเกณฑ์การแปลผลคะแนนรวมกำกับไว้</div>
+
+      <div class="legend-scale">
+        <table>
+          <tr><td>16–20</td><td>มีความคิดสร้างสรรค์สูง</td></tr>
+          <tr><td>11–15</td><td>มีความคิดสร้างสรรค์ค่อนข้างสูง</td></tr>
+          <tr><td>6–10</td><td>มีความคิดสร้างสรรค์ปานกลาง</td></tr>
+          <tr><td>0–5</td><td>ยังไม่คุ้นเคยกับการคิดนอกกรอบมากนัก</td></tr>
+        </table>
+      </div>
+
+      <button type="button" class="restart" id="restartBtn">ทำแบบประเมินอีกครั้ง</button>
+    </div>
+  </div>
+
+  <footer>The Bridge Co., Ltd. · Creativity Self-Assessment</footer>
+</div>
+
+<script>
+(function(){
+  var questions = [
+    { stem:"สำหรับคุณ การระดมสมอง คือ", opts:{
+      a:{text:"เรื่องยากลำบากที่จะทำให้เกิดความคิดต่างๆ ภายในเวลาอันรวดเร็ว", pts:0},
+      b:{text:"สิ่งที่คุณสามารถทำได้อย่างรวดเร็วยิ่งกว่าการเขียนด้วยปากกา", pts:2},
+      c:{text:"สิ่งที่เป็นประโยชน์ โดยเฉพาะสำหรับคนอื่นๆ เนื่องจากคนแต่ละคนสามารถนำเสนอความคิดได้หลายๆ รูปแบบ", pts:1}
+    }},
+    { stem:"ในระหว่างวันซึ่งเป็นช่วงเวลาที่น่าเบื่อ ในกรณีที่คุณจะต้องทำอาหาร หรือ คุณกำลังประกอบอุปกรณ์บางอย่างด้วยตัวเอง (DIY) และค้นพบว่าคุณขาดอุปกรณ์ หรือ วัตถุดิบบางอย่าง (ในกรณีทำอาหาร) คุณจะตัดสินใจทำอย่างไร", opts:{
+      a:{text:"รู้สึกเป็นกังวล และพยายามค้นหาสิ่งที่สามารถมาใช้ทดแทนกันได้ จากนั้นจึงประยุกต์ใช้สิ่งทดแทนดังกล่าวให้เข้ากับการทำอาหาร หรือ การประกอบอุปกรณ์ของตัวเอง", pts:1},
+      b:{text:"ออกไปซื้ออุปกรณ์ หรือ วัตถุดิบที่ขาดก่อนที่จะลงมือทำอาหาร หรือ ประกอบอุปกรณ์ต่อ", pts:0},
+      c:{text:"ไม่จำเป็นต้องค้นหาสิ่งทดแทน หรือ ใช้ประโยชน์จากสิ่งที่คุณมี เพราะโดยปกติคุณมักจะประสบความสำเร็จในการทำอาหาร หรือ ประกอบอุปกรณ์ของคุณตามที่ตัวเองต้องการได้ในที่สุด", pts:2}
+    }},
+    { stem:"คุณได้ซื้ออุปกรณ์บางอย่างสำหรับตกแต่งบ้าน แต่กลับค้นพบว่าวิธีการใช้อุปกรณ์ดังกล่าวเป็นภาษาญี่ปุ่นซึ่งคุณไม่สามารถปฏิบัติตามได้ ในกรณีนี้คุณจะทำอย่างไร", opts:{
+      a:{text:"นำเอาอุปกรณ์ทุกชิ้นออกมาเพื่อคิดพิจารณาว่าจะนำเอาไปตกแต่งบริเวณใดของบ้าน และจะประกอบเข้ากันได้อย่างไร เพราะโดยปกติวิธีนี้มักจะใช้ได้ผล", pts:2},
+      b:{text:"ติดต่อร้านที่ซื้อ และขอให้ทางร้านจัดส่งวิธีการประกอบอุปกรณ์เป็นภาษาไทย มิฉะนั้นคุณจะขอเงินคืน", pts:0},
+      c:{text:"ขอความช่วยเหลือจากเพื่อนที่พอมีทักษะด้านภาษาญี่ปุ่น หรือ คนที่ยินดีจะช่วยเหลือคุณได้", pts:1}
+    }},
+    { stem:"คุณคิดอย่างไรกับ “ผลงานทางศิลปะ”", opts:{
+      a:{text:"น่าเบื่อ ไม่เข้าใจว่าต้องการสื่ออะไร และไม่สามารถคาดเดาได้ว่าคุณภาพของงานวัดได้อย่างไร", pts:0},
+      b:{text:"น่าสนใจเป็นอย่างยิ่ง คุณค้นพบว่าตัวเองมักจะหลงใหลกับงานศิลปะได้อย่างง่ายดาย รวมทั้งงานศิลปะยังสามารถแปลความหมายได้หลายๆ อย่างสำหรับคุณ", pts:2},
+      c:{text:"น่าสนใจแต่สมาธิหรือความสนใจของคุณค่อนข้างมีจำกัด ด้วยเหตุนี้คุณจึงมีแนวโน้มที่จะซื้อหนังสือประเภท Guidebook มาเก็บไว้เพื่อศึกษาเพิ่มเติมเกี่ยวกับงานศิลปะ แทนที่จะต้องไปศึกษาด้วยตัวเองตามสถานที่ต่างๆ", pts:1}
+    }},
+    { stem:"นวนิยาย หรือ เรื่องราวต่างๆ ที่เขียนขึ้นตามจินตนาการของผู้แต่งมักมีสิ่งต่างๆ ที่ซ้อนเร้นให้ศึกษา คุณรู้สึกอย่างไรกับการเขียนนวนิยายหรือเรื่องราวเหล่านี้", opts:{
+      a:{text:"น่าตื่นเต้น คุณชอบที่จะศึกษาคำพูด สนุกกับคำศัพท์ต่างๆ รวมทั้งยังสนุกกับการจินตนาและแฟนตาซีที่ผู้แต่งเขียนขึ้น", pts:2},
+      b:{text:"เป็นเรื่องท้าทาย เพราะคุณอาจต้องใช้เวลาประมาณ 15 นาทีเพื่อจินตนาการ หรือ นึกถึงเรื่องราวในอดีตของตัวเอง ด้วยเหตุนี้การอ่านนวนิยายให้หมดทั้งเล่มอาจเป็นเรื่องที่ต้องใช้เวลาสำหรับคุณ", pts:1},
+      c:{text:"ไม่ได้แรงบันดาลใจใดๆ ถึงแม้ว่าตัวเองอาจเป็นคนชอบอ่านหนังสือ แต่ในส่วนของการเขียนนวนิยาย คุณคิดว่าน่าจะเป็นหน้าที่ของคนที่มีจินตนาการมากกว่า", pts:0}
+    }},
+    { stem:"แบบทดสอบประเภทใดต่อไปนี้ที่คุณชอบที่จะทำมากกว่าหากสามารถเลือกได้", opts:{
+      a:{text:"แบบทดสอบประเภทที่มีคำถามเฉพาะเจาะจง หรือ ข้อสอบแบบเลือกตอบ ก ข ค ง", pts:0},
+      b:{text:"แบบทดสอบประเภทที่ใช้คำถามปลายเปิด (Open-ended questions) ซึ่งสามารถแปลความและตอบได้หลากหลาย", pts:2},
+      c:{text:"แบบทดสอบที่ใช้คำถาม หรือ ประยุกต์ใช้ข้อมูลประเภทข้อเท็จจริง (Facts) ได้สัมพันธ์กัน", pts:1}
+    }},
+    { stem:"กิจกรรมใดต่อไปนี้สามารถเติมเต็มความต้องการของคุณได้มากที่สุด", opts:{
+      a:{text:"ดูโทรทัศน์", pts:0},
+      b:{text:"อ่านหนังสือ", pts:1},
+      c:{text:"เขียนหนังสือ หรือ บันทึกเรื่องราวต่างๆ", pts:2}
+    }},
+    { stem:"เมื่อพูดถึงนักดนตรีซึ่งสามารถพบได้ทั่วไปรอบๆ ตัวคุณ ในขณะที่คนเหล่านี้เล่นเครื่องดนตรีประเภทใดก็ตาม คุณชื่นชอบที่จะเห็นภาพใดต่อไปนี้", opts:{
+      a:{text:"นักดนตรีเล่นดนตรีตามตัวโน้ต หรือ ยึดเอาสคริปต์ที่ได้ร่างไว้เป็นหลัก", pts:0},
+      b:{text:"นักดนตรีสามารถเล่นเครื่องดนตรีได้โดยแทบไม่ต้องวางแผน หรือ สามารถเล่นดนตรีได้เข้ากับนักดนตรีคนอื่นๆ ได้อย่างทันทีทันใด", pts:2},
+      c:{text:"นักดนตรีสามารถเล่นดนตรีได้จากสิ่งที่ตัวเองได้ยิน หรือ สามารถปรับเปลี่ยนให้มีความไพเราะมากขึ้นได้หากจำเป็น", pts:1}
+    }},
+    { stem:"ในกรณีที่คุณมีความรู้สึกว่ามีความคิดบางอย่างซึ่งคนส่วนใหญ่ไม่ได้คิดถึง หรือ คุณอาจมีคำถามว่าทำไมคนส่วนใหญ่ไม่คิดแบบนี้ คุณมักจะ", opts:{
+      a:{text:"ลงมือค้นคว้า หาข้อมูลเพิ่มเติม หรือ เป็นผู้ริเริ่มให้มีการอภิปรายถกเถียงกันอย่างเป็นอิสระ", pts:2},
+      b:{text:"ไม่เก็บเอามาคิดให้เสียเวลา เพราะไม่ได้ทำให้เกิดคุณค่าใดๆ เปลี่ยนเป็นคิดถึงอาหารกลางวันดีกว่า", pts:0},
+      c:{text:"กลับมาครุ่นคิดคนเดียวสักระยะหนึ่งก่อนที่จะมีสิ่งอื่นเข้ามาขัดจังหวะ จากนั้นจึงปล่อยไปโดยไม่กลับไปคิดให้เสียเวลาอีก", pts:1}
+    }},
+    { stem:"หากต้องให้ประเมินตัวเอง คุณคิดว่าตัวคุณเองเป็นคนประเภทไหน", opts:{
+      a:{text:"เป็นคนมีความคิดสร้างสรรค์และชอบนวัตกรรมต่างๆ โดยไม่ชอบปฏิบัติตามกฎ ระเบียบ วิธีการที่ต้องมีการทดสอบ หรือ ระเบียบปฏิบัติงาน", pts:2},
+      b:{text:"เป็นผู้ตามที่ดี เพราะตัวเองชอบที่จะปฏิบัติตามวิธีการทำงานที่ได้กำหนดไว้ และมีความตั้งใจที่รับฟังความคิดเห็นของคนอื่นๆ หากความคิดดังกล่าวมีความน่าเชื่อถือพอ", pts:1},
+      c:{text:"เป็นคนที่มีความแตกต่าง คือ มีบุคลิกง่ายๆ ชอบผ่อนคลาย โดยสามารถปรับเปลี่ยนตัวเองไปตามคนอื่นๆ ได้อยู่ตลอดเวลา", pts:0}
+    }}
+  ];
+
+  var answers = {}; // answers[qIndex] = 'a'|'b'|'c'|null
+  var container = document.getElementById('questionsContainer');
+  var optLetters = ['a','b','c'];
+  var optLabels = { a:'ก', b:'ข', c:'ค' };
+
+  questions.forEach(function(q, qIndex){
+    answers[qIndex] = null;
+
+    var qDiv = document.createElement('div');
+    qDiv.className = 'question';
+    qDiv.id = 'q-' + qIndex;
+
+    var qP = document.createElement('p');
+    qP.className = 'q-text';
+    var numSpan = document.createElement('span');
+    numSpan.className = 'q-num';
+    numSpan.textContent = (qIndex + 1);
+    qP.appendChild(numSpan);
+    qP.appendChild(document.createTextNode(q.stem));
+    qDiv.appendChild(qP);
+
+    optLetters.forEach(function(letter){
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'opt-btn';
+      btn.id = 'q-' + qIndex + '-' + letter;
+
+      var letterSpan = document.createElement('span');
+      letterSpan.className = 'opt-letter';
+      letterSpan.textContent = optLabels[letter] + '.';
+      btn.appendChild(letterSpan);
+
+      var textSpan = document.createElement('span');
+      textSpan.textContent = q.opts[letter].text;
+      btn.appendChild(textSpan);
+
+      btn.addEventListener('click', function(){
+        answers[qIndex] = letter;
+        optLetters.forEach(function(ol){
+          document.getElementById('q-' + qIndex + '-' + ol).classList.remove('selected');
+        });
+        btn.classList.add('selected');
+        qDiv.classList.remove('missing');
+        updateProgress();
+      });
+
+      qDiv.appendChild(btn);
+    });
+
+    container.appendChild(qDiv);
+  });
+
+  var progressFill = document.getElementById('progressFill');
+  var progressText = document.getElementById('progressText');
+
+  function updateProgress(){
+    var n = 0;
+    for (var i = 0; i < questions.length; i++) if (answers[i] !== null) n++;
+    progressFill.style.width = (n / questions.length * 100) + '%';
+    progressText.textContent = 'ตอบแล้ว ' + n + ' / ' + questions.length + ' ข้อ';
+  }
+
+  function levelForTotal(score){
+    if (score >= 16) return { key:'high', label:'มีความคิดสร้างสรรค์สูง (16–20)', desc:'คุณเปิดรับแนวคิดใหม่ๆ กล้าทดลอง และมองหาวิธีการที่แตกต่างในการแก้ปัญหาอยู่เสมอ' };
+    if (score >= 11) return { key:'midhigh', label:'มีความคิดสร้างสรรค์ค่อนข้างสูง (11–15)', desc:'คุณมีแนวโน้มเปิดรับแนวคิดใหม่ๆ และสามารถพัฒนาความคิดสร้างสรรค์ให้มากขึ้นได้อีก' };
+    if (score >= 6)  return { key:'mid', label:'มีความคิดสร้างสรรค์ปานกลาง (6–10)', desc:'คุณมีความคิดสร้างสรรค์อยู่บ้าง แต่ยังค่อนข้างยึดติดกับวิธีการที่คุ้นเคย ลองเปิดใจทดลองสิ่งใหม่ๆ ให้มากขึ้น' };
+    return { key:'low', label:'ยังไม่คุ้นเคยกับการคิดนอกกรอบมากนัก (0–5)', desc:'คุณมักจะทำตามแนวทางหรือขั้นตอนที่คุ้นเคย การฝึกตั้งคำถามปลายเปิดและลองวิธีใหม่ๆ จะช่วยพัฒนาความคิดสร้างสรรค์ได้' };
+  }
+
+  document.getElementById('submitBtn').addEventListener('click', function(){
+    var missing = [];
+    for (var i = 0; i < questions.length; i++) {
+      var qEl = document.getElementById('q-' + i);
+      if (answers[i] === null) {
+        missing.push(i);
+        qEl.classList.add('missing');
+      } else {
+        qEl.classList.remove('missing');
+      }
+    }
+
+    if (missing.length > 0) {
+      document.getElementById('warnMsg').style.display = 'block';
+      document.getElementById('q-' + missing[0]).scrollIntoView({ behavior:'smooth', block:'center' });
+      return;
+    }
+    document.getElementById('warnMsg').style.display = 'none';
+
+    var total = 0;
+    questions.forEach(function(q, qIndex){
+      total += q.opts[answers[qIndex]].pts;
+    });
+
+    var level = levelForTotal(total);
+    document.getElementById('scoreBig').textContent = total;
+    var levelEl = document.getElementById('overallLevel');
+    levelEl.textContent = level.label;
+    levelEl.className = 'overall-level lvl-' + level.key;
+    document.getElementById('overallDesc').textContent = level.desc;
+
+    document.getElementById('quizWrap').style.display = 'none';
+    document.querySelector('.progress-wrap').style.display = 'none';
+    document.getElementById('results').style.display = 'block';
+    window.scrollTo(0, 0);
+  });
+
+  document.getElementById('restartBtn').addEventListener('click', function(){
+    questions.forEach(function(q, qIndex){
+      answers[qIndex] = null;
+      optLetters.forEach(function(ol){
+        document.getElementById('q-' + qIndex + '-' + ol).classList.remove('selected');
+      });
+    });
+    document.getElementById('quizWrap').style.display = 'block';
+    document.querySelector('.progress-wrap').style.display = 'block';
+    document.getElementById('results').style.display = 'none';
+    updateProgress();
+    window.scrollTo(0, 0);
+  });
+
+  updateProgress();
+})();
+</script>
+</body>
+</html>
